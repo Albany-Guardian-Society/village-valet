@@ -14,7 +14,6 @@ const sCubeReducer = (state = initialState, action) => {
     case "authenticate": {
         let newState = _.cloneDeep(state);
         newState.authenticated = true;
-		newState.player_id = action.payload;
         return newState;
     }
 

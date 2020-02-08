@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Container from "react-bootstrap/Container";
 
-import Landing from "./components/Landing.js";
+import Login from "./components/Login.js";
 import Navigation from './components/Navigation.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Scheduler from './components/scheduler/Scheduler.js';
@@ -21,7 +22,7 @@ class App extends Component {
                 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
                 crossorigin="anonymous"
             />
-            {true ?
+            {this.props.authenticated ?
                 <div>
             <Navigation />
             <BrowserRouter>
@@ -34,10 +35,17 @@ class App extends Component {
                 </Switch>
             </BrowserRouter>
             </div>
-            : <Landing/>}
+            : <Login/>}
             </div>
         );
     }
 }
 
-export default App;
+const mapStateToProps = state => ({
+    authenticated: state.authenticated
+});
+
+const mapDispatchToProps = dispatch => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

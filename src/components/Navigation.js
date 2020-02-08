@@ -41,14 +41,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateAuth: (id) => dispatch({
-        type: "authenticate",
-        payload: id
-    }),
-	updateAdmin: (admin) => dispatch({
-        type: "set_admin",
-        payload: admin
-    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
