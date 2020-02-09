@@ -5,7 +5,7 @@ const initialState = {
     user: ""
 };
 
-const sCubeReducer = (state = initialState, action) => {
+const VillageReducer = (state = initialState, action) => {
     switch (action.type) {
     case "dump_store": {
         console.log(state);
@@ -30,4 +30,4 @@ const sCubeReducer = (state = initialState, action) => {
     }
 };
 
-export default sCubeReducer;
+export default VillageReducer;
