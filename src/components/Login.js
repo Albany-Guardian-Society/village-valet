@@ -99,7 +99,7 @@ class Metrics extends Component {
                         <Form.Group as={Row}>
                             <Form.Label column sm={2}>Password:</Form.Label>
                             <Col>
-                                <Form.Control id="password" placeholder="Password" onChange={this.handleChange}/>
+                                <Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChange}/>
                             </Col>
                         </Form.Group>
                         <Button id="login_button" variant="primary" onClick={this.handleLogin}>

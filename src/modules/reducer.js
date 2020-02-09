@@ -1,9 +1,12 @@
 import _ from "lodash";
 
 const initialState = {
-    authenticated: true,
+    authenticated: false,
     user: ""
 };
+
+//The authentication should be cached for a period of time
+//so that reloading the page doesnt mess us up.
 
 const VillageReducer = (state = initialState, action) => {
     switch (action.type) {
