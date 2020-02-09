@@ -15,17 +15,16 @@ import Error from './components/Error.js';
 class App extends Component {
     render() {
         return (
-            <div>
+            <BrowserRouter>
             <link
                 rel="stylesheet"
                 href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
                 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-                crossorigin="anonymous"
+                crossOrigin="anonymous"
             />
             {this.props.authenticated ?
                 <div>
             <Navigation />
-            <BrowserRouter>
                 <Switch>
                     <Route path="/Dashboard" component={Dashboard}/>
                     <Route path="/Scheduler" component={Scheduler}/>
@@ -33,10 +32,9 @@ class App extends Component {
                     <Route path="/Metrics" component={Metrics}/>
                     <Route path="/" component={Dashboard}/>
                 </Switch>
-            </BrowserRouter>
             </div>
             : <Login/>}
-            </div>
+            </BrowserRouter>
         );
     }
 }

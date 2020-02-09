@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Router, Link } from 'react-router-dom'
 import { connect } from "react-redux";
 
 import Navbar from "react-bootstrap/Navbar";
@@ -25,11 +26,13 @@ class Navigation extends Component {
         return (
             <React.Fragment>
             <Navbar expand="lg" variant="light" bg="light">
-                <Navbar.Brand href="/Dashboard"> Village Valet </Navbar.Brand>
-                <Nav.Link href="/Scheduler"> Scheduler </Nav.Link>
-                <Nav.Link href="/Profiles"> Profiles </Nav.Link>
-                <Nav.Link href="/Metrics"> Metrics </Nav.Link>
-                <Button> Logout </Button>
+                <Link to="/Dashboard">
+                    <Navbar.Brand>Village Valet</Navbar.Brand>
+                </Link>
+                <Link to="/Scheduler"> Scheduler </Link>
+                <Link to="/Profiles"> Profiles </Link>
+                <Link to="/Metrics"> Metrics </Link>
+                <Button onClick={this.props.logout}> Logout </Button>
             </Navbar>
             <br/>
             </React.Fragment>
@@ -41,6 +44,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch({
+        type: "logout",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
