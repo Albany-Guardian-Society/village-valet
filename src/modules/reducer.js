@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
-    authenticated: false,
+    authenticated: true,
     user: ""
 };
 

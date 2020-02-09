@@ -10,6 +10,12 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+
+import Image from "react-bootstrap/Image";
+import logo from "../assets/VillageValetLogo.jpg"
+
+import "../App.css";
 
 class Metrics extends Component {
     constructor(props) {
@@ -22,6 +28,17 @@ class Metrics extends Component {
         };
 		this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+    }
+
+    componentDidMount() {
+        //When the enter key is pressed while on the login page
+        //Process the login
+        document.addEventListener('keyup', (k) => {
+            if (k.keyCode === 13) {
+                k.preventDefault();
+                document.getElementById("login_button").click();
+            }
+        })
     }
 
     handleChange(event) {
@@ -52,30 +69,40 @@ class Metrics extends Component {
 
     render() {
         return (
-            <Container>
+            <Container className="Login">
+            <br/>
             <Row>
                 <Col>
-                Image
+                    <Image src={logo} className="Login-Logo"/>
+                </Col>
+            </Row>
+            <br/>
+            <Row>
+                <Col>
+                {this.state.errorMessage ?
+                    <Alert variant="danger">
+                        {this.state.errorMessage}
+                    </Alert>
+                : null}
                 </Col>
             </Row>
             <Row>
                 <Col>
-                {this.state.errorMessage}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                <Card>
+                <Card className="Login-Box">
                     <Form>
-                        <Form.Group>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control id="username" placeholder="Username" onChange={this.handleChange}/>
+                        <Form.Group as={Row}>
+                            <Form.Label column sm={2}>Username:</Form.Label>
+                            <Col>
+                                <Form.Control id="username" placeholder="Username" onChange={this.handleChange}/>
+                            </Col>
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control id="password" placeholder="Password" onChange={this.handleChange}/>
+                        <Form.Group as={Row}>
+                            <Form.Label column sm={2}>Password:</Form.Label>
+                            <Col>
+                                <Form.Control id="password" placeholder="Password" onChange={this.handleChange}/>
+                            </Col>
                         </Form.Group>
-                        <Button variant="primary" onClick={this.handleLogin}>
+                        <Button id="login_button" variant="primary" onClick={this.handleLogin}>
                             Login
                         </Button>
                     </Form>

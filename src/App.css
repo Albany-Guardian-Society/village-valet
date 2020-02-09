@@ -1,38 +1,39 @@
+/*
+Team should agree on these so we can stay consistant :)
+Color Scheme Idea:
+Dark:     #
+Midtone:  #
+Light:    #
+Accent1:  #
+Accent2:  #
+*/
+
+:root {
+    --custom-dark: #000000;
+    --custom-mid: #AAAAAA;
+    --custom-light: #FFFFFF;
+}
+
+
 .App {
-  text-align: center;
+    text-align: center;
+    background-color: var(--custom-light);
+    min-height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Login {
+    height: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Login-Logo {
+    width: 50%;
+    height: auto;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.Login-Box {
+    padding: 20px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Navigation-Link {
+    text-decoration: none;
 }

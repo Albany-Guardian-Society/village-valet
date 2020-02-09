@@ -2,8 +2,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
+
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+
+import "../App.css";
 
 class Navigation extends Component {
     constructor(props) {
@@ -23,18 +32,28 @@ class Navigation extends Component {
 
     render() {
         return (
-            <React.Fragment>
-            <Navbar expand="lg" variant="light" bg="light">
-                <Link to="/Dashboard">
-                    <Navbar.Brand>Village Valet</Navbar.Brand>
-                </Link>
-                <Link to="/Scheduler"> Scheduler </Link>
-                <Link to="/Profiles"> Profiles </Link>
-                <Link to="/Metrics"> Metrics </Link>
+            <div>
+            <Navbar bg="light" variant="light">
+                <Navbar.Brand>
+                    <Link to="/Dashboard" style={{ textDecoration: 'none' }}>Village Valet</Link>
+                </Navbar.Brand>
+                <Nav className="mr-auto">
+                    <Nav.Link>
+                        <Link to="/Scheduler" style={{ textDecoration: 'none' }}>Scheduler</Link>
+                    </Nav.Link>
+                    <Nav.Link>
+                        <Link to="/Profiles" style={{ textDecoration: 'none' }}>Profiles</Link>
+                    </Nav.Link>
+                    <Nav.Link>
+                        <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
+                    </Nav.Link>
+                </Nav>
+                <Form inline>
                 <Button onClick={this.props.logout}> Logout </Button>
+                </Form>
             </Navbar>
             <br/>
-            </React.Fragment>
+            </div>
         );
     }
 }
