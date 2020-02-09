@@ -17,7 +17,7 @@ class Scheduler extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                Yo, This is a Scheduler page.
+                Scheduler page placeholder
             </Container>
         );
     }
