@@ -21,7 +21,6 @@ class Metrics extends Component {
 	}
 
     handleLogin() {
-        console.log("YO");
         this.props.updateAuth(1);
     }
 

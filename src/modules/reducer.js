@@ -1,7 +1,14 @@
 import _ from "lodash";
 
 const initialState = {
-    authenticated: false
+    authenticated: false,
+    ridebreakdown: {
+        id: "",
+        rider:'',
+        driver:'',
+        pickup: "",
+        dropoff: ""
+    }
 };
 
 const sCubeReducer = (state = initialState, action) => {
@@ -23,6 +30,13 @@ const sCubeReducer = (state = initialState, action) => {
 		newState.player_id = "";
         return newState;
     }
+
+    case "ridebreakdown": {
+        let newState = _.cloneDeep(state);
+        newState.ridebreakdown = action.payload;
+        return newState;
+    }
+
 
     default:
         return state;
