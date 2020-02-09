@@ -17,7 +17,7 @@ class Profiles extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                Yo, This is a Profiles page.
+                Profile page placeholder
             </Container>
         );
     }

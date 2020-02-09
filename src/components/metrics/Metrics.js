@@ -17,7 +17,7 @@ class Metrics extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                Yo, This is a Metrics page.
+                Metrics page placeholder
             </Container>
         );
     }
