@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Router, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 
 import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 
 class Navigation extends Component {

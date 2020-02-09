@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Container from "react-bootstrap/Container";
-
 import Login from "./components/Login.js";
 import Navigation from './components/Navigation.js';
 import Dashboard from './components/dashboard/Dashboard.js';
@@ -30,7 +28,7 @@ class App extends Component {
                     <Route path="/Scheduler" component={Scheduler}/>
                     <Route path="/Profiles" component={Profiles}/>
                     <Route path="/Metrics" component={Metrics}/>
-                    <Route path="/" component={Dashboard}/>
+                    <Route path="/" component={Error}/>
                 </Switch>
             </div>
             : <Login/>}

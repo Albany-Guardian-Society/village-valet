@@ -1,7 +1,8 @@
 import _ from "lodash";
 
 const initialState = {
-    authenticated: false
+    authenticated: false,
+    user: ""
 };
 
 const sCubeReducer = (state = initialState, action) => {
@@ -14,13 +15,13 @@ const sCubeReducer = (state = initialState, action) => {
     case "authenticate": {
         let newState = _.cloneDeep(state);
         newState.authenticated = true;
+        newState.user = action.payload;
         return newState;
     }
 
     case "logout": {
         let newState = _.cloneDeep(state);
         newState.authenticated = false;
-		newState.player_id = "";
         return newState;
     }
 
