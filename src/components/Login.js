@@ -17,7 +17,7 @@ import logo from "../assets/VillageValetLogo.jpg"
 
 import "../App.css";
 
-class Metrics extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -125,4 +125,4 @@ const mapDispatchToProps = dispatch => ({
     }),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Metrics));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
