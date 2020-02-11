@@ -33,19 +33,19 @@ class Navigation extends Component {
                 <Navbar.Brand>
                     <Link to="/Dashboard" style={{ textDecoration: 'none' }}>Village Valet</Link>
                 </Navbar.Brand>
-                <Nav className="mr-auto">
-                    <Nav.Link>
+                <Nav>
+                    <Nav.Item>
                         <Link to="/Scheduler" style={{ textDecoration: 'none' }}>Scheduler</Link>
-                    </Nav.Link>
-                    <Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
                         <Link to="/Profiles" style={{ textDecoration: 'none' }}>Profiles</Link>
-                    </Nav.Link>
-                    <Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
                         <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
-                    </Nav.Link>
+                    </Nav.Item>
                 </Nav>
                 <Form inline>
-                <Button onClick={this.props.logout}> Logout </Button>
+                    <Button onClick={this.props.logout}> Logout </Button>
                 </Form>
             </Navbar>
             <br/>
