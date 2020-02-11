@@ -12,7 +12,14 @@ import _ from "lodash";
 
 const initialState = {
     authenticated: false,
-    user: ""
+    user: "",
+    ridebreakdown: {
+        id: "",
+        rider:'',
+        driver:'',
+        pickup: "",
+        dropoff: ""
+    }
 };
 
 //The authentication should be cached for a period of time
@@ -37,6 +44,13 @@ const VillageReducer = (state = initialState, action) => {
         newState.authenticated = false;
         return newState;
     }
+
+    case "ridebreakdown": {
+        let newState = _.cloneDeep(state);
+        newState.ridebreakdown = action.payload;
+        return newState;
+    }
+
 
     default:
         return state;
