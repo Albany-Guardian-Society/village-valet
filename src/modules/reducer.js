@@ -1,5 +1,15 @@
 import _ from "lodash";
 
+// The reducer is an internal middle man that handles passing information from each
+// of the various components to something called the store.  The store is basically a
+// global state.  This state is also never edited, but rather a copy is made, updated
+// and then replaced.  This leads to come key benefits that escacpe me, but its "standard
+// practice" do still handle the reducer this way.
+
+// The reducer is "called" by using a dispatch.  These have a type and a payload.
+// The type is matched against a switch statement to perform a state update.
+// The payload is used to information from a component to the reducer and then save to store
+
 const initialState = {
     authenticated: false,
     user: "",
