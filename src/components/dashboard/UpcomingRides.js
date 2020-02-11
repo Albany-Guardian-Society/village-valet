@@ -39,7 +39,7 @@ class UpcomingRides extends Component {
     createTable = () => {
         let table = [];
         for (const ride of TEST) {
-            table.push(<tr> <button onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</button></tr>)
+            table.push(<tr key={ride.id}><td><button onClick={() => this.handleClick(ride)} >{'Ride Id: '+ ride.id}</button></td></tr>)
         }
         return table
     };
@@ -49,7 +49,11 @@ class UpcomingRides extends Component {
             <Card>
                 <Card.Header>Upcoming Rides</Card.Header>
                 <Card.Body>
-                    {this.createTable()}
+                    <table>
+                        <tbody>
+                            {this.createTable()}
+                        </tbody>
+                    </table>
                 </Card.Body>
             </Card>
         );

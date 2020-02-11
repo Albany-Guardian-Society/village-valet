@@ -39,7 +39,7 @@ class ActiveRides extends Component {
     createTable = () => {
         let table = [];
         for (const ride of TEST) {
-            table.push(<tr> <button onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</button></tr>)
+            table.push(<tr key={ride.id}><td><button onClick={() => this.handleClick(ride)} >{'Ride Id: '+ride.id}</button></td></tr>)
         }
         return table
     };
@@ -50,9 +50,11 @@ class ActiveRides extends Component {
             <Card>
                 <Card.Header>Active Rides</Card.Header>
                 <Card.Body>
-                    <table>
+                <table>
+                    <tbody>
                         {this.createTable()}
-                    </table>
+                    </tbody>
+                </table>
                 </Card.Body>
             </Card>
         );

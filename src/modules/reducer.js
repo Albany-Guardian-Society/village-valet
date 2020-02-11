@@ -12,7 +12,11 @@ import _ from "lodash";
 
 const initialState = {
     authenticated: false,
-    user: "",
+    operator: {
+        first_name: "",
+        last_name: "",
+        village_id: "",
+    },
     ridebreakdown: {
         id: "",
         rider:'',
@@ -35,7 +39,9 @@ const VillageReducer = (state = initialState, action) => {
     case "authenticate": {
         let newState = _.cloneDeep(state);
         newState.authenticated = true;
-        newState.user = action.payload;
+        newState.operator.first_name = action.payload.first_name;
+        newState.operator.last_name = action.payload.last_name;
+        newState.operator.village_id = action.payload.village;
         return newState;
     }
 
