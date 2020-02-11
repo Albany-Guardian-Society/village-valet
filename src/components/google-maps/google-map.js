@@ -13,7 +13,6 @@ class MapContainer extends Component {
 	}
 
     render() {
-        {console.log(process.env.REACT_APP_GOOGLE_MAPS_TOKEN)}
         return (
             <Map
                 google={this.props.google}
