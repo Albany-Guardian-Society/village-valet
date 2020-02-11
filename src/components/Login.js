@@ -17,7 +17,20 @@ import logo from "../assets/VillageValetLogo.jpg"
 
 import "../App.css";
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+// withRouter, firestore, bcrypt relate to the specific function of this page
+
+// The seconf section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+// Finally, the last three imports are for the logo and custom css
+
+//Components in a react webapp are classes (for the most part)
 class Login extends Component {
+    // The construction will be pretty constant.  The "props" are variables passed down from 
+    // the components parent (through an HTML attribute)
+    // The state is basically the member variables of a component.
     constructor(props) {
         super(props);
         this.state = {
@@ -26,13 +39,16 @@ class Login extends Component {
 			showPassword: false,
             errorMessage: ""
         };
+        // You basically just need to do this if you want access to state in a functiton
+        // other than render
 		this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
     }
 
+    // This is a lifecycle state function of react.  It is called every time a component loads.
+    // There are a couple of these methods, but DidMount is the most useful imo.
     componentDidMount() {
-        //When the enter key is pressed while on the login page
-        //Process the login
+        //When the enter key is pressed while on the login page, process the login
         document.addEventListener('keyup', (k) => {
             if (k.keyCode === 13) {
                 k.preventDefault();
@@ -41,6 +57,10 @@ class Login extends Component {
         })
     }
 
+    // I like to use a single handler for each "thing" I want a component to do.
+    // This function handles when a user changes the text fields on the page.  It saves
+    // information to the state.  I usually use this function to save information to the
+    // store (reducer) but the login is a niche case.
     handleChange(event) {
 		if (event.target.id === "username") {
 			this.setState({username: event.target.value})
@@ -49,6 +69,14 @@ class Login extends Component {
 		}
 	}
 
+    // This function handles the login and is called when the login button is pressed.
+    // It just does some firebase calls checking against the operators table.
+    // The two important React things are the "this.props.updateAuth" and "this.setState"
+    // The first as discussed above saves things only to this component. (Updating the state
+    // triggers a "re-render", so by chaning the text of errorMessage I can make it appear
+    // on the page without any code besids assigning a variable.)
+    // The this.props.updateAuth is a dispatch function (defined at the bottom of the file)
+    // It passes a message to the reducer stack to be "reduced" into the store.
     handleLogin() {
         //Verify that the username and password match operator credetials
         firestore.collection("operators").where("username", "==", this.state.username.toLowerCase()).get()
@@ -57,6 +85,7 @@ class Login extends Component {
             if (data.length === 1) {
                 if (bcrypt.compareSync(this.state.password, data[0].password)) {
                     this.props.updateAuth(data[0].username);
+                    //This is part of react-router and allows forced page routing
                     this.props.history.push('/Dashboard')
                 } else {
                     this.setState({errorMessage: "Login Failed: Your username/password do not match."})
@@ -67,6 +96,13 @@ class Login extends Component {
         })
     }
 
+    // render() is the bread and butter of react.  JSX (a mix of JS and HTML) is used to
+    // create the actual layout of the page.  This can basically be thought of as writing
+    // HTML and then using { } whenever you want to include code.  One example is in the second
+    // <Row> which includes a ternery that causes a conditional render of the <Alert> which also
+    // uses {this.state.errorMessage} to display the errorMessage as the elemets innerHTML
+    // The second example is the some of the attributes like sm={2} or onClick={this.handleLogin}
+    // In these cases the value of the attribue is being supplied as "code" instead of text
     render() {
         return (
             <Container className="Login">
@@ -114,10 +150,13 @@ class Login extends Component {
     }
 }
 
+// mapStateToProps and mapDispatchToProps are part of the Redux implementation.
+// mapStateToProps allows you to read variables from the store
 const mapStateToProps = state => ({
     authenticated: state.authenticated
 });
 
+//mapDispatchToProps allows you to define function that pass information to the reducer
 const mapDispatchToProps = dispatch => ({
     updateAuth: (user) => dispatch({
         type: "authenticate",
@@ -125,4 +164,6 @@ const mapDispatchToProps = dispatch => ({
     }),
 });
 
+//This is the export it is REQUIRED unless a compenet will never have a parent or need to be imported
+// Most components will not need the withRouter(), it exists here because of the forced page routing
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
