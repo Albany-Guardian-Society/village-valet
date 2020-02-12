@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 
 import Card from "react-bootstrap/Card";
 
+import RidesTable from "./RidesTable";
+
 const TEST = [
     {
         id:1234,
@@ -32,27 +34,12 @@ class ActiveRides extends Component {
 	handleChange(event) {
 	}
 
-    handleClick = ride => {
-        this.props.changeRideBreakdown(ride);
-    };
-
-    createTable = () => {
-        let table = [];
-        for (const ride of TEST) {
-            table.push(<tr> <button onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</button></tr>)
-        }
-        return table
-    };
-
-
     render() {
         return (
             <Card>
                 <Card.Header>Active Rides</Card.Header>
-                <Card.Body>
-                    <table>
-                        {this.createTable()}
-                    </table>
+                <Card.Body style={{alignItems:'center'}}>
+                    <RidesTable rides = {TEST}/>
                 </Card.Body>
             </Card>
         );

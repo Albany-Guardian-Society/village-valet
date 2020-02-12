@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import Card from "react-bootstrap/Card"
+import RidesTable from "./RidesTable";
 
 const TEST = [
     {
@@ -31,25 +32,12 @@ class UpcomingRides extends Component {
 	handleChange(event) {
 	}
 
-
-    handleClick = ride => {
-        this.props.changeRideBreakdown(ride);
-    };
-
-    createTable = () => {
-        let table = [];
-        for (const ride of TEST) {
-            table.push(<tr> <button onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</button></tr>)
-        }
-        return table
-    };
-
     render() {
         return (
             <Card>
                 <Card.Header>Upcoming Rides</Card.Header>
                 <Card.Body>
-                    {this.createTable()}
+                    <RidesTable rides = {TEST}/>
                 </Card.Body>
             </Card>
         );
@@ -57,6 +45,7 @@ class UpcomingRides extends Component {
 }
 
 const mapStateToProps = state => ({
+    ride: state.ridebreakdown
 });
 
 const mapDispatchToProps = dispatch => ({
