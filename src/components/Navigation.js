@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 
 import Navbar from "react-bootstrap/Navbar";
 import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
 import "../App.css";
