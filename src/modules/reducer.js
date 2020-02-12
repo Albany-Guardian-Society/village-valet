@@ -45,7 +45,7 @@ const VillageReducer = (state = initialState, action) => {
         newState.authenticated = true;
         newState.operator.first_name = action.payload.first_name;
         newState.operator.last_name = action.payload.last_name;
-        newState.operator.village_id = action.payload.village;
+        newState.operator.village_id = action.payload.village_id;
         return newState;
     }
 
