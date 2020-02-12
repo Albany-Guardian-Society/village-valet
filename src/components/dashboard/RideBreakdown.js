@@ -17,7 +17,6 @@ class RideBreakdown extends Component {
 	}
 
 	displayDetails() {
-        console.log(this.props.ride)
         if (this.props.ride === undefined) {
             return <div></div>
         }

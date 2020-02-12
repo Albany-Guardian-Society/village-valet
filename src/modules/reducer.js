@@ -11,7 +11,8 @@ import _ from "lodash";
 // The payload is used to information from a component to the reducer and then save to store
 
 const initialState = {
-    authenticated: true,
+    authenticated: false,
+    loaded: false,
     operator: {
         first_name: "",
         last_name: "",
@@ -23,7 +24,10 @@ const initialState = {
         driver:'',
         pickup: "",
         dropoff: ""
-    }
+    },
+    village: {},
+    users: {},
+    rides: {}
 };
 
 //The authentication should be cached for a period of time
@@ -48,6 +52,27 @@ const VillageReducer = (state = initialState, action) => {
     case "logout": {
         let newState = _.cloneDeep(state);
         newState.authenticated = false;
+        newState.loaded = false;
+        return newState;
+    }
+
+    case "load": {
+        let newState = _.cloneDeep(state);
+        switch (action.payload.tag) {
+            case "loaded":
+                newState.loaded = action.payload.data;
+                break;
+            case "village":
+                newState.village = action.payload.data;
+                break;
+            case "users":
+                newState.users = action.payload.data;
+                break;
+            case "rides":
+                newState.rides = action.payload.data;
+                break;
+            default:
+        }
         return newState;
     }
 

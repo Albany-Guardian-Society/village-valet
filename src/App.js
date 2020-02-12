@@ -4,8 +4,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import "./App.css";
 
-import Login from "./components/Login.js";
+import LoadData from "./components/LoadData.js";
+
 import Navigation from './components/Navigation.js';
+import Login from "./components/Login.js";
 import Dashboard from './components/dashboard/Dashboard.js';
 import Scheduler from './components/scheduler/Scheduler.js';
 import Profiles from './components/profiles/Profiles.js';
@@ -24,16 +26,18 @@ class App extends Component {
                     crossOrigin="anonymous"
                 />
                 {this.props.authenticated ?
-                    <div>
-                <Navigation />
-                    <Switch>
-                        <Route path="/Dashboard" component={Dashboard}/>
-                        <Route path="/Scheduler" component={Scheduler}/>
-                        <Route path="/Profiles" component={Profiles}/>
-                        <Route path="/Metrics" component={Metrics}/>
-                        <Route path="/" component={Error}/>
-                    </Switch>
-                </div>
+                    this.props.loaded ?
+                        <div>
+                            <Navigation />
+                            <Switch>
+                                <Route path="/Dashboard" component={Dashboard}/>
+                                <Route path="/Scheduler" component={Scheduler}/>
+                                <Route path="/Profiles" component={Profiles}/>
+                                <Route path="/Metrics" component={Metrics}/>
+                                <Route path="/" component={Error}/>
+                            </Switch>
+                        </div>
+                    : <LoadData/>
                 : <Login/>}
                 </BrowserRouter>
             </div>
@@ -42,7 +46,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    authenticated: state.authenticated
+    authenticated: state.authenticated,
+    loaded: state.loaded
 });
 
 const mapDispatchToProps = dispatch => ({

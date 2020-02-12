@@ -41,7 +41,7 @@ class Navigation extends Component {
                 <Col>
                     <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
                 </Col>
-                <Col/>
+                <Col><Button variant="dark" onClick={this.props.debug}> DEBUG </Button></Col>
                 <Col style={{textAlign:"right"}}>
                     <span>Operator:&nbsp;{this.props.operator}</span>
                 </Col>
@@ -64,6 +64,10 @@ const mapDispatchToProps = dispatch => ({
         type: "logout",
         payload: null
     }),
+    debug: () => dispatch({
+        type: "dump_store",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
