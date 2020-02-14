@@ -18,7 +18,6 @@ class LoadData extends Component {
 	componentDidMount() {
         //Load the villages
         this.setState({message: "Loading Village"});
-        console.log(this.props.village_id);
         firestore.collection("villages").where("village_id", "==", this.props.village_id).get()
         .then(querySnapshot => {
             const data = querySnapshot.docs.map(doc => doc.data());

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-import Card from "react-bootstrap/Card"
-import MapContainer from "../google-maps/google-map";
+import Card from "react-bootstrap/Card";
+import MapContainer from "../google-maps/MapContainer";
 
 class RideBreakdown extends Component {
     constructor(props) {
