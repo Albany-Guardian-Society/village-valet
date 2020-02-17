@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav"
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 
 import Ledger from "./Ledger.js"
+import Riders from "./Riders";
 
 class Metrics extends Component {
     constructor(props) {
@@ -19,13 +21,26 @@ class Metrics extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
-	handleChange(event) {
-	}
+	handleChange(value) {
+        this.setState({metric_options:value})
+
+    }
+
+	changeTable() {
+        switch (this.state.metric_options) {
+            case "ledger":
+                return (<Ledger/>);
+            case "riders":
+                return (<Riders/>);
+            default:
+                return(<Ledger/>);
+        }
+    }
 
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                <ButtonToolbar style={{padding:'5px'}}
+                <ButtonToolbar style={{paddingBottom:'1.5%'}}
                     className="justify-content-between"
                     aria-label="Toolbar with Button groups"
                 >
@@ -45,21 +60,15 @@ class Metrics extends Component {
                     </InputGroup>
                 </ButtonToolbar>
 
-                <Nav variant="pills" defaultActiveKey="/Metrics">
-                    <Nav.Item>
-                        <Nav.Link eventKey="/Metrics">Ledger</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="link-1">Drivers</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="link-2">Riders</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="link-3">Reports</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                <Ledger/>
+                <ButtonToolbar style={{paddingBottom:'1%'}}>
+                    <ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
+                        <ToggleButton id='ledger'  value={'ledger'}>Ledger</ToggleButton>
+                        <ToggleButton id='riders' value={'riders'}>Riders</ToggleButton>
+                        <ToggleButton id='driver' value={'driver'}>Drivers</ToggleButton>
+                        <ToggleButton id='reports'  value={'reports'}>Riders</ToggleButton>
+                    </ToggleButtonGroup>
+                </ButtonToolbar>
+                {this.changeTable()}
             </Container>
         );
     }

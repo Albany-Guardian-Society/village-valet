@@ -4,26 +4,22 @@ import Table from "react-bootstrap/Table";
 
 const TEST = [
     {
-        id:1234,
+        riderID:123434,
         rider:'Rider Name',
-        driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
         mileage: 6,
-        timestamp: 1400
+        numberRides: 2,
+        villageID: 1
     },
     {
-        id:5555,
+        riderID:5555,
         rider:'Rider Name',
-        driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
         mileage: 6,
-        timestamp: 1400
+        numberRides: 3,
+        villageID: 5
     }
 ];
 
-class Ledger extends Component {
+class Riders extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,33 +35,27 @@ class Ledger extends Component {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>Ride ID</th>
-                    <th>Driver</th>
+                    <th>Rider ID</th>
                     <th>Rider</th>
-                    <th>Origin</th>
-                    <th>Destination</th>
+                    <th>No. Rides</th>
                     <th>Mileage</th>
-                    <th>Timestamp</th>
+                    <th>Village ID</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{TEST[0].id}</td>
-                    <td>{TEST[0].driver}</td>
+                    <td>{TEST[0].riderID}</td>
                     <td>{TEST[0].rider}</td>
-                    <td>{TEST[0].pickup}</td>
-                    <td>{TEST[0].dropoff}</td>
+                    <td>{TEST[0].numberRides}</td>
                     <td>{TEST[0].mileage}</td>
-                    <td>{TEST[0].timestamp}</td>
+                    <td>{TEST[0].villageID}</td>
                 </tr>
                 <tr>
-                    <td>{TEST[1].id}</td>
-                    <td>{TEST[1].driver}</td>
+                    <td>{TEST[1].riderID}</td>
                     <td>{TEST[1].rider}</td>
-                    <td>{TEST[1].pickup}</td>
-                    <td>{TEST[1].dropoff}</td>
+                    <td>{TEST[1].numberRides}</td>
                     <td>{TEST[1].mileage}</td>
-                    <td>{TEST[1].timestamp}</td>
+                    <td>{TEST[1].villageID}</td>
                 </tr>
                 </tbody>
             </Table>
@@ -79,4 +69,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Ledger);
+export default connect(mapStateToProps, mapDispatchToProps)(Riders);
