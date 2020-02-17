@@ -4,22 +4,22 @@ import Table from "react-bootstrap/Table";
 
 const TEST = [
     {
-        riderID:123434,
-        rider:'Rider Name',
+        driverID:123434,
+        driver:'Rider Name',
         mileage: 6,
         numberRides: 2,
-        villageID: 1
+        volunteerHours: 1
     },
     {
-        riderID:5555,
-        rider:'Rider Name',
+        driverID:5555,
+        driver:'Rider Name',
         mileage: 6,
         numberRides: 3,
-        villageID: 5
+        volunteerHours: 5
     }
 ];
 
-class Riders extends Component {
+class Drivers extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,27 +35,27 @@ class Riders extends Component {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>Rider ID</th>
-                    <th>Rider</th>
+                    <th>Driver ID</th>
+                    <th>Driver</th>
                     <th>No. Trips</th>
                     <th>Mileage</th>
-                    <th>Village ID</th>
+                    <th>Volunteer Hours</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{TEST[0].riderID}</td>
-                    <td>{TEST[0].rider}</td>
+                    <td>{TEST[0].driverID}</td>
+                    <td>{TEST[0].driver}</td>
                     <td>{TEST[0].numberRides}</td>
                     <td>{TEST[0].mileage}</td>
-                    <td>{TEST[0].villageID}</td>
+                    <td>{TEST[0].volunteerHours}</td>
                 </tr>
                 <tr>
-                    <td>{TEST[1].riderID}</td>
-                    <td>{TEST[1].rider}</td>
+                    <td>{TEST[1].driverID}</td>
+                    <td>{TEST[1].driver}</td>
                     <td>{TEST[1].numberRides}</td>
                     <td>{TEST[1].mileage}</td>
-                    <td>{TEST[1].villageID}</td>
+                    <td>{TEST[1].volunteerHours}</td>
                 </tr>
                 </tbody>
             </Table>
@@ -69,4 +69,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Riders);
+export default connect(mapStateToProps, mapDispatchToProps)(Drivers);

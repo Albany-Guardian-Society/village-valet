@@ -11,7 +11,8 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
 import Ledger from "./Ledger.js"
-import Riders from "./Riders";
+import Riders from "./Riders.js";
+import Drivers from "./Drivers.js";
 
 class Metrics extends Component {
     constructor(props) {
@@ -32,6 +33,8 @@ class Metrics extends Component {
                 return (<Ledger/>);
             case "riders":
                 return (<Riders/>);
+            case "drivers":
+                return (<Drivers/>);
             default:
                 return(<Ledger/>);
         }
@@ -64,8 +67,8 @@ class Metrics extends Component {
                     <ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
                         <ToggleButton id='ledger'  value={'ledger'}>Ledger</ToggleButton>
                         <ToggleButton id='riders' value={'riders'}>Riders</ToggleButton>
-                        <ToggleButton id='driver' value={'driver'}>Drivers</ToggleButton>
-                        <ToggleButton id='reports'  value={'reports'}>Riders</ToggleButton>
+                        <ToggleButton id='drivers' value={'drivers'}>Drivers</ToggleButton>
+                        <ToggleButton id='reports'  value={'reports'}>Reports</ToggleButton>
                     </ToggleButtonGroup>
                 </ButtonToolbar>
                 {this.changeTable()}
