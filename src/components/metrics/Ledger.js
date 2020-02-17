@@ -47,7 +47,7 @@ class Ledger extends Component {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>RideID</th>
+                    <th>Ride ID</th>
                     <th>Driver</th>
                     <th>Rider</th>
                     <th>Origin</th>

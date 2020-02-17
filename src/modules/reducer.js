@@ -11,7 +11,7 @@ import _ from "lodash";
 // The payload is used to information from a component to the reducer and then save to store
 
 const initialState = {
-    authenticated: false,
+    authenticated: true,
     loaded: false,
     operator: {
         first_name: "",
