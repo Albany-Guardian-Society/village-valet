@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
+import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
@@ -14,42 +16,38 @@ class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user_type: "",
-            personal_information: {
-                first_name: "",
-                last_name: "",
-                email: "",
-                phone_mobile: "",
-                phone_home: "",
-                preferred_communication: "",
-
-            }
+            errorMessage: ""
         };
 		this.handleChange = this.handleChange.bind(this);
+        this.validateRegistration = this.validateRegistration.bind(this);
     }
 
 	handleChange(event) {
-        console.log(event.target.id)
         switch(event.target.id) {
-            case "reg_type":
-                this.setState({account_type: event.target.value})
+            default:
+                this.setState({[event.target.id]: event.target.value})
                 break;
-            case "reg_first_name":
-                this.setState({account_type: event.target.value})
-                break;
-            case "reg_last_name":
-                this.setState({account_type: event.target.value})
-                break;
-            case "reg_type":
-                this.setState({account_type: event.target.value})
-                break;
-            default: break;
         }
 	}
 
+    validateRegistration() {
+        //Validate the registration
+        // Might want to have a "list of errors and then display a bunch of them? might be ugly"
+        // THis solution works for now
+        if (!this.state.reg_type) {
+            this.setState({errorMessage: "An \"Account Type\" is REQUIRED!"})
+        }
+        if (!this.state.reg_first_name) {
+            this.setState({errorMessage: "A \"First Name\" is REQUIRED!"})
+        }
+    }
+
     render() {
         return (
-        <div style={{paddingLeft: "5%", paddingRight: "5%"}}>
+        <div style={{paddingLeft: "3%", paddingRight: "3%"}}>
+            {this.state.errorMessage ?
+                <Alert variant="danger">{this.state.errorMessage}</Alert>
+            : null}
             <div style={{width: "50%", float:"left"}}>
                 <Card>
                     <Card.Body> <Row>
@@ -84,20 +82,30 @@ class Register extends Component {
                             <Form.Label column sm={5} lg={3}>Communication Preference:</Form.Label>
                             <Col><Form.Control as="select" id="reg_pref_comm" onChange={this.handleChange}>
                                 <option value="" label=""/>
-                                <option value="home" label="Home Phone"/>
                                 <option value="mobile" label="Mobile Phone"/>
+                                <option value="home" label="Home Phone"/>
                             </Form.Control></Col>
                         </Row> <Row>
                             <Form.Label column sm={5} lg={3}>Preferred Language:</Form.Label>
                             <Col><Form.Control as="select" id="reg_language" onChange={this.handleChange}>
+                                {/*https://names.mongabay.com/languages/counties/Albany_County_NY.html*/}
                                 <option/>
+                                <option value="english" label="English"/>
+                                <option value="spanish" label="Spanish"/>
+                                <option value="french" label="French"/>
+                                <option value="italian" label="Italian"/>
+                                <option value="chinese" label="Chinese"/>
+                                <option value="korean" label="Korean"/>
+                                <option value="arabic" label="Arabic"/>
                             </Form.Control></Col>
                         </Row>
                     </Card.Body>
                 </Card>
             </div>
             <div style={{width: "50%", float:"right"}}>
-                Yo, This is a Register page.
+                <Button onClick={this.validateRegistration}>
+                        Register
+                </Button>
             </div>
         </div>
         );
