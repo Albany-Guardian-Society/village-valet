@@ -11,6 +11,7 @@ import Login from "./components/Login.js";
 import Dashboard from './components/dashboard/Dashboard.js';
 import Scheduler from './components/scheduler/Scheduler.js';
 import Profiles from './components/profiles/Profiles.js';
+import Register from './components/profiles/Register.js';
 import Metrics from './components/metrics/Metrics.js';
 import Error from './components/Error.js';
 
@@ -32,6 +33,7 @@ class App extends Component {
                             <Switch>
                                 <Route path="/Dashboard" component={Dashboard}/>
                                 <Route path="/Scheduler" component={Scheduler}/>
+                                <Route path="/Profiles/Register" component={Register}/>
                                 <Route path="/Profiles" component={Profiles}/>
                                 <Route path="/Metrics" component={Metrics}/>
                                 <Route path="/" component={Error}/>
