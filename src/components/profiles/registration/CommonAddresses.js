@@ -31,8 +31,7 @@ class CommonAddresses extends Component {
         let body = [];
         let index = 0;
         if (this.props.addresses.length === 0) body.push(<br key={"break"}/>);
-        for (let a in this.props.addresses) {
-            let address = this.props.addresses[a];
+        for (let a in this.props.addresses) { // eslint-disable-line no-unused-vars
             body.push(
                 <Card.Body key={index}>
                     <Row className="reg_row">
@@ -91,7 +90,7 @@ class CommonAddresses extends Component {
                         </Button>
                     </Col>
                 </Row>
-                <h6/>
+                <h6>{" "}</h6>
             </Card>
         );
     }

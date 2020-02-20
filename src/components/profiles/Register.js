@@ -11,13 +11,14 @@ import CommonAddresses from "./registration/CommonAddresses.js";
 import EmergencyInformation from "./registration/EmergencyInformation.js";
 import GeneralInformation from "./registration/GeneralInformation.js";
 import SpecialAccommodations from "./registration/SpecialAccommodations.js";
+import Insurance from "./registration/Insurance.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
 // Once a user is made it should be added to the store so another pull is not needed tho!
 
-const DRIVER_MAX = 4;
+const DRIVER_MAX = 3;
 const RIDER_MAX = 3;
 
 class Register extends Component {
@@ -56,6 +57,9 @@ class Register extends Component {
         if (this.props.registration.user_type === "driver") {
             switch(this.state.page) {
                 case 0: return (<GeneralInformation/>);
+                case 1: return (<EmergencyInformation/>);
+                case 2: return (<Insurance/>);
+                case 3: return (<VehicleInformation/>);
                 default: break;
             }
         } else {
@@ -75,16 +79,23 @@ class Register extends Component {
         // THis solution works for now
         if (!this.props.registration.user_type) {
             this.setState({errorMessage: "An \"Account Type\" is REQUIRED!"})
-            return 0
+            return false
         }
+        //TEMPORARY
+        if (this.props.registration.user_type === "driver") {
+            this.setState({errorMessage: "TEMPORARY: DRIVERS CANNOT BE CREATED"})
+            return false
+        }
+
         if (!this.props.registration.personal_info.first_name) {
             this.setState({errorMessage: "A \"First Name\" is REQUIRED!"})
-            return 0
+            return false
         }
 
         // Once all validation passes submit the information to the firebase
         // Also add to the local list of users so a "re-pull" is not required immediatly
         this.submitRegistration();
+        return true
     }
 
     submitRegistration() {
@@ -113,7 +124,7 @@ class Register extends Component {
                 <Col> <Button variant="dark" size="lg" onClick={() => this.changePage(-1)} disabled={this.state.page === 0}>
                     {"< Prev"}
                 </Button> </Col>
-                <Col> <Button variant="primary" size="lg" onClick={this.validateRegistration}>
+                <Col> <Button variant="primary" size="lg" onClick={() => {if (!this.validateRegistration()) window.scrollTo(0, 0);}}>
                     Validate and Register
                 </Button> </Col>
                 <Col>

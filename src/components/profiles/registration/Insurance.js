@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-class VehicleInformation extends Component {
+class Insurance extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +15,7 @@ class VehicleInformation extends Component {
     render() {
         return (
             <div>
-                Vehicle Information
+                Insurance Information
             </div>
         );
     }
@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(VehicleInformation);
+export default connect(mapStateToProps, mapDispatchToProps)(Insurance);
