@@ -15,7 +15,7 @@ class Error extends Component {
     render() {
         return (
             <div>
-                Yo, This is a Error page.
+                The page you've requested cannot be found.
             </div>
         );
     }
