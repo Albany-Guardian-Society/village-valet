@@ -69,7 +69,7 @@ const initialState = {
     users: {},
     rides: {},
     // This is
-    active_profile: BLANK_PROFILE,
+    active_profile: _.cloneDeep(BLANK_PROFILE),
 
 };
 
@@ -119,6 +119,18 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "add_user": {
+        let newState = _.cloneDeep(state);
+        newState.users.push(action.payload);
+        return newState;
+    }
+
+    case "clear_active_profile": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile = _.cloneDeep(BLANK_PROFILE);
+        return newState;
+    }
+
     case "ridebreakdown": {
         let newState = _.cloneDeep(state);
         newState.ridebreakdown = action.payload;
@@ -150,7 +162,6 @@ const VillageReducer = (state = initialState, action) => {
             }
         return newState;
     }
-
 
     default:
         return state;

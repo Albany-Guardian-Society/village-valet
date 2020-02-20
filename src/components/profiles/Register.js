@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import firestore from "../../modules/firestore.js";
 
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
@@ -80,7 +81,21 @@ class Register extends Component {
             this.setState({errorMessage: "A \"First Name\" is REQUIRED!"})
             return 0
         }
-        return 1
+
+        // Once all validation passes submit the information to the firebase
+        // Also add to the local list of users so a "re-pull" is not required immediatly
+        this.submitRegistration();
+    }
+
+    submitRegistration() {
+        console.log(this.props.registration);
+        firestore.collection("users").add(this.props.registration)
+        .then(() => {
+            this.props.addUser(this.props.registration);
+            this.props.clearRegistration();
+            //This is part of react-router and allows forced page routing
+            this.props.history.push('/Profiles');
+        })
     }
 
     render() {
@@ -118,6 +133,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    addUser: (user) => dispatch({
+        type: "add_user",
+        payload: user
+    }),
+    clearRegistration: () => dispatch({
+        type: "clear_active_profile",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

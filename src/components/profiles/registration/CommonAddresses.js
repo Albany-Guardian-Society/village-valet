@@ -22,7 +22,6 @@ class CommonAddresses extends Component {
         let field = event.target.id.split("|")[1];
         switch (field) {
             default:
-                console.log(event.target.id)
                 this.props.updateRegistration("addresses", id+"|"+field, event.target.value);
                 break;
         }

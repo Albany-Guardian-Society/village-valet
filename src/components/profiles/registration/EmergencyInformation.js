@@ -56,6 +56,7 @@ class EmergencyInformation extends Component {
                         <Form.Label column sm={4}  lg={2}>Communication Preference:</Form.Label>
                         <Col><Form.Control as="select" id="reg_preferred_communication" onChange={this.handleChange} value={this.props.emergency_contact.preferred_communication}>
                             <option value="" label=""/>
+                            <option value="email" label="Email"/>
                             <option value="mobile" label="Mobile Phone"/>
                             <option value="home" label="Home Phone"/>
                         </Form.Control></Col>
