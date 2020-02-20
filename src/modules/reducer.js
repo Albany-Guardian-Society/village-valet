@@ -10,6 +10,41 @@ import _ from "lodash";
 // The type is matched against a switch statement to perform a state update.
 // The payload is used to information from a component to the reducer and then save to store
 
+const ADDRESS_TEMPLATE = {
+    name: "",
+    line_1: "",
+    line_2: "",
+    city: "",
+    state: "",
+    zip: "",
+    special_instructions: "",
+}
+
+const BLANK_PROFILE = {
+    user_type: "",
+    village_id: "",
+    personal_info: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+        language: []
+    },
+    emergency_contact: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+        relationship: ""
+    },
+    addresses: [ADDRESS_TEMPLATE,],
+    accommodations: {},
+}
+
 const initialState = {
     authenticated: true,
     loaded: false,
@@ -25,17 +60,12 @@ const initialState = {
         pickup: "",
         dropoff: ""
     },
-    village: {},
+    villages: {},
     users: {},
     rides: {},
-    registration: {
-        user_type: "",
-        village_id: "",
-        personal_info: {},
-        emergency_contact: {},
-        addresses: {},
-        accommodations: {},
-    },
+    // This is
+    active_profile: BLANK_PROFILE,
+
 };
 
 //The authentication should be cached for a period of time
@@ -70,8 +100,8 @@ const VillageReducer = (state = initialState, action) => {
             case "loaded":
                 newState.loaded = action.payload.data;
                 break;
-            case "village":
-                newState.village = action.payload.data;
+            case "villages":
+                newState.villages = action.payload.data;
                 break;
             case "users":
                 newState.users = action.payload.data;
@@ -94,13 +124,20 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
             switch (action.payload.id) {
                 case "user_type":
-                    newState.registration[action.payload.id] = action.payload.value
+                    newState.active_profile[action.payload.id] = action.payload.value;
                     break;
                 case "village_id":
-                    newState.registration[action.payload.id] = action.payload.value
+                    newState.active_profile[action.payload.id] = action.payload.value;
+                    break;
+                case "add_address":
+                    newState.active_profile.addresses.push(_.cloneDeep(ADDRESS_TEMPLATE));
                     break;
                 default:
-                    newState.registration[action.payload.type][action.payload.id] = action.payload.value
+                    if (action.payload.type === "addresses") {
+                        newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                    } else {
+                        newState.active_profile[action.payload.type][action.payload.id] = action.payload.value;
+                    }
                     break;
             }
         return newState;

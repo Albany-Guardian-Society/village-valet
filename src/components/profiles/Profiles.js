@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
 import Container from "react-bootstrap/Container";
@@ -17,6 +18,7 @@ class Profiles extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
+            <Link to="/Profiles/Register" style={{ textDecoration: 'none' }}>Register</Link>
                 Profile page placeholder
             </Container>
         );

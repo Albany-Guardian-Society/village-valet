@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 import CommonAddresses from "./registration/CommonAddresses.js";
@@ -38,7 +36,6 @@ class Register extends Component {
 
     changePage(increment) {
         let proposed_page = this.state.page + increment;
-        console.log(proposed_page);
         //Handle minimum
         if (proposed_page < 0) proposed_page = 0;
 
@@ -110,13 +107,14 @@ class Register extends Component {
                     </Button>
                 </Col>
             </Row>
+            <br/>
         </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    registration: state.registration
+    registration: state.active_profile
 });
 
 const mapDispatchToProps = dispatch => ({
