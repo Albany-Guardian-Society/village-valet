@@ -31,6 +31,7 @@ class CommonAddresses extends Component {
     generateAddressForms() {
         let body = [];
         let index = 0;
+        if (this.props.addresses.length === 0) body.push(<br key={"break"}/>);
         for (let a in this.props.addresses) {
             let address = this.props.addresses[a];
             body.push(
@@ -38,6 +39,11 @@ class CommonAddresses extends Component {
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>Address Name:</Form.Label>
                         <Col><Form.Control id={"addr_"+index+"|name"} placeholder="--Address Name--" onChange={this.handleChange} value={this.props.addresses[index].name}/></Col>
+                        <Col sm={3} lg={2}>
+                            <Button id={index} variant="danger" onClick={(e) => this.props.removeAddress(e.target.id)}>
+                                Remove Address
+                            </Button>
+                        </Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>Address Line 1:</Form.Label>
@@ -57,11 +63,12 @@ class CommonAddresses extends Component {
                         <Form.Label column sm={2} lg={2} >Special Instructions:</Form.Label>
                         <Col><Form.Control as="textarea" rows={5} id={"addr_"+index+"|special_instructions"}
                             placeholder="Please include any additional information that a driver would need to know when picking up or dropping off from this location."
-                            onChange={this.handleChange} value={""}
+                            onChange={this.handleChange}
                             value={this.props.addresses[index].special_instructions}/></Col>
                     </Row>
                 </Card.Body>
             )
+            //Divide all the addresses (do not place a break after the last value)
             if (index !== this.props.addresses.length-1) body.push(<hr key={index + "_break"}/>);
 
             index++;
@@ -111,6 +118,14 @@ const mapDispatchToProps = dispatch => ({
             type: null,
             id: "add_address",
             value: null
+        }
+    }),
+    removeAddress: (id) => dispatch({
+        type: "registration",
+        payload: {
+            type: null,
+            id: "remove_address",
+            value: id
         }
     }),
 });

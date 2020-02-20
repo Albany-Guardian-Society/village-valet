@@ -42,7 +42,12 @@ const BLANK_PROFILE = {
         relationship: ""
     },
     addresses: [ADDRESS_TEMPLATE,],
-    accommodations: {},
+    accommodations: {
+        allergies: "",
+        mobility_aid: "",
+        smoke_preference: "",
+        special: ""
+    },
 }
 
 const initialState = {
@@ -131,6 +136,9 @@ const VillageReducer = (state = initialState, action) => {
                     break;
                 case "add_address":
                     newState.active_profile.addresses.push(_.cloneDeep(ADDRESS_TEMPLATE));
+                    break;
+                case "remove_address":
+                    newState.active_profile.addresses.splice(action.payload.value, 1);
                     break;
                 default:
                     if (action.payload.type === "addresses") {
