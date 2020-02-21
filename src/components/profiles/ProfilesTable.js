@@ -1,53 +1,49 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-import Table from "react-bootstrap/Table";
-
-
 
 class ProfilesTable extends Component {
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = {
+        this.state={
         };
+        this.generateTableData = this.generateTableData.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
-    }
+    generateTableData(){
+        let res=[];
+        let tableData = this.props.users;
+        for(let i =0; i < tableData.length; i++){
+            res.push(
+                <tr >
+                    <td key={this.props.users[i].id}>{this.props.users[i].id}</td>
+                    <td key={this.props.users[i].first_name}>{this.props.users[i].first_name}</td>
+                    <td key= {this.props.users[i].last_name}>{this.props.users[i].last_name}</td>
 
-    render() {
-        return (
-            <Table striped bordered hover variant="dark">
-                <thead>
-                <tr>
-                    <th>ID #</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Profile Type</th>
                 </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td colSpan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
-                </tbody>
-            </Table>
-        );
+            )
+        }
+        return res;
+    }
+    render(){
+        return(
+            <div>
+                <table className="table  table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID #</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Profile Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.generateTableData()}
+                    </tbody>
+                </table>
+            </div>
+        )
     }
 }
 
@@ -55,6 +51,7 @@ class ProfilesTable extends Component {
 
 
 const mapStateToProps = state => ({
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
