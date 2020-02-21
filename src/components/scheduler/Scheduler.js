@@ -40,19 +40,14 @@ class Scheduler extends Component {
         switch (this.state.scheduler_page) {
             case 0: //Rider
                 return (<SelectRider/>);
-                break;
             case 1: //Info
                 return (<RideInformation/>);
-                break;
             case 2: //Driver
                 return (<SelectDriver/>);
-                break;
             case 3: //Confirm
                 return (<Confirmation/>);
-                break;
             default:
                 return(<SelectRider/>);
-                break;
         }
     }
 
