@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import Container from "react-bootstrap/Container";
 import SearchBar from "./SearchBar";
-import ProfilesTable from "./ProfilesTable";
+import ProfileTable from "./ProfileTable";
 
 class Profiles extends Component {
     constructor(props) {
@@ -22,18 +22,16 @@ class Profiles extends Component {
         return (
             <Container style={{minWidth: "100%"}}>
                 <Link to="/Profiles/Register" style={{ textDecoration: 'none' }}>Register</Link>
-                <SearchBar></SearchBar>
-                <ProfilesTable></ProfilesTable>
+                <SearchBar/>
+                <ProfileTable/>
             </Container>
         );
     }
 }
 
 
-//let tabledate = this.props.users
 
 const mapStateToProps = state => ({
-    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
