@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
+
 import Container from "react-bootstrap/Container";
+import SearchBar from "./SearchBar";
+import ProfilesTable from "./ProfilesTable";
 
 class Profiles extends Component {
     constructor(props) {
@@ -17,11 +20,15 @@ class Profiles extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                Profile page placeholder
+                <SearchBar></SearchBar>
+                <ProfilesTable></ProfilesTable>
             </Container>
         );
     }
 }
+
+
+
 
 const mapStateToProps = state => ({
 });
