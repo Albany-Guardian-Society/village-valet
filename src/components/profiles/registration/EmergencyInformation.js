@@ -8,6 +8,9 @@ import Form from "react-bootstrap/Form";
 
 import "./registration.css"
 
+// May wish to add the ability for multiple emergency_contacts
+// Accounting for this later
+
 class EmergencyInformation extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +19,12 @@ class EmergencyInformation extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
-	handleChange(event) {
+    handleChange(event) {
+        switch (event.target.id) {
+            default:
+                this.props.updateRegistration("emergency_contact", event.target.id.replace('reg_',''), event.target.value)
+                break;
+        }
 	}
 
     render() {
@@ -48,13 +56,14 @@ class EmergencyInformation extends Component {
                         <Form.Label column sm={4}  lg={2}>Communication Preference:</Form.Label>
                         <Col><Form.Control as="select" id="reg_preferred_communication" onChange={this.handleChange} value={this.props.emergency_contact.preferred_communication}>
                             <option value="" label=""/>
+                            <option value="email" label="Email"/>
                             <option value="mobile" label="Mobile Phone"/>
                             <option value="home" label="Home Phone"/>
                         </Form.Control></Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={4}  lg={2}>Relationship:</Form.Label>
-                        <Col><Form.Control id="reg_relationship" onChange={this.handleChange} value={this.props.emergency_contact.relationship}/></Col>
+                        <Col><Form.Control id="reg_relationship" placeholder="Relationship" onChange={this.handleChange} value={this.props.emergency_contact.relationship}/></Col>
                     </Row>
                 </Card.Body>
             </Card>
@@ -63,11 +72,19 @@ class EmergencyInformation extends Component {
 }
 
 const mapStateToProps = state => ({
-    emergency_contact: state.registration.emergency_contact,
-    user_type: state.registration.user_type
+    emergency_contact: state.active_profile.emergency_contact,
+    user_type: state.active_profile.user_type
 });
 
 const mapDispatchToProps = dispatch => ({
+    updateRegistration: (type, id, value) => dispatch({
+        type: "registration",
+        payload: {
+            type: type,
+            id: id,
+            value: value
+        }
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmergencyInformation);
