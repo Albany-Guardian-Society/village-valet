@@ -33,3 +33,9 @@ Accent2:  #
 .Login-Box {
     padding: 20px;
 }
+
+.Scheduler-Buttons {
+    position: fixed;
+    bottom: 0;
+    justify-content: center;
+}
