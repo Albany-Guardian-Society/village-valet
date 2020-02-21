@@ -28,9 +28,10 @@ class Profiles extends Component {
 }
 
 
-
+//let tabledate = this.props.users
 
 const mapStateToProps = state => ({
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
