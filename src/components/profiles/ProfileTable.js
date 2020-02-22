@@ -20,6 +20,8 @@ class ProfileTable extends Component {
                 <tr key={index}>
                     <td>{user.personal_info.first_name}</td>
                     <td>{user.personal_info.last_name}</td>
+                    <td>{user.user_type}</td>
+
                 </tr>
             );
         }
@@ -34,6 +36,7 @@ class ProfileTable extends Component {
                     <tr>
                         <td>First</td>
                         <td>Last</td>
+                        <td>User Type</td>
                     </tr>
                     </thead>
                     <tbody>
