@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
+
 import Container from "react-bootstrap/Container";
+import SearchBar from "./SearchBar";
+import ProfileTable from "./ProfileTable";
 
 class Profiles extends Component {
     constructor(props) {
@@ -17,11 +21,15 @@ class Profiles extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                Profile page placeholder
+                <Link to="/Profiles/Register" style={{ textDecoration: 'none' }}>Register</Link>
+                <SearchBar/>
+                <ProfileTable/>
             </Container>
         );
     }
 }
+
+
 
 const mapStateToProps = state => ({
 });
