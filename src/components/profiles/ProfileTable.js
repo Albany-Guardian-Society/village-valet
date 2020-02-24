@@ -17,12 +17,12 @@ class ProfileTable extends Component {
         for (let index in this.props.users){
             let user = this.props.users[index];
             res.push(
-                <tr key={user.village_id}>
-                    <td>{user.village_id}</td>
+                <tr key={user.id}>
+                    <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
                     <td>{user.personal_info.first_name}</td>
                     <td>{user.personal_info.last_name}</td>
-                    <td>{user.user_type}</td>
-
+                    <td>{user.village_id}</td>  //Will want to map village_id to a village name
+                    <td>{user.id}</td>
                 </tr>
             );
         }
@@ -35,10 +35,11 @@ class ProfileTable extends Component {
                 <Table striped bordered hover>
                     <thead>
                     <tr>
-                        <td>ID</td>
+                        <td>User Type</td>
                         <td>First</td>
                         <td>Last</td>
-                        <td>User Type</td>
+                        <td>Village Association</td>
+                        <td>ID</td>
                     </tr>
                     </thead>
                     <tbody>
