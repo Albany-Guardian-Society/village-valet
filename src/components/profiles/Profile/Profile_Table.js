@@ -22,7 +22,7 @@ class PTable extends Component {
             <div>
                 <Container>
                         <Row>
-                            <Button variant="primary" onClick={() => alert('ContactInfo')}>Contact Info</Button>
+                            <Button variant="primary">Contact Info</Button>
                         </Row>
                         <Row>
                             <Button variant="primary">Address Log</Button>
