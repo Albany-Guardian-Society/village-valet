@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ProfileTable from "./Profile_Table.js";
+import ProfileTable from "./ProfileContainer.js";
 
 class Profile extends Component {
     constructor(props) {
