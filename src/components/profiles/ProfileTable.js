@@ -17,9 +17,12 @@ class ProfileTable extends Component {
         for (let index in this.props.users){
             let user = this.props.users[index];
             res.push(
-                <tr key={index}>
+                <tr key={user.village_id}>
+                    <td>{user.village_id}</td>
                     <td>{user.personal_info.first_name}</td>
                     <td>{user.personal_info.last_name}</td>
+                    <td>{user.user_type}</td>
+
                 </tr>
             );
         }
@@ -32,8 +35,10 @@ class ProfileTable extends Component {
                 <Table striped bordered hover>
                     <thead>
                     <tr>
+                        <td>ID</td>
                         <td>First</td>
                         <td>Last</td>
+                        <td>User Type</td>
                     </tr>
                     </thead>
                     <tbody>
