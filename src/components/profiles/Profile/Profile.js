@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-
+import usrpic from './user-profile-male-logo.jpg';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ProfileTable from "./Profile_Table.js";
+import {Image} from "react-bootstrap";
+
 
 class Profile extends Component {
     constructor(props) {
@@ -20,8 +22,10 @@ class Profile extends Component {
         return (
             <div>
                 <Row>
-                    Picture/Name
-                </Row>
+                    <Col>
+                        <Image publicId={usrpic} height="150" width="150" />
+                    </Col>
+                    </Row>
                 <Row>
                     <Col>
                         <ProfileTable/>

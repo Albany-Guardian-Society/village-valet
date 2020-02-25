@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from 'react-bootstrap/Container'
+// import TableContent from "./TableContent";
 
 class PTable extends Component {
     constructor(props) {
@@ -21,9 +22,11 @@ class PTable extends Component {
         return (
             <div>
                 <Container>
+                    {/*onClick={() => table(contact)}*/}
                         <Row>
-                            <Button variant="primary" onClick={() => alert('ContactInfo')}>Contact Info</Button>
+                            <Button variant="primary" >Contact Info</Button>
                         </Row>
+
                         <Row>
                             <Button variant="primary">Address Log</Button>
                         </Row>
@@ -45,6 +48,8 @@ class PTable extends Component {
         );
     }
 }
+
+
 
 const mapStateToProps = state => ({
 });
