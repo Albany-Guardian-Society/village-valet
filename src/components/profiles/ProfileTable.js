@@ -21,7 +21,7 @@ class ProfileTable extends Component {
                     <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
                     <td>{user.personal_info.first_name}</td>
                     <td>{user.personal_info.last_name}</td>
-                    <td>{user.village_id}</td>  //Will want to map village_id to a village name
+                    <td>{user.village_id}</td>
                     <td>{user.id}</td>
                 </tr>
             );
