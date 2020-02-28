@@ -28,7 +28,7 @@ import "../App.css";
 
 //Components in a react webapp are classes (for the most part)
 class Login extends Component {
-    // The construction will be pretty constant.  The "props" are variables passed down from 
+    // The construction will be pretty constant.  The "props" are variables passed down from
     // the components parent (through an HTML attribute)
     // The state is basically the member variables of a component.
     constructor(props) {
@@ -84,9 +84,9 @@ class Login extends Component {
             const data = querySnapshot.docs.map(doc => doc.data());
             if (data.length === 1) {
                 if (bcrypt.compareSync(this.state.password, data[0].password)) {
-                    this.props.updateAuth(data[0].username);
+                    this.props.updateAuth(data[0]);
                     //This is part of react-router and allows forced page routing
-                    this.props.history.push('/Dashboard')
+                    this.props.history.push('/Dashboard');
                 } else {
                     this.setState({errorMessage: "Login Failed: Your username/password do not match."})
                 }

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import Card from "react-bootstrap/Card"
 import MapContainer from "../google-maps/google-map";
-import RidesTable from "./RidesTable";
 import RideDetails from "./RideDetails";
 
 class RideBreakdown extends Component {

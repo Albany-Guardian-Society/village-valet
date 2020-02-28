@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-class Error extends Component {
+class VolunteerSchedule extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +15,7 @@ class Error extends Component {
     render() {
         return (
             <div>
-                The page you've requested cannot be found.
+                Volunteer Scheduling
             </div>
         );
     }
@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Error);
+export default connect(mapStateToProps, mapDispatchToProps)(VolunteerSchedule);

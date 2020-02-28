@@ -10,16 +10,85 @@ import _ from "lodash";
 // The type is matched against a switch statement to perform a state update.
 // The payload is used to information from a component to the reducer and then save to store
 
+const ADDRESS_TEMPLATE = {
+    name: "",
+    line_1: "",
+    line_2: "",
+    city: "",
+    state: "",
+    zip: "",
+    special_instructions: "",
+}
+
+const VEHICLE_TEMPLATE = {
+    make_model: "",
+    year: "",
+    color: "",
+    lp: "",
+    insp_date: "",
+    insur_provider: "",
+    insur_policy: "",
+    insur_exp: "",
+    insur_coverage: 0,
+    seats: 0,
+    special: "",
+}
+
+const BLANK_PROFILE = {
+    user_type: "",
+    village_id: "",
+    personal_info: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+        language: []
+    },
+    emergency_contact: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+        relationship: ""
+    },
+    addresses: [ADDRESS_TEMPLATE,],
+    accommodations: {
+        allergies: "",
+        mobility_aid: "",
+        smoke_preference: "",
+        special: ""
+    },
+    vehicles: [VEHICLE_TEMPLATE,],
+    driver_specific: {
+        vetting: "",
+    },
+}
+
 const initialState = {
     authenticated: false,
-    user: "",
+    loaded: false,
+    operator: {
+        first_name: "",
+        last_name: "",
+        village_id: "",
+    },
     ridebreakdown: {
         id: "",
         rider:'',
         driver:'',
         pickup: "",
         dropoff: ""
-    }
+    },
+    villages: {},
+    users: {},
+    rides: {},
+    // This is
+    active_profile: _.cloneDeep(BLANK_PROFILE),
+
 };
 
 //The authentication should be cached for a period of time
@@ -35,13 +104,48 @@ const VillageReducer = (state = initialState, action) => {
     case "authenticate": {
         let newState = _.cloneDeep(state);
         newState.authenticated = true;
-        newState.user = action.payload;
+        newState.operator.first_name = action.payload.first_name;
+        newState.operator.last_name = action.payload.last_name;
+        newState.operator.village_id = action.payload.village_id;
         return newState;
     }
 
     case "logout": {
         let newState = _.cloneDeep(state);
         newState.authenticated = false;
+        newState.loaded = false;
+        return newState;
+    }
+
+    case "load": {
+        let newState = _.cloneDeep(state);
+        switch (action.payload.tag) {
+            case "loaded":
+                newState.loaded = action.payload.data;
+                break;
+            case "villages":
+                newState.villages = action.payload.data;
+                break;
+            case "users":
+                newState.users = action.payload.data;
+                break;
+            case "rides":
+                newState.rides = action.payload.data;
+                break;
+            default:
+        }
+        return newState;
+    }
+
+    case "add_user": {
+        let newState = _.cloneDeep(state);
+        newState.users.push(action.payload);
+        return newState;
+    }
+
+    case "clear_active_profile": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile = _.cloneDeep(BLANK_PROFILE);
         return newState;
     }
 
@@ -51,6 +155,39 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "registration": {
+        let newState = _.cloneDeep(state);
+            switch (action.payload.id) {
+                case "user_type":
+                    newState.active_profile[action.payload.id] = action.payload.value;
+                    break;
+                case "village_id":
+                    newState.active_profile[action.payload.id] = action.payload.value;
+                    break;
+                case "add_address":
+                    newState.active_profile.addresses.push(_.cloneDeep(ADDRESS_TEMPLATE));
+                    break;
+                case "remove_address":
+                    newState.active_profile.addresses.splice(action.payload.value, 1);
+                    break;
+                case "add_vehicle":
+                    newState.active_profile.vehicles.push(_.cloneDeep(VEHICLE_TEMPLATE));
+                    break;
+                case "remove_vehicle":
+                    newState.active_profile.vehicles.splice(action.payload.value, 1);
+                    break;
+                default:
+                    if (action.payload.type === "addresses") {
+                        newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                    } else if (action.payload.type === "vehicles") {
+                        newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                    } else {
+                        newState.active_profile[action.payload.type][action.payload.id] = action.payload.value;
+                    }
+                    break;
+            }
+        return newState;
+    }
 
     default:
         return state;

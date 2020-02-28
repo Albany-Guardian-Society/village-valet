@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
 import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
+import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-
-import Form from "react-bootstrap/Form";
 
 import "../App.css";
 
@@ -29,24 +27,26 @@ class Navigation extends Component {
     render() {
         return (
             <div>
-            <Navbar bg="light" variant="light">
+            <Navbar bg="light" variant="light" style={{width: "100%"}}>
                 <Navbar.Brand>
                     <Link to="/Dashboard" style={{ textDecoration: 'none' }}>Village Valet</Link>
                 </Navbar.Brand>
-                <Nav className="mr-auto">
-                    <Nav.Link>
-                        <Link to="/Scheduler" style={{ textDecoration: 'none' }}>Scheduler</Link>
-                    </Nav.Link>
-                    <Nav.Link>
-                        <Link to="/Profiles" style={{ textDecoration: 'none' }}>Profiles</Link>
-                    </Nav.Link>
-                    <Nav.Link>
-                        <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
-                    </Nav.Link>
-                </Nav>
-                <Form inline>
-                <Button onClick={this.props.logout}> Logout </Button>
-                </Form>
+                <Col>
+                    <Link to="/Scheduler" style={{ textDecoration: 'none' }}>Scheduler</Link>
+                </Col>
+                <Col>
+                    <Link to="/Profiles" style={{ textDecoration: 'none' }}>Profiles</Link>
+                </Col>
+                <Col>
+                    <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
+                </Col>
+                <Col><Button variant="dark" onClick={this.props.debug}> DEBUG </Button></Col>
+                <Col style={{textAlign:"right"}}>
+                    <span>Operator:&nbsp;{this.props.operator}</span>
+                </Col>
+                <Col>
+                    <Button onClick={this.props.logout}> Logout </Button>
+                </Col>
             </Navbar>
             <br/>
             </div>
@@ -55,6 +55,7 @@ class Navigation extends Component {
 }
 
 const mapStateToProps = state => ({
+    operator: state.operator.first_name,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -62,6 +63,10 @@ const mapDispatchToProps = dispatch => ({
         type: "logout",
         payload: null
     }),
+    debug: () => dispatch({
+        type: "dump_store",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
