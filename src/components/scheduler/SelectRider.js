@@ -7,6 +7,7 @@ import Table from "react-bootstrap/Table";
 import MapContainer from "../google-maps/MapContainer";
 import React, {Component} from "react";
 import {connect} from "react-redux";
+import ProfileTable from "../profiles/ProfileTable";
 
 
 class SelectRider extends Component {
@@ -19,26 +20,7 @@ class SelectRider extends Component {
     handleChange(event){
 
     };
-
-    getRiders() {
-        let k = 0
-        let riders = this.props.users.filter((user) => {
-            return (user.user_type === "rider")
-        }).map((rider) => {
-            k++;
-            return(
-                <tr key={k}>
-                    <td>:)</td>
-                    <td>{rider.personal_info.first_name}</td>
-                    <td>{rider.personal_info.last_name}</td>
-                    <td>{rider.village_id}</td>
-                    <td>Active</td>
-                </tr>
-            );
-        })
-
-        return riders;
-    }
+    
 
     render() {
         return (
@@ -53,20 +35,7 @@ class SelectRider extends Component {
                     </Col>
                 </Row>
                 <hr/>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>Picture</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Village</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.getRiders()}
-                    </tbody>
-                </Table>
+                <ProfileTable mode={"rider"}/>
             </Container>
         );
     }
