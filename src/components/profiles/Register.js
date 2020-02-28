@@ -11,7 +11,7 @@ import CommonAddresses from "./registration/CommonAddresses.js";
 import EmergencyInformation from "./registration/EmergencyInformation.js";
 import GeneralInformation from "./registration/GeneralInformation.js";
 import SpecialAccommodations from "./registration/SpecialAccommodations.js";
-import Insurance from "./registration/Insurance.js";
+import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 
 // This page will build a user in its state then export that to the firebase.
@@ -58,7 +58,7 @@ class Register extends Component {
             switch(this.state.page) {
                 case 0: return (<GeneralInformation/>);
                 case 1: return (<EmergencyInformation/>);
-                case 2: return (<Insurance/>);
+                case 2: return (<DriverSpecific/>);
                 case 3: return (<VehicleInformation/>);
                 default: break;
             }

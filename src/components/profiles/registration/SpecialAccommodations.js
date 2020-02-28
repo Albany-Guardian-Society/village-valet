@@ -25,7 +25,9 @@ class Error extends Component {
     render() {
         return (
             <Card>
-                <Card.Header>Special Accommodations</Card.Header>
+                <Card.Header>
+                    <h5 style={{float:"left"}}>Special Accommodations</h5>
+                </Card.Header>
                 <Card.Body>
                     <Row className="reg_row">
                         <Form.Label column sm={4}  lg={2}>Allergy Information:</Form.Label>
