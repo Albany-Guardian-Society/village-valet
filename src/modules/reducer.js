@@ -63,6 +63,9 @@ const BLANK_PROFILE = {
         special: ""
     },
     vehicles: [VEHICLE_TEMPLATE,],
+    driver_specific: {
+        vetting: "",
+    },
 }
 
 const initialState = {
