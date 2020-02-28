@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import Card from "react-bootstrap/Card"
-import MapContainer from "../google-maps/google-map";
+import MapContainer from "../google-maps/MapContainer";
 import RideDetails from "./RideDetails";
 
 class RideBreakdown extends Component {
