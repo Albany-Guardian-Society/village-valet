@@ -24,7 +24,7 @@ class RidesTable extends Component {
     createTable = () => {
         let table = [];
         for (const ride of this.props.rides) {
-            table.push(<Row style={{padding:"5px"}}><Button size="lg" variant="light"  block={true} onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</Button></Row>)
+            table.push(<Row style={{padding:"5px"}} key={ride.id}><Button size="lg" variant="light" block={true} onClick={() => this.handleClick(ride)} >{`Ride Id: ${ride.id}`}</Button></Row>)
         }
         return table
     };

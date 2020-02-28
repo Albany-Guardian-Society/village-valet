@@ -26,7 +26,8 @@ class RideBreakdown extends Component {
                 <Card.Body>
                     <RideDetails/>
                     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                        <MapContainer/>
+                        <MapContainer locations={{orign:{latitude:42.6526,longitude:-73.7562},
+                            destination:{latitude:42.7284,longitude:-73.6918}}}/>
                     </div>
                 </Card.Body>
             </Card>

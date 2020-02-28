@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
+
 class MapContainer extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +13,19 @@ class MapContainer extends Component {
 	handleChange(event) {
 	}
 
+	makeMarkers(location_list) {
+        const markers = [];
+        for (const location of Object.values(location_list)) {
+            markers.push(
+                <Marker
+                    key={location.latitude+location.longitude}
+                    title={location.name}
+                    position={{lat: location.latitude, lng:location.longitude}}
+                    name={location.name}
+                />);
+        }
+        return markers;
+    }
 
     render() {
         return (
@@ -21,11 +35,7 @@ class MapContainer extends Component {
                 style={{width: "100%", height: "100%"}}
                 initialCenter={{ lat: 42.6526, lng: -73.7562}}
             >
-                <Marker
-                    title = { 'Changing Colors Garage' }
-                    position = {{ lat: 39.648209, lng: -75.711185 }}
-                    name = { 'Changing Colors Garage' }
-                />
+                {this.makeMarkers(this.props.locations)}
             </Map>
         )
     }
