@@ -34,6 +34,12 @@ const VEHICLE_TEMPLATE = {
     special: "",
 }
 
+const VOL_HOURS_TEMPLATE = {
+    day: "",
+    start: "",
+    end: ""
+}
+
 const BLANK_PROFILE = {
     user_type: "",
     village_id: "",
@@ -63,6 +69,15 @@ const BLANK_PROFILE = {
         special: ""
     },
     vehicles: [VEHICLE_TEMPLATE,],
+    volunteer_hours: [
+        {day: "sunday", start: "", end: ""},
+        {day: "monday", start: "", end: ""},
+        {day: "tuesday", start: "", end: ""},
+        {day: "wednesday", start: "", end: ""},
+        {day: "thursday", start: "", end: ""},
+        {day: "friday", start: "", end: ""},
+        {day: "saturday", start: "", end: ""},
+    ],
     driver_specific: {
         vetting: "",
     },

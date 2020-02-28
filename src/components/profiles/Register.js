@@ -86,14 +86,14 @@ class Register extends Component {
             });
             return false
         }
-        //TEMPORARY
-        if (this.props.registration.user_type === "driver") {
-            this.setState({
-                errorMessage: "TEMPORARY: DRIVERS CANNOT BE CREATED",
-                page: 0
-            });
-            return false
-        }
+        // //TEMPORARY
+        // if (this.props.registration.user_type === "driver") {
+        //     this.setState({
+        //         errorMessage: "TEMPORARY: DRIVERS CANNOT BE CREATED",
+        //         page: 0
+        //     });
+        //     return false
+        // }
 
         if (!this.props.registration.personal_info.first_name) {
             this.setState({
