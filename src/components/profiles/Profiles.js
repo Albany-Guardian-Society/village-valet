@@ -23,7 +23,7 @@ class Profiles extends Component {
             <Container style={{minWidth: "100%"}}>
                 <Link to="/Profiles/Register" style={{ textDecoration: 'none' }}>Register</Link>
                 <SearchBar/>
-                <ProfileTable/>
+                <ProfileTable mode={"all"}/>
             </Container>
         );
     }

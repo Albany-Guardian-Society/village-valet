@@ -9,6 +9,8 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import MapContainer from "../google-maps/MapContainer";
 
+import ProfileTable from "../profiles/ProfileTable";
+
 class SelectDriver extends Component {
     constructor(props) {
         super(props);
@@ -36,61 +38,7 @@ class SelectDriver extends Component {
                         </Button>
                     </Form.Group>
                 </Form>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>Picture</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Village</th>
-                        <th>Time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>:)</td>
-                        <td>Garrett</td>
-                        <td>Dribusch</td>
-                        <td>RPI</td>
-                        <td>1-5PM</td>
-                    </tr>
-                    <tr>
-                        <td>:)</td>
-                        <td>Jeremy</td>
-                        <td>Ettlinger</td>
-                        <td>RPI</td>
-                        <td>2-6PM</td>
-                    </tr>
-                    <tr>
-                        <td>:)</td>
-                        <td>Mohammad</td>
-                        <td>Hamaf</td>
-                        <td>RPI</td>
-                        <td>7-11AM</td>
-                    </tr>
-                    <tr>
-                        <td>:)</td>
-                        <td>Matthew</td>
-                        <td>Menendez</td>
-                        <td>RPI</td>
-                        <td>8PM-2AM</td>
-                    </tr>
-                    <tr>
-                        <td>:)</td>
-                        <td>Jonathon</td>
-                        <td>Schmalz</td>
-                        <td>RPI</td>
-                        <td>12-6PM</td>
-                    </tr>
-                    <tr>
-                        <td>:)</td>
-                        <td>Nick</td>
-                        <td>Zoner</td>
-                        <td>RPI</td>
-                        <td>6PM-12AM</td>
-                    </tr>
-                    </tbody>
-                </Table>
+                <ProfileTable mode={ "driver"}/>
                 <Row>
                     <Col>
                         <Row>
