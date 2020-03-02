@@ -77,19 +77,13 @@ class CommonAddresses extends Component {
     render() {
         return (
             <Card>
-                <Card.Header>Common Addresses</Card.Header>
+                <Card.Header>
+                    <h5 style={{float:"left"}}>Common Addresses</h5>
+                    <Button variant="dark" style={{float:"right"}} onClick={() => this.props.addAddress()}>
+                        Add Address
+                    </Button>
+                </Card.Header>
                 {this.generateAddressForms()}
-                <Row>
-                    <Col/>
-                    <Col/>
-                    <Col/>
-                    <Col/>
-                    <Col>
-                        <Button variant="dark" onClick={() => this.props.addAddress()}>
-                            Add Address
-                        </Button>
-                    </Col>
-                </Row>
                 <h6>{" "}</h6>
             </Card>
         );

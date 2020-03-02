@@ -11,14 +11,15 @@ import CommonAddresses from "./registration/CommonAddresses.js";
 import EmergencyInformation from "./registration/EmergencyInformation.js";
 import GeneralInformation from "./registration/GeneralInformation.js";
 import SpecialAccommodations from "./registration/SpecialAccommodations.js";
-import Insurance from "./registration/Insurance.js";
+import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
+import VolunteerSchedule from "./registration/VolunteerSchedule.js";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
 // Once a user is made it should be added to the store so another pull is not needed tho!
 
-const DRIVER_MAX = 3;
+const DRIVER_MAX = 4;
 const RIDER_MAX = 3;
 
 class Register extends Component {
@@ -58,8 +59,9 @@ class Register extends Component {
             switch(this.state.page) {
                 case 0: return (<GeneralInformation/>);
                 case 1: return (<EmergencyInformation/>);
-                case 2: return (<Insurance/>);
-                case 3: return (<VehicleInformation/>);
+                case 2: return (<VehicleInformation/>);
+                case 3: return (<VolunteerSchedule/>);
+                case 4: return (<DriverSpecific/>);
                 default: break;
             }
         } else {
@@ -78,17 +80,53 @@ class Register extends Component {
         // Might want to have a "list of errors and then display a bunch of them? might be ugly"
         // THis solution works for now
         if (!this.props.registration.user_type) {
-            this.setState({errorMessage: "An \"Account Type\" is REQUIRED!"})
+            this.setState({
+                errorMessage: "An \"Account Type\" is REQUIRED!",
+                page: 0
+            });
             return false
         }
-        //TEMPORARY
-        if (this.props.registration.user_type === "driver") {
-            this.setState({errorMessage: "TEMPORARY: DRIVERS CANNOT BE CREATED"})
-            return false
-        }
+        // //TEMPORARY
+        // if (this.props.registration.user_type === "driver") {
+        //     this.setState({
+        //         errorMessage: "TEMPORARY: DRIVERS CANNOT BE CREATED",
+        //         page: 0
+        //     });
+        //     return false
+        // }
 
         if (!this.props.registration.personal_info.first_name) {
-            this.setState({errorMessage: "A \"First Name\" is REQUIRED!"})
+            this.setState({
+                errorMessage: "A \"First Name\" is REQUIRED!",
+                page: 0
+            });
+            return false
+        }
+        if (!this.props.registration.personal_info.last_name) {
+            this.setState({
+                errorMessage: "A \"Last Name\" is REQUIRED!",
+                page: 0
+            });
+            return false
+        }
+        //Need atleast one form of communication
+        if (!this.props.registration.personal_info.email
+            && !this.props.registration.personal_info.phone_home
+            && !this.props.registration.personal_info.phone_mobile) {
+            this.setState({
+                errorMessage: "At least one form of communication is REQUIRED!",
+                page: 0
+            });
+            return false
+        }
+        //A user needs to give information for their choice of preferred communication
+        if ((!this.props.registration.personal_info.email && this.props.registration.personal_info.preferred_communication === "email")
+            || (!this.props.registration.personal_info.phone_home && this.props.registration.personal_info.preferred_communication === "home")
+            || (!this.props.registration.personal_info.phone_mobile && this.props.registration.personal_info.preferred_communication === "mobile")) {
+            this.setState({
+                errorMessage: "You must provide information matching your communication preference.",
+                page: 0
+            });
             return false
         }
 
@@ -146,7 +184,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addUser: (user) => dispatch({
         type: "add_user",
-        payload: user
+        payload: {...user, id: "TEMP"}
     }),
     clearRegistration: () => dispatch({
         type: "clear_active_profile",

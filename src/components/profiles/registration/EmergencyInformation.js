@@ -30,7 +30,9 @@ class EmergencyInformation extends Component {
     render() {
         return (
             <Card>
-                <Card.Header>Emergency Contact</Card.Header>
+                <Card.Header>
+                    <h5 style={{float:"left"}}>Emergency Contact</h5>
+                </Card.Header>
                 <Card.Body>
                     <Row className="reg_row">
                         <Form.Label column sm={4}  lg={2}>First Name:</Form.Label>

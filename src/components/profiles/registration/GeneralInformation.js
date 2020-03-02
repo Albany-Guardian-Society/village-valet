@@ -68,7 +68,9 @@ class GeneralInformation extends Component {
                 </Card>
                 <br/>
                 <Card>
-                    <Card.Header>General Information</Card.Header>
+                    <Card.Header>
+                        <h5 style={{float:"left"}}>General Information</h5>
+                    </Card.Header>
                     <Card.Body>
                         <Row className="reg_row">
                             <Form.Label column sm={4}  lg={2}>First Name:</Form.Label>

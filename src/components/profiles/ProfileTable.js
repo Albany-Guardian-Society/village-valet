@@ -66,7 +66,6 @@ class ProfileTable extends Component {
                         <td>{user.village_id}</td>
                         <td>6-9pm</td>
                     </tr>
-
             );
             }
             else if (this.props.mode === "rider" && user.user_type === "rider") {

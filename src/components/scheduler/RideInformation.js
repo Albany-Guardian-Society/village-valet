@@ -1,13 +1,10 @@
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import MapContainer from "../google-maps/MapContainer";
 import React, {Component} from "react";
 import {connect} from "react-redux";
 
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Table from "react-bootstrap/Table";
 
 class RideInformation extends Component {
     constructor(props) {
