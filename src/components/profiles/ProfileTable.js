@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
-
-
+import fuzzysort from "fuzzysort";
 
 class ProfileTable extends Component {
     constructor(props){
@@ -14,8 +13,22 @@ class ProfileTable extends Component {
 
     generateTableData(){
         let res=[];
-        for (let index in this.props.users){
-            let user = this.props.users[index];
+        let filtered_users = [];
+        if (this.props.search_term) {
+            let index = -1;
+            filtered_users = fuzzysort.go(this.props.search_term, this.props.users.map((p) => {
+                index++;
+                return p.personal_info.first_name + p.personal_info.last_name + "|" + index;
+            })).filter((p) => {
+                return p.score > -2000;
+            }).map((p) => {
+                return this.props.users[p.target.split("|")[p.target.split("|").length-1]]
+            })
+        } else {
+            filtered_users = this.props.users;
+        }
+        for (let index in filtered_users){
+            let user = filtered_users[index];
             res.push(
                 <tr key={user.id}>
                     <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
@@ -34,16 +47,16 @@ class ProfileTable extends Component {
             <div>
                 <Table striped bordered hover>
                     <thead>
-                    <tr>
-                        <td>User Type</td>
-                        <td>First</td>
-                        <td>Last</td>
-                        <td>Village Association</td>
-                        <td>ID</td>
-                    </tr>
+                        <tr>
+                            <th>User Type</th>
+                            <th>First</th>
+                            <th>Last</th>
+                            <th>Village Association</th>
+                            <th>ID</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {this.generateTableData()}
+                        {this.generateTableData()}
                     </tbody>
                 </Table>
             </div>

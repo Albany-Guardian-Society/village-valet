@@ -17,8 +17,6 @@ class SearchBar extends Component {
                         <FormControl
                             type="text"
                             placeholder="Type in a name..."
-                            aria-label="Input group example"
-                            aria-describedby="btnGroupAddon"
                         />
                     </InputGroup>
                 </ButtonToolbar>
