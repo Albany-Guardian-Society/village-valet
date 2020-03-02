@@ -9,6 +9,43 @@ class ProfileTable extends Component {
         this.state={
         };
         this.generateTableData = this.generateTableData.bind(this);
+        this.generateTableHeaders = this.generateTableHeaders.bind(this);
+
+    }
+
+    componentDidMount() {
+    }
+
+    generateTableHeaders() {
+        if (this.props.mode === "driver"){
+            return (
+                <tr>
+                    <th>Picture</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Village</th>
+                    <th>Time</th>
+                </tr>
+            )
+        } else if (this.props.mode === "rider"){
+            return (
+                <tr>
+                    <th>Picture</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Village</th>
+                </tr>
+            )
+        } else {
+            return (
+                <tr>
+                    <th>Village</th>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>User Type</th>
+                </tr>
+            )
+        }
     }
 
     generateTableData(){
@@ -29,17 +66,36 @@ class ProfileTable extends Component {
         }
         for (let index in filtered_users){
             let user = filtered_users[index];
-            res.push(
-                <tr key={user.id}>
-                    <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
-                    <td>{user.personal_info.first_name}</td>
-                    <td>{user.personal_info.last_name}</td>
-                    <td>{user.village_id}</td>
-                    <td>{user.id}</td>
-                </tr>
-            );
+            if (this.props.mode === "driver" && user.user_type === "driver") {
+                res.push(
+                    <tr key={user.id}>
+                        <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
+                        <td>{user.personal_info.first_name}</td>
+                        <td>{user.personal_info.last_name}</td>
+                        <td>{user.village_id}</td>
+                        <td>{user.id}</td>
+                    </tr>
+                );
+            } else if (this.props.mode === "rider" && user.user_type === "rider") {
+                res.push(
+                    <tr key={user.id}>
+                        <td>{user.village_id}</td>
+                        <td>{user.personal_info.first_name}</td>
+                        <td>{user.personal_info.last_name}</td>
+                        <td>{user.village_id}</td>
+                    </tr>
+                );
+            } else {
+                res.push(
+                    <tr key={user.id}>
+                        <td>{user.village_id}</td>
+                        <td>{user.personal_info.first_name}</td>
+                        <td>{user.personal_info.last_name}</td>
+                        <td>{user.user_type}</td>
+                    </tr>
+                );
+            }
         }
-
         return res;
     }
     render(){
@@ -47,13 +103,7 @@ class ProfileTable extends Component {
             <div>
                 <Table striped bordered hover>
                     <thead>
-                        <tr>
-                            <th>User Type</th>
-                            <th>First</th>
-                            <th>Last</th>
-                            <th>Village Association</th>
-                            <th>ID</th>
-                        </tr>
+                        {this.generateTableHeaders()}
                     </thead>
                     <tbody>
                         {this.generateTableData()}
@@ -61,7 +111,9 @@ class ProfileTable extends Component {
                 </Table>
             </div>
         )
+
     }
+
 }
 
 const mapStateToProps = state => ({

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
 import Container from "react-bootstrap/Container";
@@ -8,7 +7,6 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-import SearchBar from "./SearchBar";
 import ProfileTable from "./ProfileTable";
 
 class Profiles extends Component {
@@ -43,7 +41,7 @@ class Profiles extends Component {
                 </Row>
                 <hr/>
                 <Row><Col>
-                    <ProfileTable search_term={this.state.search_term}/>
+                    <ProfileTable search_term={this.state.search_term} mode="all"/>
                 </Col></Row>
             </Container>
         );
