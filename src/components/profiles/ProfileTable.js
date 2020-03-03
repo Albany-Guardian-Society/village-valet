@@ -40,6 +40,7 @@ class ProfileTable extends Component {
                     </tr>
             )
         }
+        //Having this as an else breaks the tables
         else if (this.props.mode === "all"){
             headerList.push(
                     <tr>
