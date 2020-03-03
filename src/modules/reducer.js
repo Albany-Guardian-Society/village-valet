@@ -75,6 +75,37 @@ const BLANK_PROFILE = {
     },
 }
 
+const BLANK_RIDE = {
+    rider_id: "",
+    rider: {
+        first_name: "",
+        last_name: "",
+        id: "",
+    },
+    driver_1: {
+        first_name: "",
+        last_name: "",
+        id: "",
+    },
+    //Optional
+    driver_2: {
+        first_name: "",
+        last_name: "",
+        id: "",
+    },
+    locations: {
+        pickup: "",
+        dropoff: "",
+        //Optional
+        return: "",
+    },
+    ride_data: {
+        distance: "",
+        time_total: "",
+        traffic: "",
+    }
+}
+
 const initialState = {
     authenticated: false,
     loaded: false,
@@ -95,7 +126,7 @@ const initialState = {
     rides: {},
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
-
+    active_ride: _.cloneDeep(BLANK_RIDE),
 };
 
 //The authentication should be cached for a period of time

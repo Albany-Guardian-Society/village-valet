@@ -27,28 +27,28 @@ class Confirmation extends Component {
                     </Col>
                     <Col>
                         <Row>
-                            Name:
+                            Name: {this.props.active_ride.rider.first_name} {this.props.active_ride.rider.last_name}
                         </Row>
                         <Row>
-                            PICTURE
+                            Pickup: {this.props.active_ride.locations.pickup}
                         </Row>
                         <Row>
-                            Pickup:
+                            Dropoff: {this.props.active_ride.locations.dropoff}
                         </Row>
                         <Row>
-                            Dropoff:
+                            Trip Duration: {this.props.active_ride.ride_data.time_total}
                         </Row>
                         <Row>
-                            Trip Duration:
+                            Expected Traffic: {this.props.active_ride.ride_data.traffic}
                         </Row>
                         <Row>
-                            Expected Traffic:
+                            Driver: {this.props.active_ride.driver_1.first_name} {this.props.active_ride.driver_1.last_name}
                         </Row>
                         <Row>
-                            Driver:
+                            Return Driver: {this.props.active_ride.driver_2.first_name} {this.props.active_ride.driver_2.last_name}
                         </Row>
                         <Row>
-                            Return Driver:
+                            Return Destination: {this.props.active_ride.locations.return}
                         </Row>
                     </Col>
                 </Row>
@@ -59,6 +59,7 @@ class Confirmation extends Component {
 }
 
 const mapStateToProps = state => ({
+    active_ride: state.active_ride,
 });
 
 const mapDispatchToProps = dispatch => ({
