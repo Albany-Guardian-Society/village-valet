@@ -14,7 +14,7 @@ class ProfileTable extends Component {
     }
 
     handleSelect(event) {
-
+        this.setState({selected_row: event.target.id});
     }
 
     generateTableHeaders() {
@@ -82,14 +82,14 @@ class ProfileTable extends Component {
             profile_table.push(
                 <tr key={user.id} style={this.state.selected_row === user.id ? {background:"#cce4ff"} : null}>
                     {this.props.mode === "all" ?
-                        <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
+                        <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
                     :
-                        <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>PICTURE</td>
+                        <td id={user.id} onClick={(e) => this.handleSelect(e)}>PICTURE</td>
                     }
-                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.personal_info.first_name}</td>
-                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.personal_info.last_name}</td>
-                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.village_id}</td>
-                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.id}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.personal_info.first_name}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.personal_info.last_name}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.village_id}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.id}</td>
                 </tr>
             );
         }
