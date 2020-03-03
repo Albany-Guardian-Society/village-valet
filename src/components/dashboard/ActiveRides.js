@@ -11,14 +11,18 @@ const TEST = [
         rider:'Rider Name',
         driver:'Driver Name',
         pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432"
+        dropoff: "4534 Pizza St, Troy, NY 12432",
+        locations: {orign:{latitude:42.6526,longitude:-73.7562},
+        destination:{latitude:42.7284,longitude:-73.6918}}
     },
     {
         id:5555,
         rider:'Rider Name',
         driver:'Driver Name',
         pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432"
+        dropoff: "4534 Pizza St, Troy, NY 12432",
+        locations:{orign:{latitude:42.6526,longitude:-73.7562},
+        destination:{latitude:42.7284,longitude:-73.6918}}
     }
 ];
 

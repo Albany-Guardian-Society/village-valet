@@ -25,8 +25,7 @@ class RideBreakdown extends Component {
                 <Card.Body>
                     <RideDetails/>
                     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                        <MapContainer locations={{orign:{latitude:42.6526,longitude:-73.7562},
-                            destination:{latitude:42.7284,longitude:-73.6918}}}/>
+                        <MapContainer locations={this.props.ride.locations}/>
                     </div>
                 </Card.Body>
             </Card>
@@ -35,7 +34,9 @@ class RideBreakdown extends Component {
 }
 
 const mapStateToProps = state => ({
- });
+    ride: state.ridebreakdown
+
+});
 
 const mapDispatchToProps = dispatch => ({
 });
