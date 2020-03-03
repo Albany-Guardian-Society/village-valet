@@ -45,7 +45,7 @@ class Navigation extends Component {
                     <span>Operator:&nbsp;{this.props.operator}</span>
                 </Col>
                 <Col>
-                    <Button onClick={this.props.logout}> Logout </Button>
+                    <Button variant="dark" onClick={this.props.logout}> Logout </Button>
                 </Col>
             </Navbar>
             <br/>

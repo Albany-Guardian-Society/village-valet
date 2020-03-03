@@ -7,49 +7,42 @@ class ProfileTable extends Component {
     constructor(props){
         super(props);
         this.state={
+            selected_row: "",
         };
         this.generateTableData = this.generateTableData.bind(this);
         this.generateTableHeaders = this.generateTableHeaders.bind(this);
-
     }
 
-    componentDidMount() {
+    handleSelect(event) {
+
     }
 
     generateTableHeaders() {
-        if (this.props.mode === "driver"){
-            return (
-                <tr>
-                    <th>Picture</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Village</th>
-                    <th>Time</th>
-                </tr>
-            )
-        } else if (this.props.mode === "rider"){
-            return (
-                <tr>
-                    <th>Picture</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Village</th>
-                </tr>
-            )
-        } else {
-            return (
-                <tr>
-                    <th>Village</th>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>User Type</th>
-                </tr>
-            )
+        let headers = [];
+        switch (this.props.mode) {
+            case "driver":
+                headers = ["Picture", "First Name", "Last Name", "Village", "Database ID"];
+                break;
+            case "rider":
+                headers = ["Picture", "First Name", "Last Name", "Village", "Database ID"];
+                break;
+            case "all":
+                headers = ["User Type", "First Name", "Last Name", "Village", "Database ID"];
+                break;
+            default:
+                headers = ["User Type", "First Name", "Last Name", "Village", "Database ID"]
+                break;
         }
+        return headers.map((h) => {
+            return <th key={h}>{h}</th>
+        })
     }
 
     generateTableData(){
-        let res=[];
+        let profile_table=[];
+
+        //FIRST STEP.  Filter the users.
+        //Users are filtered by type and then by search term
         let filtered_users = [];
         if (this.props.search_term) {
             let index = -1;
@@ -57,53 +50,59 @@ class ProfileTable extends Component {
                 index++;
                 return p.personal_info.first_name + p.personal_info.last_name + "|" + index;
             })).filter((p) => {
+                // This was choosed arbitrarily... It is the match criteria index,
+                // More negative means a worse match
                 return p.score > -2000;
             }).map((p) => {
+                //Convert back to the user objects
                 return this.props.users[p.target.split("|")[p.target.split("|").length-1]]
             })
         } else {
+            //If no search term, return all
             filtered_users = this.props.users;
         }
-        for (let index in filtered_users){
-            let user = filtered_users[index];
-            if (this.props.mode === "driver" && user.user_type === "driver") {
-                res.push(
-                    <tr key={user.id}>
-                        <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
-                        <td>{user.personal_info.first_name}</td>
-                        <td>{user.personal_info.last_name}</td>
-                        <td>{user.village_id}</td>
-                        <td>{user.id}</td>
-                    </tr>
-                );
-            } else if (this.props.mode === "rider" && user.user_type === "rider") {
-                res.push(
-                    <tr key={user.id}>
-                        <td>{user.village_id}</td>
-                        <td>{user.personal_info.first_name}</td>
-                        <td>{user.personal_info.last_name}</td>
-                        <td>{user.village_id}</td>
-                    </tr>
-                );
-            } else {
-                res.push(
-                    <tr key={user.id}>
-                        <td>{user.village_id}</td>
-                        <td>{user.personal_info.first_name}</td>
-                        <td>{user.personal_info.last_name}</td>
-                        <td>{user.user_type}</td>
-                    </tr>
-                );
+
+        //Could optimize by skipping in "all" case
+        filtered_users = filtered_users.filter((user) => {
+            switch(this.props.mode) {
+                case "driver":
+                    return user.user_type === "driver";
+                case "rider":
+                    return user.user_type === "rider";
+                case "all":
+                    return true;
+                default:
+                    return true;
             }
+        })
+
+        //could also be done with a map function return
+        for (let index in filtered_users) {
+            let user = filtered_users[index];
+            profile_table.push(
+                <tr key={user.id} style={this.state.selected_row === user.id ? {background:"#cce4ff"} : null}>
+                    {this.props.mode === "all" ?
+                        <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
+                    :
+                        <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>PICTURE</td>
+                    }
+                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.personal_info.first_name}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.personal_info.last_name}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.village_id}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e.target.id)}>{user.id}</td>
+                </tr>
+            );
         }
-        return res;
+        return profile_table;
     }
     render(){
         return(
             <div>
                 <Table striped bordered hover>
                     <thead>
-                        {this.generateTableHeaders()}
+                        <tr>
+                            {this.generateTableHeaders()}
+                        </tr>
                     </thead>
                     <tbody>
                         {this.generateTableData()}
