@@ -164,7 +164,6 @@ const VillageReducer = (state = initialState, action) => {
 
     case "registration": {
         let newState = _.cloneDeep(state);
-        console.log("test");
             switch (action.payload.id) {
                 case "user_type":
                     newState.active_profile[action.payload.id] = action.payload.value;

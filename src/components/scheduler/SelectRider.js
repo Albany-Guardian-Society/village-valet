@@ -6,8 +6,6 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import MapContainer from "../google-maps/MapContainer";
 
 import ProfileTable from "../profiles/ProfileTable";
 
@@ -21,7 +19,6 @@ class SelectRider extends Component {
     handleChange(event){
 
     };
-    
 
     render() {
         return (

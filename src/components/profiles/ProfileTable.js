@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
-
-
+import fuzzysort from "fuzzysort";
 
 class ProfileTable extends Component {
     constructor(props){
@@ -13,34 +12,31 @@ class ProfileTable extends Component {
         this.generateTableHeaders = this.generateTableHeaders.bind(this);
 
     }
+
     componentDidMount() {
-        console.log(this.props.mode);
     }
 
     generateTableHeaders() {
-        let headerList = [];
         if (this.props.mode === "driver"){
-            headerList.push(
-                    <tr>
-                        <td>Picture</td>
-                        <td>First Name</td>
-                        <td>Last Name</td>
-                        <td>Village</td>
-                        <td>Time</td>
-                    </tr>
+            return (
+                <tr>
+                    <th>Picture</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Village</th>
+                    <th>Time</th>
+                </tr>
+            )
+        } else if (this.props.mode === "rider"){
+            return (
+                <tr>
+                    <th>Picture</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Village</th>
+                </tr>
             )
         }
-        else if (this.props.mode === "rider"){
-            headerList.push(
-                    <tr>
-                        <td>Picture</td>
-                        <td>First Name</td>
-                        <td>Last Name</td>
-                        <td>Village</td>
-                    </tr>
-            )
-        }
-        //Having this as an else breaks the tables
         else if (this.props.mode === "all"){
             headerList.push(
                     <tr>
@@ -51,37 +47,49 @@ class ProfileTable extends Component {
                     </tr>
             )
         }
-        return headerList;
     }
 
     generateTableData(){
         let res=[];
-        for (let index in this.props.users){
-            let user = this.props.users[index];
-            if (this.props.mode === "driver" && user.user_type === "driver"){
+        let filtered_users = [];
+        if (this.props.search_term) {
+            let index = -1;
+            filtered_users = fuzzysort.go(this.props.search_term, this.props.users.map((p) => {
+                index++;
+                return p.personal_info.first_name + p.personal_info.last_name + "|" + index;
+            })).filter((p) => {
+                return p.score > -2000;
+            }).map((p) => {
+                return this.props.users[p.target.split("|")[p.target.split("|").length-1]]
+            })
+        } else {
+            filtered_users = this.props.users;
+        }
+        for (let index in filtered_users){
+            let user = filtered_users[index];
+            if (this.props.mode === "driver" && user.user_type === "driver") {
                 res.push(
-                    <tr key={user.village_id}>
-                        <td>{user.village_id}</td>
+                    <tr key={user.id}>
+                        <td>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
                         <td>{user.personal_info.first_name}</td>
                         <td>{user.personal_info.last_name}</td>
                         <td>{user.village_id}</td>
-                        <td>6-9pm</td>
+                        <td>{user.id}</td>
                     </tr>
-            );
-            }
-            else if (this.props.mode === "rider" && user.user_type === "rider") {
+                );
+            } else if (this.props.mode === "rider" && user.user_type === "rider") {
                 res.push(
-                    <tr key={user.village_id}>
+                    <tr key={user.id}>
                         <td>{user.village_id}</td>
                         <td>{user.personal_info.first_name}</td>
                         <td>{user.personal_info.last_name}</td>
                         <td>{user.village_id}</td>
                     </tr>
                 );
-            }
-            else if (this.props.mode === "all") {
+              //This breaks the tables if it is an else
+            } else if (this.props.mode === "all") {
                 res.push(
-                    <tr key={user.village_id}>
+                    <tr key={user.id}>
                         <td>{user.village_id}</td>
                         <td>{user.personal_info.first_name}</td>
                         <td>{user.personal_info.last_name}</td>
@@ -90,7 +98,6 @@ class ProfileTable extends Component {
                 );
             }
         }
-
         return res;
     }
     render(){
