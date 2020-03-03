@@ -34,6 +34,12 @@ const VEHICLE_TEMPLATE = {
     special: "",
 }
 
+const VOL_HOURS_TEMPLATE = (day="monday") => {return {
+    day: day,
+    start: "",
+    end: ""
+}}
+
 const BLANK_PROFILE = {
     user_type: "",
     village_id: "",
@@ -63,6 +69,7 @@ const BLANK_PROFILE = {
         special: ""
     },
     vehicles: [VEHICLE_TEMPLATE,],
+    volunteer_hours: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map(day => VOL_HOURS_TEMPLATE(day)),
     driver_specific: {
         vetting: "",
     },
@@ -176,10 +183,18 @@ const VillageReducer = (state = initialState, action) => {
                 case "remove_vehicle":
                     newState.active_profile.vehicles.splice(action.payload.value, 1);
                     break;
+                case "add_vol_hours":
+                    newState.active_profile.volunteer_hours.push(_.cloneDeep(VOL_HOURS_TEMPLATE()));
+                    break;
+                case "remove_vol_hours":
+                    newState.active_profile.volunteer_hours.splice(action.payload.value, 1);
+                    break;
                 default:
                     if (action.payload.type === "addresses") {
                         newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
                     } else if (action.payload.type === "vehicles") {
+                        newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                    } else if (action.payload.type === "volunteer_hours") {
                         newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
                     } else {
                         newState.active_profile[action.payload.type][action.payload.id] = action.payload.value;
