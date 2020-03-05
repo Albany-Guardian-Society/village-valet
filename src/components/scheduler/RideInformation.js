@@ -5,6 +5,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
+import './pic_placeholder.jpg';
 
 class RideInformation extends Component {
     constructor(props) {
@@ -24,17 +26,19 @@ class RideInformation extends Component {
                 <Row>
                     <Col>
                         <Row>
-                            Picture
+                            <img src="./pic_placeholder.jpg" alt="pic_placeholder"/>
                         </Row>
                         <Row>
-                            Name
+                            <Form.Control readOnly type="text" placeholder="Frist Name" id='first_n' />
+                            <Form.Control readOnly type="text" placeholder="Last Name" id='last_n' />
                         </Row>
                         <Row>
-                            Round Trip Options
+                            <Form.Control type="date" placeholder="" id='ride_date' />
                         </Row>
                         <Row>
-                            Date
+                            <Form.Control type="text" placeholder="Return" id='return_op' />
                         </Row>
+
                     </Col>
                     <Col xs={10}>
                         <Table striped bordered hover>
@@ -48,34 +52,34 @@ class RideInformation extends Component {
                             </thead>
                             <tbody>
                             <tr>
-                                <td>Location</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Name</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
                                 <td>Address</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><Form.Control type="text" placeholder="Pickup Location" id='pickup' /></td>
+                                <td><Form.Control type="text" placeholder="Dropoff Location" id='dropoff' /></td>
+                                <td><Form.Control type="text" placeholder="Return" id='return' /></td>
                             </tr>
+                            {/*<tr>*/}
+                            {/*    <td>Name</td>*/}
+                            {/*    <td><Form.Control type="text" placeholder="Frist Name" id='first_n' /></td>*/}
+                            {/*    <td><Form.Control type="text" placeholder="Last Name" id='last_n' /></td>*/}
+                            {/*    <td></td>*/}
+                            {/*</tr>*/}
+                            {/*<tr>*/}
+                            {/*    <td>Address</td>*/}
+                            {/*    <td></td>*/}
+                            {/*    <td></td>*/}
+                            {/*    <td></td>*/}
+                            {/*</tr>*/}
                             <tr>
                                 <td>Special Instructions</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><Form.Control type="text" placeholder="Pickup Instructions" id='pickup_si' /></td>
+                                <td><Form.Control type="text" placeholder="Dropoff Instructions" id='dropoff_si'/></td>
+                                <td><Form.Control type="text" placeholder="Return Instructions" id='return_si'/></td>
                             </tr>
                             <tr>
                                 <td>Time</td>
+                                <td><Form.Control type="time" placeholder="pickup time" id='pickup_time' /></td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><Form.Control type="time" placeholder="return time" id='return_time' /></td>
                             </tr>
                             </tbody>
                         </Table>
