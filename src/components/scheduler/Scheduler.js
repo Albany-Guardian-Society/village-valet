@@ -65,12 +65,12 @@ class Scheduler extends Component {
                     width: "100%",}}>
                     <Col></Col>
                     <Col>
-                        <Button id="prev_button" onClick={() => {this.changePage(-1)}}>
+                        <Button size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
                             PREV
                         </Button>
                     </Col>
                     <Col>
-                        <Button id="next_button" onClick={() => {this.changePage(1)}}>
+                        <Button size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
                             NEXT
                         </Button>
                     </Col>
