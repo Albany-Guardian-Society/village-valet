@@ -56,14 +56,13 @@ class Scheduler extends Component {
         return (
             <Container>
                 {this.showPage()}
-                <div style={{
+                <Row style={{
                     textAlign: "center",
                     position: "fixed",
                     left: "0",
                     bottom: "0",
                     height: "60px",
                     width: "100%",}}>
-                <Row>
                     <Col></Col>
                     <Col>
                         <Button id="prev_button" onClick={() => {this.changePage(-1)}}>
@@ -77,7 +76,6 @@ class Scheduler extends Component {
                     </Col>
                     <Col></Col>
                 </Row>
-                </div>
             </Container>
         );
     }
