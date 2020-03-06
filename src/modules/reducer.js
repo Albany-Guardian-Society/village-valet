@@ -43,6 +43,7 @@ const VOL_HOURS_TEMPLATE = (day="monday") => {return {
 const BLANK_PROFILE = {
     user_type: "",
     village_id: "",
+    status: "active",
     personal_info: {
         first_name: "",
         last_name: "",
@@ -199,6 +200,12 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "set_active_user": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile = action.payload
+        return newState;
+    }
+
     case "ridebreakdown": {
         let newState = _.cloneDeep(state);
         newState.ridebreakdown = action.payload;
@@ -247,16 +254,33 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
-        case "scheduler":{
-            let newState = _.cloneDeep(state);
-            if (action.payload.type === "date"){
-                newState.active_ride.ride_data.date = action.payload.value;
-            } else{
-                newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
-
-            }
-            return newState;
+    case "scheduler": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.type === "date"){
+            newState.active_ride.ride_data.date = action.payload.value;
+        } else {
+            newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
         }
+        return newState;
+    }
+
+    case "set_ride_participant": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.type === "rider"){
+            newState.active_ride.rider.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.rider.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.rider.id = action.payload.user.id;
+        } else if (action.payload.type === "driver_1") {
+            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver_1.id = action.payload.user.id;
+        } else if (action.payload.type === "driver_2") {
+            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver_1.id = action.payload.user.id;
+        }
+        return newState;
+    }
 
     default:
         return state;

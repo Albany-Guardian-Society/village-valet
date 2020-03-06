@@ -35,8 +35,8 @@ class RideInformation extends Component {
                 <Row>
                     <Col>
                         <Row>
-                            <Form.Control readOnly type="text" placeholder="First Name" id='first_n' />
-                            <Form.Control readOnly type="text" placeholder="Last Name" id='last_n' />
+                            <Form.Control readOnly type="text" placeholder="First Name" value={this.props.active_ride.rider.first_name}/>
+                            <Form.Control readOnly type="text" placeholder="Last Name" value={this.props.active_ride.rider.last_name}/>
                         </Row>
                         <Row>
                             <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange} value={this.props.active_ride.ride_data.date}/>
