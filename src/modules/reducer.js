@@ -95,6 +95,49 @@ const initialState = {
     rides: {},
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
+    active_ride: {
+        ride_id: "",
+            rider: {
+            first_name: "",
+                last_name: "",
+                id: "",
+        },
+        driver_1: {
+            first_name: "",
+                last_name: "",
+                id: "",
+        },
+        //Optional second driver
+        driver_2: {
+            first_name: "",
+                last_name: "",
+                id: "",
+        },
+        locations: {
+            pickup: {
+                address: "",
+                    time: "",
+                    special: "",
+            },
+            dropoff: {
+                address: "",
+                    special: ""
+            },
+            //Optional return location
+            return: {
+                address: "",
+                    time: "",
+                    special: ""
+
+            },
+        },
+        ride_data: {
+            distance: "",
+                time_total: "",
+                traffic: "",
+                date: "",
+        }
+    }
 
 };
 
@@ -203,6 +246,17 @@ const VillageReducer = (state = initialState, action) => {
             }
         return newState;
     }
+
+        case "scheduler":{
+            let newState = _.cloneDeep(state);
+            if (action.payload.type === "date"){
+                newState.active_ride.ride_data.date = action.payload.value;
+            } else{
+                newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
+
+            }
+            return newState;
+        }
 
     default:
         return state;
