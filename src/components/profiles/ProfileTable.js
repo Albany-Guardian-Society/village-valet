@@ -74,7 +74,7 @@ class ProfileTable extends Component {
                 default:
                     return true;
             }
-        })
+        });
 
         //could also be done with a map function return
         for (let index in filtered_users) {
