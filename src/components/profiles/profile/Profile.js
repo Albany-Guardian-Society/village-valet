@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ProfileTable from "./ProfileContainer.js";
 
 import usrpic from './user-profile-male-logo.jpg';
 
@@ -28,7 +27,6 @@ class Profile extends Component {
                     </Row>
                 <Row>
                     <Col>
-                        <ProfileTable/>
                     </Col>
                 </Row>
             </div>

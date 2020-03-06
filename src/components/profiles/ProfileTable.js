@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
+import { withRouter } from 'react-router-dom';
 import fuzzysort from "fuzzysort";
+
+import Table from "react-bootstrap/Table";
 
 class ProfileTable extends Component {
     constructor(props){
@@ -11,10 +13,17 @@ class ProfileTable extends Component {
         };
         this.generateTableData = this.generateTableData.bind(this);
         this.generateTableHeaders = this.generateTableHeaders.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
     handleSelect(event) {
         this.setState({selected_row: event.target.id});
+        //Handle this being selected
+        //In the case of "all" we want to open the profile
+        //In the case of "rider" or "driver" we want to add them to the active_ride
+        if (this.props.mode === "all") {
+            this.props.history.push('/Profiles/User/'+event.target.id);
+        }
     }
 
     generateTableHeaders() {
@@ -122,4 +131,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileTable);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProfileTable));
