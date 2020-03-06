@@ -55,7 +55,6 @@ class Login extends Component {
     }
 
     componentWillUnmount() {
-        console.log("rem")
         document.removeEventListener('keyup', this.key_function);
     }
 
