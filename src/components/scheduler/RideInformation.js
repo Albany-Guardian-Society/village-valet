@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
-import './pic_placeholder.png';
+//import './pic_placeholder.png';
 
 class RideInformation extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ class RideInformation extends Component {
                 <Row>
                     <Col>
                         <Row>
-                            <img src="pic_placeholder.png" alt="pic_placeholder"/>
+                            {/*<img src="pic_placeholder.png" alt="pic_placeholder"/>*/}
                         </Row>
                         <Row>
                             <Form.Control readOnly type="text" placeholder="Frist Name" id='first_n' />
