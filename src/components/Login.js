@@ -86,7 +86,7 @@ class Login extends Component {
                 if (bcrypt.compareSync(this.state.password, data[0].password)) {
                     this.props.updateAuth(data[0]);
                     //This is part of react-router and allows forced page routing
-                    this.props.history.push('/Dashboard')
+                    this.props.history.push('/Dashboard');
                 } else {
                     this.setState({errorMessage: "Login Failed: Your username/password do not match."})
                 }

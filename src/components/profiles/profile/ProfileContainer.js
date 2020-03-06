@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Button from 'react-bootstrap/Button';
 
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Container from 'react-bootstrap/Container'
 // import TableContent from "./TableContent";
 
@@ -24,7 +23,11 @@ class PTable extends Component {
                 <Container>
                     {/*onClick={() => table(contact)}*/}
                         <Row>
+<<<<<<< HEAD:src/components/profiles/Profile/Profile_Table.js
                             <Button variant="primary" >Contact Info</Button>
+=======
+                            <Button variant="primary">Contact Info</Button>
+>>>>>>> master:src/components/profiles/profile/ProfileContainer.js
                         </Row>
 
                         <Row>

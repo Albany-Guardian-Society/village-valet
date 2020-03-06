@@ -18,10 +18,10 @@ class LoadData extends Component {
 	componentDidMount() {
         //Load the villages
         this.setState({message: "Loading Village"});
-        firestore.collection("villages").where("village_id", "==", this.props.village_id).get()
+        firestore.collection("villages").get()
         .then(querySnapshot => {
             const data = querySnapshot.docs.map(doc => doc.data());
-            this.props.load("village", data);
+            this.props.load("villages", data);
         }).then(() => {
             this.setState({status: 20});
         }).then(() => {
@@ -32,7 +32,7 @@ class LoadData extends Component {
                 this.setState({message: "Loading Users"});
                 firestore.collection("users").get()
                 .then(querySnapshot => {
-                    const data = querySnapshot.docs.map(doc => doc.data());
+                    const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
                     this.props.load("users", data);
                 }).then(() => {
                     this.setState({status: 60});
@@ -41,7 +41,7 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").get()
                     .then(querySnapshot => {
-                        const data = querySnapshot.docs.map(doc => doc.data());
+                        const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
                         this.props.load("rides", data);
                     }).then(() => {
                         this.setState({status: 100});
@@ -54,7 +54,7 @@ class LoadData extends Component {
                 this.setState({message: "Loading Users"});
                 firestore.collection("users").where("village_id", "==", this.props.village_id).get()
                 .then(querySnapshot => {
-                    const data = querySnapshot.docs.map(doc => doc.data());
+                    const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
                     this.props.load("users", data);
                 }).then(() => {
                     this.setState({status: 60});
@@ -63,7 +63,7 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").where("village_id", "==", this.props.village_id).get()
                     .then(querySnapshot => {
-                        const data = querySnapshot.docs.map(doc => doc.data());
+                        const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
                         this.props.load("rides", data);
                     }).then(() => {
                         this.setState({status: 100});
