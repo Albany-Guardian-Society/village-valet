@@ -26,36 +26,36 @@ class Profile extends Component {
         switch (this.state.sub_page) {
             case "general_info":
                 return (
-                <tbody>
-                    <tr>
-                        <th>First Name</th><td>{this.props.user.personal_info.first_name}</td>
-                    </tr>
-                    <tr>
-                        <th>Last Name</th><td>{this.props.user.personal_info.last_name}</td>
-                    </tr>
-                    <tr>
-                        <th>Email</th><td>{this.props.user.personal_info.email}</td>
-                    </tr>
-                    <tr>
-                        <th>Home Phone</th><td>{this.props.user.personal_info.phone_home}</td>
-                    </tr>
-                    <tr>
-                        <th>Mobile Phone</th><td>{this.props.user.personal_info.phone_mobile}</td>
-                    </tr>
-                    <tr>
-                        <th>Preferred Communcation</th><td>{this.props.user.personal_info.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
-                    </tr>
-                    <tr>
-                        <th>Language</th><td>{this.props.user.personal_info.language.map((l) => {return l.replace(/^\w/, c => c.toUpperCase()) + ", "})}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th><td>{this.props.user.status.replace(/^\w/, c => c.toUpperCase())}</td>
-                    </tr>
-                </tbody>
+                    <Table striped bordered><tbody>
+                        <tr>
+                            <th>First Name</th><td>{this.props.user.personal_info.first_name}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Name</th><td>{this.props.user.personal_info.last_name}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th><td>{this.props.user.personal_info.email}</td>
+                        </tr>
+                        <tr>
+                            <th>Home Phone</th><td>{this.props.user.personal_info.phone_home}</td>
+                        </tr>
+                        <tr>
+                            <th>Mobile Phone</th><td>{this.props.user.personal_info.phone_mobile}</td>
+                        </tr>
+                        <tr>
+                            <th>Preferred Communcation</th><td>{this.props.user.personal_info.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                        </tr>
+                        <tr>
+                            <th>Language</th><td>{this.props.user.personal_info.language.map((l) => {return l.replace(/^\w/, c => c.toUpperCase()) + ", "})}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th><td>{this.props.user.status.replace(/^\w/, c => c.toUpperCase())}</td>
+                        </tr>
+                    </tbody></Table>
                 );
             case "emergency":
                 return (
-                    <tbody>
+                    <Table striped bordered><tbody>
                         <tr>
                             <th>First Name</th><td>{this.props.user.emergency_contact.first_name}</td>
                         </tr>
@@ -74,55 +74,139 @@ class Profile extends Component {
                         <tr>
                             <th>Preferred Communcation</th><td>{this.props.user.emergency_contact.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
                         </tr>
-                    </tbody>
+                    </tbody></Table>
                 );
             case "vehicles":
                 return (
-                <tbody>
-                    <tr>
-                        <td>First Name</td>
-                        <td>{this.props.user.personal_info.first_name}</td>
-                    </tr>
-                </tbody>
+                    this.props.user.vehicles.map((car) => {
+                        return (
+                            <React.Fragment key={car.lp+car.make_model}><Table striped bordered><tbody>
+                                <tr>
+                                    <th colSpan="2">{car.year + " " + car.make_model}</th>
+                                </tr>
+                                <tr>
+                                    <th>Make/Model</th>
+                                    <td>{car.make_model}</td>
+                                </tr>
+                                <tr>
+                                    <th>Year</th>
+                                    <td>{car.year}</td>
+                                </tr>
+                                <tr>
+                                    <th>Color</th>
+                                    <td>{car.color}</td>
+                                </tr>
+                                <tr>
+                                    <th>License Plate</th>
+                                    <td>{car.lp}</td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Seats</th>
+                                    <td>{car.seats}</td>
+                                </tr>
+
+                                <tr>
+                                    <th colSpan="2">Insurance</th>
+                                </tr>
+                                <tr>
+                                    <th>Provder</th>
+                                    <td>{car.insur_provider}</td>
+                                </tr>
+                                <tr>
+                                    <th>Policy Number</th>
+                                    <td>{car.insur_policy}</td>
+                                </tr>
+                                <tr>
+                                    <th>Coverage Amount</th>
+                                    <td>{car.insur_coverage}</td>
+                                </tr>
+                                <tr>
+                                    <th>Insurance Expiration</th>
+                                    <td>{car.insur_exp}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Inspection</th>
+                                    <td>{car.insp_date}</td>
+                                </tr>
+                                <tr>
+                                    <th>Additional Notes</th>
+                                    <td>{car.special}</td>
+                                </tr>
+                            </tbody></Table>
+                            <hr/></React.Fragment>
+                        );
+                    })
                 );
             case "schedule":
                 return (
-                    <tr>
-                        <td>First Name</td>
-                        <td>{this.props.user.personal_info.first_name}</td>
-                    </tr>
+                    <Table striped bordered>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {this.props.user.volunteer_hours.map((item) => {
+                        return (
+                            <tr key={item.day+item.start+item.end}>
+                                <td>{item.day}</td>
+                                <td>{item.start}</td>
+                                <td>{item.end}</td>
+                            </tr>
+                        );
+                    })}
+                    </tbody></Table>
                 );
             case "vetting":
                 return (
-                <tbody>
-                    <tr>
-                        <td>First Name</td>
-                        <td>{this.props.user.personal_info.first_name}</td>
-                    </tr>
-                </tbody>
+                    <Table striped bordered><tbody>
+                        <tr>
+                            <th>Vetting Date</th><td>{this.props.user.driver_specific.vetting}</td>
+                        </tr>
+                    </tbody></Table>
                 );
             case "addresses":
                 return (
-                    <tbody>
-                        {this.props.user.addresses.map((loc) => {
-                            return (
-                                <React.Fragment key={loc.name+loc.line_1}>
+                    this.props.user.addresses.map((loc) => {
+                        return (
+                            <React.Fragment key={loc.name+loc.line_1}><Table striped bordered><tbody>
                                 <tr>
-                                    <td colSpan="2">{loc.name}</td>
+                                    <th colSpan="2">{loc.name}</th>
                                 </tr>
                                 <tr>
                                     <th>Line 1</th>
                                     <td>{loc.line_1}</td>
                                 </tr>
-                                <br/>
-                                </React.Fragment>
-                            );
-                        })}
-                    </tbody>
+                                <tr>
+                                    <th>Line 2</th>
+                                    <td>{loc.line_2}</td>
+                                </tr>
+                                <tr>
+                                    <th>City</th>
+                                    <td>{loc.city}</td>
+                                </tr>
+                                <tr>
+                                    <th>State</th>
+                                    <td>{loc.state}</td>
+                                </tr>
+                                <tr>
+                                    <th>Zip</th>
+                                    <td>{loc.zip}</td>
+                                </tr>
+                                <tr>
+                                    <th>Special Instructions</th>
+                                    <td>{loc.special_instructions}</td>
+                                </tr>
+                            </tbody></Table>
+                            <hr/></React.Fragment>
+                        );
+                    })
                 );
             case "special":
                 return (
-                    <tbody>
+                    <Table striped bordered><tbody>
                         <tr>
                             <th>Allergies</th><td>{this.props.user.accommodations.allergies}</td>
                         </tr>
@@ -135,7 +219,7 @@ class Profile extends Component {
                         <tr>
                             <th>Additional Accomodations</th><td>{this.props.user.accommodations.special}</td>
                         </tr>
-                    </tbody>
+                    </tbody></Table>
                 );
             default:
                 break;
@@ -191,9 +275,7 @@ class Profile extends Component {
                         </ListGroup>
                     </Col>
                     <Col>
-                        <Table striped bordered>
-                            {this.genSubPage()}
-                        </Table>
+                        {this.genSubPage()}
                     </Col>
                     </Row>
                 </Card.Body>
