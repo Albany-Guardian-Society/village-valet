@@ -8,9 +8,10 @@ import Button from "react-bootstrap/Button";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
-import Ledger from "./Ledger.js"
+import Ledger from "./Ledger.js";
 import Riders from "./Riders.js";
 import Drivers from "./Drivers.js";
+import Reports from "./Reports";
 
 class Metrics extends Component {
     constructor(props) {
@@ -33,6 +34,8 @@ class Metrics extends Component {
                 return (<Riders/>);
             case "drivers":
                 return (<Drivers/>);
+            case "reports":
+                return (<Reports/>);
             default:
                 return(<Ledger/>);
         }
@@ -52,7 +55,7 @@ class Metrics extends Component {
                     </ToggleButtonGroup>
 
                     <ButtonGroup aria-label="First group">
-                        <Button  variant="info">Print</Button>
+                        <Button  variant="info">Download</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
                 {this.changeTable()}

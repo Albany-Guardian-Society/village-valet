@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card";
-import RidesTable from "../dashboard/RidesTable";
+import Form from "react-bootstrap/Form";
+import CardDeck from "react-bootstrap/CardDeck";
 
 
 
@@ -22,29 +21,48 @@ class Reports extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                <Row>
-                    <Col>
-                        <Card>
-                            <Card.Header>Who?</Card.Header>
-                            <Card.Body>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card>
-                            <Card.Header>What?</Card.Header>
-                            <Card.Body>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col>
-                        <Card>
-                            <Card.Header>When?</Card.Header>
-                            <Card.Body>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
+                <CardDeck>
+                    <Card>
+                        <Card.Header as="th">Who?</Card.Header>
+                        <Card.Body>
+                        </Card.Body>
+                    </Card>
+
+                    <Card>
+                        <Card.Header as="th">What?</Card.Header>
+                        <Card.Body className="text-left">
+                            <Form>
+                                {['checkbox'].map((type) => (
+                                    <div key={`default-${type}`} className="mb-3">
+                                        <Form.Check
+                                            type={type}
+                                            id={`mileage`}
+                                            label={`Mileage`}
+                                        />
+
+                                        <Form.Check
+                                            type={type}
+                                            label={`Volunteer Hours`}
+                                            id={`volunteer hours`}
+                                        />
+
+                                        <Form.Check
+                                            type={type}
+                                            label={`Number of Trips`}
+                                            id={`number of trips`}
+                                        />
+                                    </div>
+                                ))}
+                            </Form>
+                        </Card.Body>
+                    </Card>
+
+                    <Card>
+                        <Card.Header as="th">When?</Card.Header>
+                        <Card.Body>
+                        </Card.Body>
+                    </Card>
+                </CardDeck>
             </Container>
         );
     }
