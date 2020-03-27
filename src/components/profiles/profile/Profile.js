@@ -151,7 +151,7 @@ class Profile extends Component {
                     {this.props.user.volunteer_hours.map((item) => {
                         return (
                             <tr key={item.day+item.start+item.end}>
-                                <td>{item.day}</td>
+                                <td>{item.day.replace(/^\w/, c => c.toUpperCase())}</td>
                                 <td>{item.start}</td>
                                 <td>{item.end}</td>
                             </tr>
@@ -217,7 +217,7 @@ class Profile extends Component {
                             <th>Smoke Free</th><td>{this.props.user.accommodations.smoke_preference.replace(/^\w/, c => c.toUpperCase())}</td>
                         </tr>
                         <tr>
-                            <th>Additional Accomodations</th><td>{this.props.user.accommodations.special}</td>
+                            <th>Additional Accommodations</th><td>{this.props.user.accommodations.special}</td>
                         </tr>
                     </tbody></Table>
                 );
@@ -269,7 +269,7 @@ class Profile extends Component {
                             :
                                 <>
                                 <ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "special"} onClick={() => this.changePage("special")}>Special Accomodations</ListGroup.Item>
+                                <ListGroup.Item active={this.state.sub_page === "special"} onClick={() => this.changePage("special")}>Special Accommodations</ListGroup.Item>
                                 </>
                             }
                         </ListGroup>
