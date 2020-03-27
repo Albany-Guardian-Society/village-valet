@@ -136,6 +136,7 @@ class Register extends Component {
         return true
     }
 
+    //Might want to add this to the reducer for consistancy
     submitRegistration() {
         console.log(this.props.registration);
         firestore.collection("users").add(this.props.registration)

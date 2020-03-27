@@ -1,4 +1,5 @@
 import _ from "lodash";
+import firestore from "./firestore.js";
 
 // The reducer is an internal middle man that handles passing information from each
 // of the various components to something called the store.  The store is basically a
@@ -280,6 +281,70 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
             newState.active_ride.driver_1.id = action.payload.user.id;
         }
+        return newState;
+    }
+
+    case "user_update": {
+        let newState = _.cloneDeep(state);
+
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index] = newState.active_profile;
+        }
+
+        firestore.collection("users").doc(newState.active_profile.id).update(newState.active_profile);
+
+        return newState;
+    }
+
+    case "user_deactivate": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile.status = "inactive";
+        //Now edit the local copy, then update the DB:
+        //Find the user in newState.users
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index].status = "inactive";
+        }
+
+        //Update Firestore
+        firestore.collection("users").doc(newState.active_profile.id).update({
+            status: "inactive"
+        });
+
+        return newState;
+    }
+    case "user_activate": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile.status = "active";
+        //Now edit the local copy, then update the DB:
+        //Find the user in newState.users
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index].status = "active";
+        }
+
+        //Update the FS document
+        firestore.collection("users").doc(newState.active_profile.id).update({
+            status: "active"
+        });
+
+        return newState;
+    }
+    case "user_perma_delete": {
+        let newState = _.cloneDeep(state);
+        //Now edit the local copy, then update the DB:
+        let id_to_delete = newState.active_profile.id;
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            delete newState.users[index];
+        }
+
+        newState.active_profile = _.cloneDeep(BLANK_PROFILE);
+
+        //Delete the record (document) in firestore
+        firestore.collection("users").doc(id_to_delete).delete();
+
         return newState;
     }
 
