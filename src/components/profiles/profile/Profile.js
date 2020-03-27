@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import firestore from "../../../modules/firestore.js";
 
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
