@@ -8,11 +8,14 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 
+import GI from "../registration/GeneralInformation.js";
+
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sub_page: "general_info"
+            sub_page: "general_info",
+            mode: "view"
         };
         this.changePage = this.changePage.bind(this);
         this.genSubPage = this.genSubPage.bind(this);
@@ -226,6 +229,35 @@ class Profile extends Component {
         }
     }
 
+    handleDeactivate() {
+        if (window.confirm("Are you sure you want to DEACTIVATE this user?")) {
+            this.props.deactivateUser();
+            let name = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            window.alert("DEACTIVATED: " + name);
+        }
+    }
+
+    handleReactivate() {
+        if (window.confirm("Are you sure you want to ACTIVATE this user?")) {
+            this.props.activateUser();
+            let name = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            window.alert("ACTIVATED: " + name);
+        }
+    }
+
+    handlePermaDelete() {
+        if (window.confirm("Are you sure you want to DELETE this user?")) {
+            let check_value = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            if (window.prompt("To delete this user please enter check value: " + check_value + "\n THIS OPERATION CANNOT BE UNDONE!") === check_value) {
+                this.props.deleteUser();
+                this.props.history.push("/Profiles/");
+                window.alert("DELETED: " + check_value);
+            } else {
+                window.alert("Check value did not match, operation canceled.")
+            }
+        }
+    }
+
     render() {
         return (
             <div style={{paddingLeft: "3%", paddingRight: "3%"}}>
@@ -235,19 +267,19 @@ class Profile extends Component {
                     <div style={{float:"right"}}>
                         {this.props.user.status === "active" ?
                         <React.Fragment>
-                            <Button variant="dark" style={{marginRight: "10px"}}>
+                            <Button variant="dark" style={{marginRight: "10px"}} onClick={() => this.setState({mode: "edit"})}>
                                 Edit
                             </Button>
-                            <Button variant="danger">
+                            <Button variant="danger" onClick={() => this.handleDeactivate()}>
                                 Deactivate
                             </Button>
                         </React.Fragment>
                         :
                         <React.Fragment>
-                            <Button variant="warning" style={{marginRight: "10px"}}>
+                            <Button variant="warning" style={{marginRight: "10px"}} onClick={() => this.handleReactivate()}>
                                 Reactivate
                             </Button>
-                            <Button variant="danger">
+                            <Button variant="danger" onClick={() => this.handlePermaDelete()}>
                                 Permanently Delete
                             </Button>
                         </React.Fragment>
@@ -290,6 +322,18 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    deactivateUser: () => dispatch({
+        type: "user_deactivate",
+        payload: null
+    }),
+    activateUser: () => dispatch({
+        type: "user_activate",
+        payload: null
+    }),
+    deleteUser: () => dispatch({
+        type: "user_perma_delete",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
