@@ -6,6 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
+import {Autocomplete, LoadScript} from "@react-google-maps/api";
+
 //import './pic_placeholder.png';
 
 class RideInformation extends Component {
@@ -13,13 +15,18 @@ class RideInformation extends Component {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.autocomplete = null;
+
+        this.onLoad = this.onLoad.bind(this);
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
 
     handleChange(event){
-        let label_flag = event.target.id.split("_")
+        let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date"){
             //updating the date
-            this.props.updateScheduler(label_flag[1], null, event.target.value)
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
+            console.log(event.target.value)
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
@@ -27,6 +34,22 @@ class RideInformation extends Component {
 
         }
     };
+
+    onLoad(autocomplete) {
+        console.log('autocomplete: ', autocomplete);
+
+        this.autocomplete = autocomplete
+    }
+
+    onPlaceChanged() {
+        if (this.autocomplete !== null) {
+            const place = this.autocomplete.getPlace();
+            console.log(<place className="geometry location"></place>);
+            this.props.active_ride.locations.dropoff.address = place.formatted_address;
+        } else {
+            console.log('Autocomplete is not loaded yet!')
+        }
+    }
 
     render() {
         return (
@@ -60,7 +83,22 @@ class RideInformation extends Component {
                             <tr>
                                 <td>Address</td>
                                 <td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address' onChange={this.handleChange} value={this.props.active_ride.locations.pickup.address}/></td>
-                                <td><Form.Control type="text" placeholder="Dropoff Location" id='sched_dropoff_address' onChange={this.handleChange} value={this.props.active_ride.locations.dropoff.address}/></td>
+                                <td>
+                                    <LoadScript
+                                        id="script-loader"
+                                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                                        libraries={["places"]}
+                                    >
+                                        <Autocomplete
+                                            onLoad={this.onLoad}
+                                            onPlaceChanged={this.onPlaceChanged}
+                                        >
+                                            <Form.Control type="text" placeholder="Dropoff Location"
+                                                          id='sched_dropoff_address' onChange={this.handleChange}
+                                                          value={this.props.active_ride.locations.dropoff.address}/>
+                                        </Autocomplete>
+                                    </LoadScript>
+                                </td>
                                 <td><Form.Control type="text" placeholder="Return" id='sched_return_address' onChange={this.handleChange} value={this.props.active_ride.locations.return.address}/></td>
                             </tr>
                             <tr>

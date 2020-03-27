@@ -18,7 +18,7 @@ const ADDRESS_TEMPLATE = {
     state: "",
     zip: "",
     special_instructions: "",
-}
+};
 
 const VEHICLE_TEMPLATE = {
     make_model: "",
@@ -32,13 +32,14 @@ const VEHICLE_TEMPLATE = {
     insur_coverage: 0,
     seats: 0,
     special: "",
-}
+};
 
 const VOL_HOURS_TEMPLATE = (day="monday") => {return {
     day: day,
     start: "",
     end: ""
-}}
+}
+};
 
 const BLANK_PROFILE = {
     user_type: "",
@@ -74,10 +75,10 @@ const BLANK_PROFILE = {
     driver_specific: {
         vetting: "",
     },
-}
+};
 
 const initialState = {
-    authenticated: false,
+    authenticated: true,
     loaded: false,
     operator: {
         first_name: "",
@@ -202,7 +203,7 @@ const VillageReducer = (state = initialState, action) => {
 
     case "set_active_user": {
         let newState = _.cloneDeep(state);
-        newState.active_profile = action.payload
+        newState.active_profile = action.payload;
         return newState;
     }
 

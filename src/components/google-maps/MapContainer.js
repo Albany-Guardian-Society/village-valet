@@ -25,6 +25,7 @@ class MapContainer extends Component {
         }
     }
 
+
     makeDirections(ride_id, locations) {
         if (locations === undefined || ride_id === undefined) return;
         if (this.state.directions_cache.has(ride_id)) {
@@ -66,6 +67,7 @@ class MapContainer extends Component {
             }}
         />
     }
+
 
     render() {
         return (
