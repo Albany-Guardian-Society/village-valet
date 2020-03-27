@@ -283,6 +283,19 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "user_update": {
+        let newState = _.cloneDeep(state);
+
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index] = newState.active_profile;
+        }
+
+        firestore.collection("users").doc(newState.active_profile.id).update(newState.active_profile);
+
+        return newState;
+    }
+
     case "user_deactivate": {
         let newState = _.cloneDeep(state);
         newState.active_profile.status = "inactive";

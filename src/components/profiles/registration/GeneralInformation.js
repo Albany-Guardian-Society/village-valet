@@ -48,25 +48,29 @@ class GeneralInformation extends Component {
     render() {
         return (
             <div>
-                <Card>
-                    <Card.Body>
-                        <Row className="reg_row">
-                            <Form.Label column sm={4}  lg={2}>Account Type:</Form.Label>
-                            <Col><Form.Control as="select" id="reg_user_type" onChange={this.handleChange} value={this.props.user_type}>
-                                <option value="" label=""/>
-                                <option value="rider" label="Rider"/>
-                                <option value="driver" label="Driver"/>
-                            </Form.Control></Col>
-                        </Row>
-                        <Row className="reg_row">
-                            <Form.Label column sm={4}  lg={2}>Village Membership:</Form.Label>
-                            <Col><Form.Control as="select" id="reg_village_id" onChange={this.handleChange} value={this.props.village_id}>
-                                {this.villageOptions()}
-                            </Form.Control></Col>
-                        </Row>
-                    </Card.Body>
-                </Card>
-                <br/>
+                {!this.props.partial ? <React.Fragment>
+                    <Card>
+                        <Card.Body>
+                            <Row className="reg_row">
+                                <Form.Label column sm={4}  lg={2}>Account Type:</Form.Label>
+                                <Col><Form.Control as="select" id="reg_user_type" onChange={this.handleChange} value={this.props.user_type}>
+                                    <option value="" label=""/>
+                                    <option value="rider" label="Rider"/>
+                                    <option value="driver" label="Driver"/>
+                                </Form.Control></Col>
+                            </Row>
+                            <Row className="reg_row">
+                                <Form.Label column sm={4}  lg={2}>Village Membership:</Form.Label>
+                                <Col><Form.Control as="select" id="reg_village_id" onChange={this.handleChange} value={this.props.village_id}>
+                                    {this.villageOptions()}
+                                </Form.Control></Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                    <br/>
+                </React.Fragment>
+                :
+                null}
                 <Card>
                     <Card.Header>
                         <h5 style={{float:"left"}}>General Information</h5>
