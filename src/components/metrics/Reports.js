@@ -31,50 +31,22 @@ class Reports extends Component {
                     </Card>
 
                     <Card>
-                        <Card.Header as="th">Choose the Information to Include</Card.Header>
-                        <Card.Body className="text-left">
-                            <Form>
-                                {['checkbox'].map((type) => (
-                                    <div key={`default-${type}`} className="mb-3">
-                                        <Form.Check
-                                            type={type}
-                                            id={`mileage`}
-                                            label={`Mileage`}
-                                        />
-
-                                        <Form.Check
-                                            type={type}
-                                            label={`Volunteer Hours`}
-                                            id={`volunteer hours`}
-                                        />
-
-                                        <Form.Check
-                                            type={type}
-                                            label={`Number of Trips`}
-                                            id={`number of trips`}
-                                        />
-                                    </div>
-                                ))}
-                            </Form>
-                        </Card.Body>
-                    </Card>
-
-                    <Card>
-                        <Card.Header as="th">Specify the Time Frame</Card.Header>
+                        <Card.Header as="th">Choose the Type of Report</Card.Header>
                         <Card.Body className="text-left">
                             <Form>
                                 {['radio'].map((type) => (
                                     <div key={`default-${type}`} className="mb-3">
                                         <Form.Check
                                             type={type}
-                                            id={`all time`}
-                                            label={`All Time`}
+                                            id={`mileage`}
+                                            label={`Mileage`}
                                         />
                                     </div>
                                 ))}
                             </Form>
                         </Card.Body>
                     </Card>
+
                 </CardDeck>
             </Container>
         );
