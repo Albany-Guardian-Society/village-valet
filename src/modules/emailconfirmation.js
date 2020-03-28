@@ -13,7 +13,7 @@ oauth2Client.setCredentials({
 const accessToken = oauth2Client.getAccessToken();
 
 // async..await is not allowed in global scope, must use a wrapper
-const sendEmail = async(address, subject, text, html) => {
+const sendEmail = async (message) => {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -32,13 +32,27 @@ const sendEmail = async(address, subject, text, html) => {
     // send mail with defined transport object
     let info = await transporter.sendMail({
         from: `"Village Valet" <${process.env.REACT_APP_GMAIL_EMAIL}>`, // sender address
-        to: address, // list of receivers
-        subject, // Subject line
-        text, // plain text body
-        html // html body
+        ...message
     });
 
     console.log("Message sent: %s", info.messageId);
 };
 
 export default sendEmail;
+
+
+// Message object
+let message = {
+    // Comma separated list of recipients
+    to: '${riderFirstName} ${riderLastName} <${riderEmail}>, ${driverFirstName} ${driverLastName} <${driverEmail}> ',
+
+    // Subject of the message
+    subject: 'AGS Village Valet Ride Confirmation' + Date.now(),
+
+    // plaintext body
+    text: 'Below is the information about the Scheduled Rider',
+
+    // HTML body
+    html: "<b>AGS Village Valet Ride Information</b>",
+
+};
