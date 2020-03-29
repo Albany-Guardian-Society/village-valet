@@ -78,6 +78,50 @@ const BLANK_PROFILE = {
     },
 };
 
+const BLANK_RIDE = {
+    ride_id: "",
+    rider: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    driver_1: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    //Optional second driver
+    driver_2: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    locations: {
+        pickup: {
+            address: "",
+            time: "",
+            special: "",
+        },
+        dropoff: {
+            address: "",
+            special: ""
+        },
+        //Optional return location
+        return: {
+            address: "",
+                time: "",
+                special: ""
+
+        },
+    },
+    ride_data: {
+        distance: "",
+            time_total: "",
+            traffic: "",
+            date: "",
+    }
+}
+
 const initialState = {
     authenticated: false,
     loaded: false,
@@ -96,52 +140,10 @@ const initialState = {
     villages: {},
     users: {},
     rides: {},
+    status: "active",
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
-    active_ride: {
-        ride_id: "",
-            rider: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        driver_1: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        //Optional second driver
-        driver_2: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        locations: {
-            pickup: {
-                address: "",
-                    time: "",
-                    special: "",
-            },
-            dropoff: {
-                address: "",
-                    special: ""
-            },
-            //Optional return location
-            return: {
-                address: "",
-                    time: "",
-                    special: ""
-
-            },
-        },
-        ride_data: {
-            distance: "",
-                time_total: "",
-                traffic: "",
-                date: "",
-        }
-    }
-
+    active_ride: _.cloneDeep(BLANK_RIDE),
 };
 
 //The authentication should be cached for a period of time
