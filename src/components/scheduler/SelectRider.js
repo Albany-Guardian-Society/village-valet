@@ -12,12 +12,14 @@ import ProfileTable from "../profiles/ProfileTable";
 class SelectRider extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            search_term: "",
+        };
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event){
-
+        this.setState({search_term: event.target.value})
     };
 
     render() {
@@ -33,7 +35,7 @@ class SelectRider extends Component {
                     </Col>
                 </Row>
                 <hr/>
-                <ProfileTable mode={"rider"}/>
+                <ProfileTable search_term={this.state.search_term} mode={"rider"}/>
             </Container>
         );
     }

@@ -35,7 +35,7 @@ class App extends Component {
                                 <Route path="/Dashboard" component={Dashboard}/>
                                 <Route path="/Scheduler" component={Scheduler}/>
                                 <Route path="/Profiles/Register" component={Register}/>
-                                <Route path="/Profiles/User" component={Profile}/>
+                                <Route path="/Profiles/User/*" component={Profile}/>
                                 <Route path="/Profiles" component={Profiles}/>
                                 <Route path="/Metrics" component={Metrics}/>
                                 <Route path="/" component={Error}/>
