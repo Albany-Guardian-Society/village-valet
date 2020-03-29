@@ -78,33 +78,46 @@ const BLANK_PROFILE = {
 }
 
 const BLANK_RIDE = {
-    rider_id: "",
+    ride_id: "",
     rider: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
     driver_1: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
-    //Optional
+    //Optional second driver
     driver_2: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
     locations: {
-        pickup: "",
-        dropoff: "",
-        //Optional
-        return: "",
+        pickup: {
+            address: "",
+                time: "",
+                special: "",
+        },
+        dropoff: {
+            address: "",
+                special: ""
+        },
+        //Optional return location
+        return: {
+            address: "",
+                time: "",
+                special: ""
+
+        },
     },
     ride_data: {
         distance: "",
-        time_total: "",
-        traffic: "",
+            time_total: "",
+            traffic: "",
+            date: "",
     }
 }
 
@@ -129,54 +142,7 @@ const initialState = {
     status: "active",
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
-<<<<<<< HEAD
     active_ride: _.cloneDeep(BLANK_RIDE),
-=======
-    active_ride: {
-        ride_id: "",
-            rider: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        driver_1: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        //Optional second driver
-        driver_2: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        locations: {
-            pickup: {
-                address: "",
-                    time: "",
-                    special: "",
-            },
-            dropoff: {
-                address: "",
-                    special: ""
-            },
-            //Optional return location
-            return: {
-                address: "",
-                    time: "",
-                    special: ""
-
-            },
-        },
-        ride_data: {
-            distance: "",
-                time_total: "",
-                traffic: "",
-                date: "",
-        }
-    }
-
->>>>>>> 823e317844c8a3d4fa05a71fe8f098a8c1ab274b
 };
 
 //The authentication should be cached for a period of time
