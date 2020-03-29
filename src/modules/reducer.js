@@ -79,7 +79,7 @@ const BLANK_PROFILE = {
 };
 
 const initialState = {
-    authenticated: true,
+    authenticated: false,
     loaded: false,
     operator: {
         first_name: "",
@@ -88,8 +88,8 @@ const initialState = {
     },
     ridebreakdown: {
         id: "",
-        rider:'',
-        driver:'',
+        rider: '',
+        driver: '',
         pickup: "",
         dropoff: ""
     },

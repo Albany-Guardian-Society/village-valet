@@ -15,7 +15,8 @@ class RideInformation extends Component {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
-        this.autocomplete = null;
+        this.autocomplete = {};
+        this.count = 0;
 
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
@@ -37,15 +38,14 @@ class RideInformation extends Component {
 
     onLoad(autocomplete) {
         console.log('autocomplete: ', autocomplete);
-
-        this.autocomplete = autocomplete
+        this.autocomplete[this.count] = autocomplete;
+        this.count += 1
     }
 
-    onPlaceChanged() {
-        if (this.autocomplete !== null) {
-            const place = this.autocomplete.getPlace();
-            console.log(<place className="geometry location"></place>);
-            this.props.active_ride.locations.dropoff.address = place.formatted_address;
+    onPlaceChanged(variable, number) {
+        if (this.autocomplete[number] !== null) {
+            const place = this.autocomplete[number].getPlace();
+            this.props.active_ride.locations[variable].address = place.formatted_address;
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -79,41 +79,70 @@ class RideInformation extends Component {
                                 <th>Return</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td>Address</td>
-                                <td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address' onChange={this.handleChange} value={this.props.active_ride.locations.pickup.address}/></td>
-                                <td>
-                                    <LoadScript
-                                        id="script-loader"
-                                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                                        libraries={["places"]}
-                                    >
+                            <LoadScript
+                                id="script-loader"
+                                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                                libraries={["places"]}
+                            >
+                                <tbody>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>
                                         <Autocomplete
                                             onLoad={this.onLoad}
-                                            onPlaceChanged={this.onPlaceChanged}
+                                            onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                        >
+                                            <Form.Control type="text" placeholder="Pickup Location"
+                                                          id='sched_pickup_address' onChange={this.handleChange}
+                                                          value={this.props.active_ride.locations.pickup.address}/>
+                                        </Autocomplete>
+                                    </td>
+                                    <td>
+                                        <Autocomplete
+                                            onLoad={this.onLoad}
+                                            onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
                                         >
                                             <Form.Control type="text" placeholder="Dropoff Location"
                                                           id='sched_dropoff_address' onChange={this.handleChange}
                                                           value={this.props.active_ride.locations.dropoff.address}/>
                                         </Autocomplete>
-                                    </LoadScript>
-                                </td>
-                                <td><Form.Control type="text" placeholder="Return" id='sched_return_address' onChange={this.handleChange} value={this.props.active_ride.locations.return.address}/></td>
-                            </tr>
-                            <tr>
-                                <td>Special Instructions</td>
-                                <td><Form.Control type="text" placeholder="Pickup Instructions" id='sched_pickup_special' onChange={this.handleChange} value={this.props.active_ride.locations.pickup.special}/></td>
-                                <td><Form.Control type="text" placeholder="Dropoff Instructions" id='sched_dropoff_special' onChange={this.handleChange} value={this.props.active_ride.locations.dropoff.special}/></td>
-                                <td><Form.Control type="text" placeholder="Return Instructions" id='sched_return_special' onChange={this.handleChange} value={this.props.active_ride.locations.return.special}/></td>
-                            </tr>
-                            <tr>
-                                <td>Time</td>
-                                <td><Form.Control type="time" placeholder="pickup time" id='sched_pickup_time' onChange={(e) => this.handleChange(e)} value={this.props.active_ride.locations.pickup.time}/></td>
-                                <td></td>
-                                <td><Form.Control type="time" placeholder="return time" id='sched_return_time' onChange={(e) => this.handleChange(e)} value={this.props.active_ride.locations.return.time}/></td>
-                            </tr>
-                            </tbody>
+                                    </td>
+                                    <td>
+                                        <Autocomplete
+                                            onLoad={this.onLoad}
+                                            onPlaceChanged={() => this.onPlaceChanged('return', 2)}
+                                        >
+                                            <Form.Control type="text" placeholder="Return" id='sched_return_address'
+                                                          onChange={this.handleChange}
+                                                          value={this.props.active_ride.locations.return.address}/>
+                                        </Autocomplete>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Special Instructions</td>
+                                    <td><Form.Control type="text" placeholder="Pickup Instructions"
+                                                      id='sched_pickup_special' onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.pickup.special}/></td>
+                                    <td><Form.Control type="text" placeholder="Dropoff Instructions"
+                                                      id='sched_dropoff_special' onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.dropoff.special}/></td>
+                                    <td><Form.Control type="text" placeholder="Return Instructions"
+                                                      id='sched_return_special' onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.return.special}/></td>
+                                </tr>
+                                <tr>
+                                    <td>Time</td>
+                                    <td><Form.Control type="time" placeholder="pickup time" id='sched_pickup_time'
+                                                      onChange={(e) => this.handleChange(e)}
+                                                      value={this.props.active_ride.locations.pickup.time}/></td>
+                                    <td></td>
+                                    <td><Form.Control type="time" placeholder="return time" id='sched_return_time'
+                                                      onChange={(e) => this.handleChange(e)}
+                                                      value={this.props.active_ride.locations.return.time}/></td>
+                                </tr>
+                                </tbody>
+                            </LoadScript>
+
                         </Table>
                     </Col>
                 </Row>
