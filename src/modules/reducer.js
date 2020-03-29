@@ -19,7 +19,7 @@ const ADDRESS_TEMPLATE = {
     state: "",
     zip: "",
     special_instructions: "",
-}
+};
 
 const VEHICLE_TEMPLATE = {
     make_model: "",
@@ -33,13 +33,14 @@ const VEHICLE_TEMPLATE = {
     insur_coverage: 0,
     seats: 0,
     special: "",
-}
+};
 
 const VOL_HOURS_TEMPLATE = (day="monday") => {return {
     day: day,
     start: "",
     end: ""
-}}
+}
+};
 
 const BLANK_PROFILE = {
     user_type: "",
@@ -75,6 +76,52 @@ const BLANK_PROFILE = {
     driver_specific: {
         vetting: "",
     },
+};
+
+const BLANK_RIDE = {
+    ride_id: "",
+    rider: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    driver_1: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    //Optional second driver
+    driver_2: {
+        first_name: "",
+            last_name: "",
+            id: "",
+    },
+    locations: {
+        pickup: {
+            address: "",
+            time: "",
+            special: "",
+            geolocation: ""
+        },
+        dropoff: {
+            address: "",
+            special: "",
+            geolocation: ""
+        },
+        //Optional return location
+        return: {
+            address: "",
+            time: "",
+            special: "",
+            geolocation: ""
+        },
+    },
+    ride_data: {
+        distance: "",
+            time_total: "",
+            traffic: "",
+            date: "",
+    }
 }
 
 const initialState = {
@@ -87,8 +134,8 @@ const initialState = {
     },
     ridebreakdown: {
         id: "",
-        rider:'',
-        driver:'',
+        rider: '',
+        driver: '',
         pickup: "",
         dropoff: ""
     },
@@ -98,50 +145,7 @@ const initialState = {
     status: "active",
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
-    active_ride: {
-        ride_id: "",
-            rider: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        driver_1: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        //Optional second driver
-        driver_2: {
-            first_name: "",
-                last_name: "",
-                id: "",
-        },
-        locations: {
-            pickup: {
-                address: "",
-                    time: "",
-                    special: "",
-            },
-            dropoff: {
-                address: "",
-                    special: ""
-            },
-            //Optional return location
-            return: {
-                address: "",
-                    time: "",
-                    special: ""
-
-            },
-        },
-        ride_data: {
-            distance: "",
-                time_total: "",
-                traffic: "",
-                date: "",
-        }
-    }
-
+    active_ride: _.cloneDeep(BLANK_RIDE),
 };
 
 //The authentication should be cached for a period of time
@@ -204,7 +208,7 @@ const VillageReducer = (state = initialState, action) => {
 
     case "set_active_user": {
         let newState = _.cloneDeep(state);
-        newState.active_profile = action.payload
+        newState.active_profile = action.payload;
         return newState;
     }
 

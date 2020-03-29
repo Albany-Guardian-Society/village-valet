@@ -17,7 +17,6 @@ class RideBreakdown extends Component {
 	handleChange(event) {
 	}
 
-
     render() {
         return (
             <Card style={{height:'100%'}}>

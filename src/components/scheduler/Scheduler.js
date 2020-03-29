@@ -51,19 +51,26 @@ class Scheduler extends Component {
         }
     }
 
+
     render() {
         return (
             <Container>
                 {this.showPage()}
-                <Row>
+                <Row style={{
+                    textAlign: "center",
+                    position: "fixed",
+                    left: "0",
+                    bottom: "0",
+                    height: "60px",
+                    width: "100%",}}>
                     <Col></Col>
                     <Col>
-                        <Button id="prev_button" onClick={() => {this.changePage(-1)}}>
+                        <Button size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
                             PREV
                         </Button>
                     </Col>
                     <Col>
-                        <Button id="next_button" onClick={() => {this.changePage(1)}}>
+                        <Button size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
                             NEXT
                         </Button>
                     </Col>
