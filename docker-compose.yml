@@ -6,6 +6,6 @@ services:
         restart: always
         mem_limit: 500m
         ports:
-         - "80:80"
-         - "443:443"
+         - "80:3000"
+         - "443:3000"
         env_file: village-valet/.env
