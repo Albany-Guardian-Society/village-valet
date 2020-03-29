@@ -1,6 +1,6 @@
 version: '2'
 
- village-valet:
+village-valet:
     build: https://github.com/ItsAMeNick/village-valet.git
     container_name: village-valet
     restart: always
@@ -8,5 +8,4 @@ version: '2'
     ports:
      - "80:80"
      - "443:443"
-
     env_file: village-valet/.env
