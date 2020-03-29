@@ -101,17 +101,19 @@ const BLANK_RIDE = {
             address: "",
             time: "",
             special: "",
+            geolocation: ""
         },
         dropoff: {
             address: "",
-            special: ""
+            special: "",
+            geolocation: ""
         },
         //Optional return location
         return: {
             address: "",
-                time: "",
-                special: ""
-
+            time: "",
+            special: "",
+            geolocation: ""
         },
     },
     ride_data: {
