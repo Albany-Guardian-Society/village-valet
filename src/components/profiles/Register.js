@@ -159,7 +159,13 @@ class Register extends Component {
             : null}
             {this.generatePage()}
             <br/>
-            <Row>
+            <Row style={{
+                textAlign: "center",
+                position: "fixed",
+                left: "0",
+                bottom: "0",
+                height: "60px",
+                width: "100%",}}>
                 <Col> <Button variant="dark" size="lg" onClick={() => this.changePage(-1)} disabled={this.state.page === 0}>
                     {"< Prev"}
                 </Button> </Col>

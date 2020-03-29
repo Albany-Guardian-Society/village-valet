@@ -71,20 +71,20 @@ class RideInformation extends Component {
                 <Row>
                     <Col xs={1}/>
                     <Col xs={10}>
-                        <Table striped bordered hover>
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Pickup</th>
-                                <th>Dropoff</th>
-                                <th>Return</th>
-                            </tr>
-                            </thead>
-                            <LoadScript
-                                id="script-loader"
-                                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                                libraries={["places"]}
-                            >
+                        <LoadScript
+                            id="script-loader"
+                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                            libraries={["places"]}
+                        >
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Pickup</th>
+                                        <th>Dropoff</th>
+                                        <th>Return</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                 <tr>
                                     <td>Address</td>
@@ -142,9 +142,8 @@ class RideInformation extends Component {
                                                       value={this.props.active_ride.locations.return.time}/></td>
                                 </tr>
                                 </tbody>
-                            </LoadScript>
-
-                        </Table>
+                            </Table>
+                        </LoadScript>
                     </Col>
                 </Row>
             </Container>
