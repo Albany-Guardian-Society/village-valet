@@ -5,7 +5,7 @@ steps:
   - name: deploy
     image: appleboy/drone-ssh
     settings:
-      host: village-valet.tk
+      host: ssh.village-valet.tk
       username: drone
       password:
         from_secret: SSH_PASSWORD
