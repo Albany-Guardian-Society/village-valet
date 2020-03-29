@@ -98,12 +98,12 @@ const BLANK_RIDE = {
     locations: {
         pickup: {
             address: "",
-                time: "",
-                special: "",
+            time: "",
+            special: "",
         },
         dropoff: {
             address: "",
-                special: ""
+            special: ""
         },
         //Optional return location
         return: {
