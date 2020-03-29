@@ -8,9 +8,6 @@
 /.pnp
 .pnp.js
 
-#API Key for FireBase
-firestore.js
-
 # testing
 /coverage
 
