@@ -28,13 +28,10 @@ class Profiles extends Component {
                 <Row>
                     <Col sm={4}><Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/></Col>
                     <Col sm={1}>
-                        {/*<Button id="search_button" onClick={this.handleSearch}>
-                            Search
-                        </Button> */}
                     </Col>
                     <Col sm={5}/>
                     <Col sm={2}>
-                        <Button id="register_button" onClick={() => {this.props.history.push('/Profiles/Register');}}>
+                        <Button id="register_button" onClick={() => {this.props.clearRegistration(); this.props.history.push('/Profiles/Register');}}>
                             Register
                         </Button>
                     </Col>
@@ -54,6 +51,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    clearRegistration: () => dispatch({
+        type: "clear_active_profile",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profiles);

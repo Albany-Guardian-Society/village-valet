@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
 
 class RideDetails extends Component {
     constructor(props) {
@@ -19,11 +17,11 @@ class RideDetails extends Component {
 
     displayDetails() {
         if (this.props.ride === undefined) {
-            return <div></div>
+            return <div/>
         }
         return <div>
-            Ride Id: {this.props.ride.id}<br></br>
-            Rider Name: {this.props.ride.rider}<br></br>
+            Ride Id: {this.props.ride.id}<br/>
+            Rider Name: {this.props.ride.rider}<br/>
             Driver Name: {this.props.ride.rider}
         </div>
 
@@ -45,7 +43,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RideDetails);

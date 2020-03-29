@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Card from "react-bootstrap/Card";
 
@@ -10,19 +10,17 @@ const TEST = [
         id:1234,
         rider:'Rider Name',
         driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
-        locations: {orign:{latitude:42.6526,longitude:-73.7562},
-        destination:{latitude:42.7284,longitude:-73.6918}}
+        locations: {
+            origin: {lat: 42.6526, lng: -73.7562},
+            pickup: {lat: 42.7301, lng: -73.7012},
+            destination: {lat: 42.7284, lng: -73.6918}
+        }
     },
     {
         id:5555,
         rider:'Rider Name',
         driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
-        locations:{orign:{latitude:42.6526,longitude:-73.7562},
-        destination:{latitude:42.7284,longitude:-73.6918}}
+        locations: {origin: {lat: 41.6526, lng: -73.7562}, destination: {lat: 41.7284, lng: -73.6918}}
     }
 ];
 

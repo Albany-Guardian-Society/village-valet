@@ -13,12 +13,14 @@ import ProfileTable from "../profiles/ProfileTable";
 class SelectDriver extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            search_term: "",
+        };
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event){
-
+        this.setState({search_term: event.target.value})
     };
 
     render() {
@@ -37,7 +39,7 @@ class SelectDriver extends Component {
                         </Button>
                     </Form.Group>
                 </Form>
-                <ProfileTable mode={ "driver"}/>
+                <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
                         <Row>

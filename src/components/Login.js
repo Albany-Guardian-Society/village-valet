@@ -43,18 +43,27 @@ class Login extends Component {
         // other than render
 		this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentWillUnmount = this.componentWillUnmount.bind(this);
     }
 
     // This is a lifecycle state function of react.  It is called every time a component loads.
     // There are a couple of these methods, but DidMount is the most useful imo.
     componentDidMount() {
         //When the enter key is pressed while on the login page, process the login
-        document.addEventListener('keyup', (k) => {
-            if (k.keyCode === 13) {
-                k.preventDefault();
-                document.getElementById("login_button").click();
-            }
-        })
+        document.addEventListener('keyup', this.key_function);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.key_function);
+    }
+
+    //This was done to remove the bug that hitting enter caused the page to crash because "login_button" was not rendered
+    key_function = (k) => {
+        if (k.keyCode === 13) {
+            k.preventDefault();
+            document.getElementById("login_button").click();
+        }
     }
 
     // I like to use a single handler for each "thing" I want a component to do.
