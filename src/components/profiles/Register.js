@@ -162,9 +162,6 @@ class Register extends Component {
             {this.state.errorMessage ?
                 <Alert variant="danger">{this.state.errorMessage}</Alert>
             : null}
-            {this.props.registration.user_type ?
-                <Alert variant={"primary"}>Creating {this.props.registration.user_type.replace(/^\w/, c => c.toUpperCase())}</Alert>
-            : null}
             {this.generatePage()}
             <br/>
             <Row style={{
