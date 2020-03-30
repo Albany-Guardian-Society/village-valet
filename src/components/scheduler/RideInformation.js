@@ -6,18 +6,58 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
-import './pic_placeholder.png';
+//import './pic_placeholder.png';
 
 class RideInformation extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            addresses: {}
+        };
+
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event){
+        let label_flag = event.target.id.split("_");
+        if (label_flag[1] === "date"){
+            //updating the date
+            this.props.updateScheduler(label_flag[1], null, event.target.value)
+        } else {
+            //updating the location
+            this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
 
+
+        }
     };
+    componentDidMount(){
+        this.matchRiderId();
+    }
+    matchRiderId(){
+
+    }
+
+    getSelectedItems(){
+        let items = [];
+        let addresses =[];
+        for (let i =0; i < this.props.users.length; i++){
+            console.log(this.props.users[i].id);
+            console.log(this.props.active_ride.rider.id);
+            if (this.props.users[i].id === this.props.active_ride.rider.id){
+                // this.setState({addresses: this.props.users[i].addresses});
+                let addresses = this.props.users[i].addresses
+            }
+        }
+        for (let i = 0; i < addresses.length; i++){
+            items.push(<option key={i} value={i}>{i}</option>);
+        }
+        return items
+    }
+
+    onSelected(e) {
+        console.log("value", e.target.value);
+        //here you will see the current selected value of the select input
+    }
 
     render() {
         return (
@@ -26,20 +66,20 @@ class RideInformation extends Component {
                 <Row>
                     <Col>
                         <Row>
-                            <img src="pic_placeholder.png" alt="pic_placeholder"/>
+                            <Form.Control readOnly type="text" placeholder="First Name"
+                                          value={this.props.active_ride.rider.first_name}/>
+                            <Form.Control readOnly type="text" placeholder="Last Name"
+                                          value={this.props.active_ride.rider.last_name}/>
                         </Row>
                         <Row>
-                            <Form.Control readOnly type="text" placeholder="Frist Name" id='first_n' />
-                            <Form.Control readOnly type="text" placeholder="Last Name" id='last_n' />
+                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                          value={this.props.active_ride.ride_data.date}/>
                         </Row>
-                        <Row>
-                            <Form.Control type="date" placeholder="" id='ride_date' />
-                        </Row>
-                        <Row>
-                            <Form.Control type="text" placeholder="Return" id='return_op' />
-                        </Row>
-
                     </Col>
+                </Row>
+                <br/>
+                <Row>
+                    <Col xs={1}/>
                     <Col xs={10}>
                         <Table striped bordered hover>
                             <thead>
@@ -53,33 +93,44 @@ class RideInformation extends Component {
                             <tbody>
                             <tr>
                                 <td>Address</td>
-                                <td><Form.Control type="text" placeholder="Pickup Location" id='pickup' /></td>
-                                <td><Form.Control type="text" placeholder="Dropoff Location" id='dropoff' /></td>
-                                <td><Form.Control type="text" placeholder="Return" id='return' /></td>
+                                {/*<td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address'*/}
+                                {/*                  onChange={this.handleChange}*/}
+                                {/*                  value={this.props.active_ride.locations.pickup.address}/></td>*/}
+                                <td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address'
+                                                  onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.pickup.address}/>
+                                    < Form.Control as="select" onChange={this.onSelected} label="Address Pickup">
+                                        {this.getSelectedItems()}
+                                    </Form.Control>
+                                </td>
+                                <td><Form.Control type="text" placeholder="Dropoff Location" id='sched_dropoff_address'
+                                                  onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.dropoff.address}/></td>
+                                <td><Form.Control type="text" placeholder="Return" id='sched_return_address'
+                                                  onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.return.address}/></td>
                             </tr>
-                            {/*<tr>*/}
-                            {/*    <td>Name</td>*/}
-                            {/*    <td><Form.Control type="text" placeholder="Frist Name" id='first_n' /></td>*/}
-                            {/*    <td><Form.Control type="text" placeholder="Last Name" id='last_n' /></td>*/}
-                            {/*    <td></td>*/}
-                            {/*</tr>*/}
-                            {/*<tr>*/}
-                            {/*    <td>Address</td>*/}
-                            {/*    <td></td>*/}
-                            {/*    <td></td>*/}
-                            {/*    <td></td>*/}
-                            {/*</tr>*/}
                             <tr>
                                 <td>Special Instructions</td>
-                                <td><Form.Control type="text" placeholder="Pickup Instructions" id='pickup_si' /></td>
-                                <td><Form.Control type="text" placeholder="Dropoff Instructions" id='dropoff_si'/></td>
-                                <td><Form.Control type="text" placeholder="Return Instructions" id='return_si'/></td>
+                                <td><Form.Control type="text" placeholder="Pickup Instructions"
+                                                  id='sched_pickup_special' onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.pickup.special}/></td>
+                                <td><Form.Control type="text" placeholder="Dropoff Instructions"
+                                                  id='sched_dropoff_special' onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.dropoff.special}/></td>
+                                <td><Form.Control type="text" placeholder="Return Instructions"
+                                                  id='sched_return_special' onChange={this.handleChange}
+                                                  value={this.props.active_ride.locations.return.special}/></td>
                             </tr>
                             <tr>
                                 <td>Time</td>
-                                <td><Form.Control type="time" placeholder="pickup time" id='pickup_time' /></td>
+                                <td><Form.Control type="time" placeholder="pickup time" id='sched_pickup_time'
+                                                  onChange={(e) => this.handleChange(e)}
+                                                  value={this.props.active_ride.locations.pickup.time}/></td>
                                 <td></td>
-                                <td><Form.Control type="time" placeholder="return time" id='return_time' /></td>
+                                <td><Form.Control type="time" placeholder="return time" id='sched_return_time'
+                                                  onChange={(e) => this.handleChange(e)}
+                                                  value={this.props.active_ride.locations.return.time}/></td>
                             </tr>
                             </tbody>
                         </Table>
@@ -91,9 +142,19 @@ class RideInformation extends Component {
 }
 
 const mapStateToProps = state => ({
+    active_ride: state.active_ride,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
+    updateScheduler: (type, field, value) => dispatch({
+        type: "scheduler",
+        payload: {
+            type: type,
+            field: field,
+            value: value
+        }
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RideInformation);
