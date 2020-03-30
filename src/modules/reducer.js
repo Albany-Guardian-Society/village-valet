@@ -64,6 +64,14 @@ const BLANK_PROFILE = {
         preferred_communication: "",
         relationship: ""
     },
+    caregiver: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+    },
     addresses: [ADDRESS_TEMPLATE,],
     accommodations: {
         allergies: "",
@@ -118,11 +126,11 @@ const BLANK_RIDE = {
     },
     ride_data: {
         distance: "",
-            time_total: "",
-            traffic: "",
-            date: "",
+        time_total: "",
+        traffic: "",
+        date: "",
     }
-}
+};
 
 const initialState = {
     authenticated: false,

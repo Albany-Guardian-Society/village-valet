@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
 
 import Alert from "react-bootstrap/Alert";
@@ -14,6 +14,7 @@ import SpecialAccommodations from "./registration/SpecialAccommodations.js";
 import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 import VolunteerSchedule from "./registration/VolunteerSchedule.js";
+import CaregiverInformation from "./registration/CaregiveInformation";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
@@ -65,12 +66,19 @@ class Register extends Component {
                 default: break;
             }
         } else {
-            switch(this.state.page) {
-                case 0: return (<GeneralInformation/>);
-                case 1: return (<EmergencyInformation/>);
-                case 2: return (<CommonAddresses/>);
-                case 3: return (<SpecialAccommodations/>);
-                default: break;
+            switch (this.state.page) {
+                case 0:
+                    return (<GeneralInformation/>);
+                case 1:
+                    return (<CaregiverInformation/>);
+                case 2:
+                    return (<EmergencyInformation/>);
+                case 3:
+                    return (<CommonAddresses/>);
+                case 4:
+                    return (<SpecialAccommodations/>);
+                default:
+                    break;
             }
         }
     }
