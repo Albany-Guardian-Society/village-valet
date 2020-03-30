@@ -43,7 +43,7 @@ class RideInformation extends Component {
     }
 
     onPlaceChanged(variable, number) {
-        if (this.autocomplete[number] !== null) {
+        if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.active_ride.locations[variable].address = place.formatted_address;
             this.props.active_ride.locations[variable].geolocation = place.geometry.location;
