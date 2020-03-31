@@ -58,7 +58,7 @@ class VolunteerSchedule extends Component {
                 <Card.Header>
                     <h5 style={{float:"left"}}>Volunteer Hours</h5>
                     <Button variant="dark" style={{float:"right"}} onClick={() => this.props.addVolHours()}>
-                        Add Address
+                        Add Volunteer Day
                     </Button>
                 </Card.Header>
                 <Card.Body>
