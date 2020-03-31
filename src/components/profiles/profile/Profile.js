@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 
+import {LoadScript} from "@react-google-maps/api";
+
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -10,6 +12,7 @@ import Table from "react-bootstrap/Table";
 
 import GI from "../registration/GeneralInformation.js";
 import EC from "../registration/EmergencyInformation.js";
+import CI from "../registration/CaregiveInformation.js"
 import CA from "../registration/CommonAddresses.js";
 import SA from "../registration/SpecialAccommodations.js";
 
@@ -79,6 +82,7 @@ class Profile extends Component {
                 if (this.state.mode === "view") {
                     return (
                         <Table striped bordered>
+                        {this.props.user.caregiver ?
                             <tbody>
                             <tr>
                                 <th>First Name</th>
@@ -105,10 +109,11 @@ class Profile extends Component {
                                 <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
                             </tr>
                             </tbody>
+                            : null}
                         </Table>
                     );
                 } else if (this.state.mode === "edit") {
-                    return <EC/>;
+                    return <CI/>;
                 }
                 break;
             case "emergency":
@@ -292,7 +297,15 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                   return <CA/>;
+                   return (
+                        <LoadScript
+                        id="script-loader"
+                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                        libraries={["places"]}
+                        >
+                            <CA/>
+                        </LoadScript>
+                   );
                 }
                 break;
             case "special":

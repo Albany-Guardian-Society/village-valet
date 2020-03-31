@@ -8,13 +8,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 import "./registration.css"
-import {Autocomplete, LoadScript} from "@react-google-maps/api";
+import {Autocomplete} from "@react-google-maps/api";
 
 class CommonAddresses extends Component {
     constructor(props) {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+
         this.autocomplete = {};
         this.count = 0;
         this.onLoad = this.onLoad.bind(this);
@@ -26,6 +27,8 @@ class CommonAddresses extends Component {
         let field = event.target.id.split("|")[1];
         switch (field) {
             case "autocomplete":
+                this.forceUpdate();
+                break;
             default:
                 this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
                 break;
@@ -33,8 +36,6 @@ class CommonAddresses extends Component {
     }
 
     onLoad(autocomplete, index) {
-        console.log('autocomplete: ', autocomplete);
-        console.log(this.autocomplete, index);
         this.autocomplete[index] = autocomplete;
     }
 
@@ -133,11 +134,6 @@ class CommonAddresses extends Component {
 
     render() {
         return (
-            <LoadScript
-                id="script-loader"
-                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                libraries={["places"]}
-            >
                 <Card>
                     <Card.Header>
                         <h5 style={{float: "left"}}>Common Addresses</h5>
@@ -148,7 +144,6 @@ class CommonAddresses extends Component {
                     {this.generateAddressForms()}
                     <h6>{" "}</h6>
                 </Card>
-            </LoadScript>
         );
     }
 }

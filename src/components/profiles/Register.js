@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
 
+import {LoadScript} from "@react-google-maps/api";
+
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -21,7 +23,7 @@ import CaregiverInformation from "./registration/CaregiveInformation";
 // Once a user is made it should be added to the store so another pull is not needed tho!
 
 const DRIVER_MAX = 4;
-const RIDER_MAX = 3;
+const RIDER_MAX = 4;
 
 class Register extends Component {
     constructor(props) {
@@ -74,7 +76,14 @@ class Register extends Component {
                 case 2:
                     return (<EmergencyInformation/>);
                 case 3:
-                    return (<CommonAddresses/>);
+                    return (
+                        <LoadScript
+                            id="script-loader"
+                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                            libraries={["places"]}
+                        >
+                            <CommonAddresses/>
+                        </LoadScript>);
                 case 4:
                     return (<SpecialAccommodations/>);
                 default:

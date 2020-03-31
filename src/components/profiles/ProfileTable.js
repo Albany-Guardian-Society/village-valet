@@ -122,15 +122,13 @@ class ProfileTable extends Component {
                 if (a.status === "active") return -1;
                 return 1;
             }
-            return 0;
         });
 
         //could also be done with a map function return
         for (let index in filtered_users) {
             let user = filtered_users[index];
             profile_table.push(
-                <tr key={user.id} style={this.state.selected_row === user.id ? {background: "#cce4ff"} : null}
-                    style={{display: "table", width: '100%', tableLayout: 'fixed'}}>
+                <tr key={user.id} style={this.state.selected_row === user.id ? {background: "#cce4ff", display: "table", width: '100%', tableLayout: 'fixed'} : {display: "table", width: '100%', tableLayout: 'fixed'}}>
                     {this.props.mode === "all" ?
                         <td id={user.id}
                             onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
