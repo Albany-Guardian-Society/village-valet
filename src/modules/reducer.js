@@ -150,7 +150,6 @@ const initialState = {
     villages: {},
     users: {},
     rides: {},
-    status: "active",
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
     active_ride: _.cloneDeep(BLANK_RIDE),
