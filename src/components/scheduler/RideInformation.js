@@ -101,8 +101,7 @@ class RideInformation extends Component {
                 </Row>
                 <br/>
                 <Row>
-                    <Col xs={1}/>
-                    <Col xs={10}>
+                    <Col>
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
