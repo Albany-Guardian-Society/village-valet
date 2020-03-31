@@ -41,13 +41,9 @@ class VolunteerSchedule extends Component {
                         <option label="Saturday" value="saturday" />
                     </Form.Control></Col>
                     <Form.Label column sm={2} lg={2}>Starting Time:</Form.Label>
-                    <Col><Form.Control as="select" id={"vol_start|"+index+"|start"} onChange={this.handleChange} value={this.props.volunteer_hours[index].start}>
-                        <option/>
-                    </Form.Control></Col>
+                    <Col><Form.Control type="time" id={"vol_"+index+"|start"} onChange={this.handleChange} value={this.props.volunteer_hours[index].start}/></Col>
                     <Form.Label column sm={2} lg={2}>Ending Time:</Form.Label>
-                    <Col><Form.Control as="select" id={"vol_end|"+index+"|end"} onChange={this.handleChange} value={this.props.volunteer_hours[index].end}>
-                        <option/>
-                    </Form.Control></Col>
+                    <Col><Form.Control type="time" id={"vol_"+index+"|end"} onChange={this.handleChange} value={this.props.volunteer_hours[index].end}/></Col>
                     <Col><Button variant="danger" onClick={(e) => this.props.removeVolHours(e.target.id)}>Delete</Button></Col>
                 </Row>
             );
