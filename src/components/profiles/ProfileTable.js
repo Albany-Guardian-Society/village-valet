@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom';
 import fuzzysort from "fuzzysort";
 
 import Table from "react-bootstrap/Table";
 
 class ProfileTable extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
+        this.state = {
             selected_row: "",
         };
         this.generateTableData = this.generateTableData.bind(this);
@@ -44,7 +44,7 @@ class ProfileTable extends Component {
     }
 
     generateTableHeaders() {
-        let headers = [];
+        let headers;
         switch (this.props.mode) {
             case "driver":
                 headers = ["Picture", "First Name", "Last Name", "Village", "Database ID"];
@@ -56,7 +56,7 @@ class ProfileTable extends Component {
                 headers = ["User Type", "Last Name", "First Name", "Village", "Status", "Database ID"];
                 break;
             default:
-                headers = ["User Type", "First Name", "Last Name", "Village", "Database ID"]
+                headers = ["User Type", "First Name", "Last Name", "Village", "Database ID"];
                 break;
         }
         return headers.map((h) => {
@@ -69,7 +69,7 @@ class ProfileTable extends Component {
 
         //FIRST STEP.  Filter the users.
         //Users are filtered by type and then by search term
-        let filtered_users = [];
+        let filtered_users;
         if (this.props.search_term) {
             let index = -1;
             filtered_users = fuzzysort.go(this.props.search_term, this.props.users.map((p) => {
@@ -122,17 +122,17 @@ class ProfileTable extends Component {
                 if (a.status === "active") return -1;
                 return 1;
             }
-            return 0;
-        })
+        });
 
         //could also be done with a map function return
         for (let index in filtered_users) {
             let user = filtered_users[index];
             profile_table.push(
-                <tr key={user.id} style={this.state.selected_row === user.id ? {background:"#cce4ff"} : null}>
+                <tr key={user.id} style={this.state.selected_row === user.id ? {background: "#cce4ff", display: "table", width: '100%', tableLayout: 'fixed'} : {display: "table", width: '100%', tableLayout: 'fixed'}}>
                     {this.props.mode === "all" ?
-                        <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
-                    :
+                        <td id={user.id}
+                            onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
+                        :
                         <td id={user.id} onClick={(e) => this.handleSelect(e)}>PICTURE</td>
                     }
                     {this.props.mode === "all" ?
@@ -161,14 +161,14 @@ class ProfileTable extends Component {
     render(){
         return(
             <div>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            {this.generateTableHeaders()}
-                        </tr>
+                <Table striped bordered hover style={{width: '100%'}}>
+                    <thead style={{display: "table", width: 'calc( 100% - 17px )'}}>
+                    <tr style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
+                        {this.generateTableHeaders()}
+                    </tr>
                     </thead>
-                    <tbody>
-                        {this.generateTableData()}
+                    <tbody style={{display: 'block', height: '400px', width: '100%', overflow: 'auto'}}>
+                    {this.generateTableData()}
                     </tbody>
                 </Table>
             </div>

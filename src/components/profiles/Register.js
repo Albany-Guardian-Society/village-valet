@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
+
+import {LoadScript} from "@react-google-maps/api";
 
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
@@ -14,13 +16,14 @@ import SpecialAccommodations from "./registration/SpecialAccommodations.js";
 import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 import VolunteerSchedule from "./registration/VolunteerSchedule.js";
+import CaregiverInformation from "./registration/CaregiveInformation";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
 // Once a user is made it should be added to the store so another pull is not needed tho!
 
 const DRIVER_MAX = 4;
-const RIDER_MAX = 3;
+const RIDER_MAX = 4;
 
 class Register extends Component {
     constructor(props) {
@@ -65,12 +68,26 @@ class Register extends Component {
                 default: break;
             }
         } else {
-            switch(this.state.page) {
-                case 0: return (<GeneralInformation/>);
-                case 1: return (<EmergencyInformation/>);
-                case 2: return (<CommonAddresses/>);
-                case 3: return (<SpecialAccommodations/>);
-                default: break;
+            switch (this.state.page) {
+                case 0:
+                    return (<GeneralInformation/>);
+                case 1:
+                    return (<CaregiverInformation/>);
+                case 2:
+                    return (<EmergencyInformation/>);
+                case 3:
+                    return (
+                        <LoadScript
+                            id="script-loader"
+                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                            libraries={["places"]}
+                        >
+                            <CommonAddresses/>
+                        </LoadScript>);
+                case 4:
+                    return (<SpecialAccommodations/>);
+                default:
+                    break;
             }
         }
     }
@@ -153,9 +170,6 @@ class Register extends Component {
         <div style={{paddingLeft: "3%", paddingRight: "3%"}}>
             {this.state.errorMessage ?
                 <Alert variant="danger">{this.state.errorMessage}</Alert>
-            : null}
-            {this.props.registration.user_type ?
-                <Alert variant={"primary"}>Creating {this.props.registration.user_type.replace(/^\w/, c => c.toUpperCase())}</Alert>
             : null}
             {this.generatePage()}
             <br/>

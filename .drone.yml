@@ -1,0 +1,18 @@
+#Drone File
+kind: pipeline
+name: village-valet
+
+steps:
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host: ssh.village-valet.tk
+      username: drone
+      password:
+        from_secret: SSH_PASSWORD
+      port: 22
+      script:
+        - docker-compose -f /drone/docker-compose.yml up -d --build village-valet
+    when:
+      branch:
+        - master
