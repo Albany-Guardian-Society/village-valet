@@ -13,6 +13,8 @@ import RideInformation from "./RideInformation";
 import SelectDriver from "./SelectDriver";
 import Confirmation from "./Confirmation";
 
+const PAGE_MAX = 3;
+
 class Scheduler extends Component {
     constructor(props) {
         super(props);
@@ -64,7 +66,7 @@ class Scheduler extends Component {
 
     render() {
         return (
-            <Container>
+            <Container style={{minWidth: "100%"}}>
                 {this.showPage()}
                 <Row style={{
                     textAlign: "center",
@@ -75,12 +77,12 @@ class Scheduler extends Component {
                     width: "100%",}}>
                     <Col></Col>
                     <Col>
-                        <Button size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
+                        <Button disabled={this.state.scheduler_page === 0} size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
                             PREV
                         </Button>
                     </Col>
                     <Col>
-                        <Button size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
+                        <Button disabled={this.state.scheduler_page === PAGE_MAX} size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
                             NEXT
                         </Button>
                     </Col>
