@@ -4,7 +4,9 @@ import {connect} from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import MapContainer from "../google-maps/MapContainer";
+import Table from "react-bootstrap/Table";
+
+import MapContainer from "../google-maps/MapContainer.js";
 
 class Confirmation extends Component {
     constructor(props) {
@@ -14,7 +16,6 @@ class Confirmation extends Component {
     }
 
     handleChange(event){
-
     };
 
     render() {
@@ -26,34 +27,43 @@ class Confirmation extends Component {
                         <MapContainer>Trip Summary</MapContainer>
                     </Col>
                     <Col>
-                        <Row>
-                            Name: {this.props.active_ride.rider.first_name} {this.props.active_ride.rider.last_name}
-                        </Row>
-                        <Row>
-                            Pickup: {this.props.active_ride.locations.pickup}
-                        </Row>
-                        <Row>
-                            Dropoff: {this.props.active_ride.locations.dropoff}
-                        </Row>
-                        <Row>
-                            Trip Duration: {this.props.active_ride.ride_data.time_total}
-                        </Row>
-                        <Row>
-                            Expected Traffic: {this.props.active_ride.ride_data.traffic}
-                        </Row>
-                        <Row>
-                            Driver: {this.props.active_ride.driver_1.first_name} {this.props.active_ride.driver_1.last_name}
-                        </Row>
-                        <Row>
-                            Return Driver: {this.props.active_ride.driver_2.first_name} {this.props.active_ride.driver_2.last_name}
-                        </Row>
-                        <Row>
-                            Return Destination: {this.props.active_ride.locations.return}
-                        </Row>
+                        <Table><tbody>
+                            <tr>
+                                <td>Name:</td>
+                                <td>{this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name}</td>
+                            </tr>
+                            <tr>
+                                <td>Pickup:</td>
+                                <td>{this.props.active_ride.locations.pickup.address}</td>
+                            </tr>
+                            <tr>
+                                <td>Dropoff:</td>
+                                <td>{this.props.active_ride.locations.dropoff.address}</td>
+                            </tr>
+                            <tr>
+                                <td>Trip Duration:</td>
+                                <td>{this.props.active_ride.ride_data.time_total}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected Traffic:</td>
+                                <td>{this.props.active_ride.ride_data.traffic}</td>
+                            </tr>
+                            <tr>
+                                <td>Driver:</td>
+                                <td>{this.props.active_ride.driver_1.first_name} {this.props.active_ride.driver_1.last_name}</td>
+                            </tr>
+                            <tr>
+                                <td>Return Driver:</td>
+                                <td>{this.props.active_ride.driver_2.first_name} {this.props.active_ride.driver_2.last_name}</td>
+                            </tr>
+                            <tr>
+                                <td>Return Destination:</td>
+                                <td>{this.props.active_ride.locations.return.address}</td>
+                            </tr>
+                        </tbody></Table>
                     </Col>
                 </Row>
             </Container>
-
         );
     }
 }

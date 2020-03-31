@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Card from "react-bootstrap/Card"
 import MapContainer from "../google-maps/MapContainer";
@@ -17,7 +17,6 @@ class RideBreakdown extends Component {
 	handleChange(event) {
 	}
 
-
     render() {
         return (
             <Card style={{height:'100%'}}>
@@ -25,7 +24,7 @@ class RideBreakdown extends Component {
                 <Card.Body>
                     <RideDetails/>
                     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                        <MapContainer locations={this.props.ride.locations}/>
+                        <MapContainer ride={this.props.ride}/>
                     </div>
                 </Card.Body>
             </Card>

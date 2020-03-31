@@ -1,4 +1,5 @@
 import _ from "lodash";
+import firestore from "./firestore.js";
 
 // The reducer is an internal middle man that handles passing information from each
 // of the various components to something called the store.  The store is basically a
@@ -18,7 +19,7 @@ const ADDRESS_TEMPLATE = {
     state: "",
     zip: "",
     special_instructions: "",
-}
+};
 
 const VEHICLE_TEMPLATE = {
     make_model: "",
@@ -32,17 +33,19 @@ const VEHICLE_TEMPLATE = {
     insur_coverage: 0,
     seats: 0,
     special: "",
-}
+};
 
 const VOL_HOURS_TEMPLATE = (day="monday") => {return {
     day: day,
     start: "",
     end: ""
-}}
+}
+};
 
 const BLANK_PROFILE = {
     user_type: "",
     village_id: "",
+    status: "active",
     personal_info: {
         first_name: "",
         last_name: "",
@@ -61,6 +64,14 @@ const BLANK_PROFILE = {
         preferred_communication: "",
         relationship: ""
     },
+    caregiver: {
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_mobile: "",
+        phone_home: "",
+        preferred_communication: "",
+    },
     addresses: [ADDRESS_TEMPLATE,],
     accommodations: {
         allergies: "",
@@ -73,38 +84,53 @@ const BLANK_PROFILE = {
     driver_specific: {
         vetting: "",
     },
-}
+};
 
 const BLANK_RIDE = {
-    rider_id: "",
+    ride_id: "",
     rider: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
     driver_1: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
-    //Optional
+    //Optional second driver
     driver_2: {
         first_name: "",
-        last_name: "",
-        id: "",
+            last_name: "",
+            id: "",
     },
     locations: {
-        pickup: "",
-        dropoff: "",
-        //Optional
-        return: "",
+        pickup: {
+            address: "",
+            time: "",
+            special: "",
+            geolocation: ""
+        },
+        dropoff: {
+            address: "",
+            special: "",
+            geolocation: ""
+        },
+        //Optional return location
+        return: {
+            address: "",
+            time: "",
+            special: "",
+            geolocation: ""
+        },
     },
     ride_data: {
         distance: "",
         time_total: "",
         traffic: "",
+        date: "",
     }
-}
+};
 
 const initialState = {
     authenticated: false,
@@ -116,8 +142,8 @@ const initialState = {
     },
     ridebreakdown: {
         id: "",
-        rider:'',
-        driver:'',
+        rider: '',
+        driver: '',
         pickup: "",
         dropoff: ""
     },
@@ -187,6 +213,12 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "set_active_user": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile = action.payload;
+        return newState;
+    }
+
     case "ridebreakdown": {
         let newState = _.cloneDeep(state);
         newState.ridebreakdown = action.payload;
@@ -232,6 +264,98 @@ const VillageReducer = (state = initialState, action) => {
                     }
                     break;
             }
+        return newState;
+    }
+
+    case "scheduler": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.type === "date"){
+            newState.active_ride.ride_data.date = action.payload.value;
+        } else {
+            newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
+        }
+        return newState;
+    }
+
+    case "set_ride_participant": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.type === "rider"){
+            newState.active_ride.rider.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.rider.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.rider.id = action.payload.user.id;
+        } else if (action.payload.type === "driver_1") {
+            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver_1.id = action.payload.user.id;
+        } else if (action.payload.type === "driver_2") {
+            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver_1.id = action.payload.user.id;
+        }
+        return newState;
+    }
+
+    case "user_update": {
+        let newState = _.cloneDeep(state);
+
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index] = newState.active_profile;
+        }
+
+        firestore.collection("users").doc(newState.active_profile.id).update(newState.active_profile);
+
+        return newState;
+    }
+
+    case "user_deactivate": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile.status = "inactive";
+        //Now edit the local copy, then update the DB:
+        //Find the user in newState.users
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index].status = "inactive";
+        }
+
+        //Update Firestore
+        firestore.collection("users").doc(newState.active_profile.id).update({
+            status: "inactive"
+        });
+
+        return newState;
+    }
+    case "user_activate": {
+        let newState = _.cloneDeep(state);
+        newState.active_profile.status = "active";
+        //Now edit the local copy, then update the DB:
+        //Find the user in newState.users
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            newState.users[index].status = "active";
+        }
+
+        //Update the FS document
+        firestore.collection("users").doc(newState.active_profile.id).update({
+            status: "active"
+        });
+
+        return newState;
+    }
+    case "user_perma_delete": {
+        let newState = _.cloneDeep(state);
+        //Now edit the local copy, then update the DB:
+        let id_to_delete = newState.active_profile.id;
+        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        if (index >= 0) {
+            delete newState.users[index];
+        }
+
+        newState.active_profile = _.cloneDeep(BLANK_PROFILE);
+
+        //Delete the record (document) in firestore
+        firestore.collection("users").doc(id_to_delete).delete();
+
         return newState;
     }
 
