@@ -21,11 +21,14 @@ class Scheduler extends Component {
         this.state = {
             scheduler_page: 0
         };
-		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
-
+    handleSubmit() {
+        if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+            console.log("Add Ride");
+            this.props.history.push("/Dashboard");
+        }
     }
 
     changePage(increment) {
@@ -77,14 +80,25 @@ class Scheduler extends Component {
                     width: "100%",}}>
                     <Col></Col>
                     <Col>
-                        <Button disabled={this.state.scheduler_page === 0} size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
+                        {this.state.scheduler_page !== 0  ?
+                        <Button variant="dark" disabled={this.state.scheduler_page === 0} size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
                             PREV
                         </Button>
+                        : null }
                     </Col>
                     <Col>
-                        <Button disabled={this.state.scheduler_page === PAGE_MAX} size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
+                        {this.state.scheduler_page === PAGE_MAX ?
+                        <Button disabled={this.state.scheduler_page !== PAGE_MAX} size="lg" id="sched_submit_button" onClick={() => {this.handleSubmit()}}>
+                            Submit Ride
+                        </Button>
+                        : null}
+                    </Col>
+                    <Col>
+                        {this.state.scheduler_page !== PAGE_MAX ?
+                        <Button variant="dark" disabled={this.state.scheduler_page === PAGE_MAX} size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
                             NEXT
                         </Button>
+                        : null}
                     </Col>
                     <Col></Col>
                 </Row>
@@ -94,6 +108,7 @@ class Scheduler extends Component {
 }
 
 const mapStateToProps = state => ({
+    active_ride: state.active_ride,
 });
 
 const mapDispatchToProps = dispatch => ({
