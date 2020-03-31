@@ -6,6 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
+import {Autocomplete} from "@react-google-maps/api";
+
 //import './pic_placeholder.png';
 
 class RideInformation extends Component {
@@ -16,6 +18,11 @@ class RideInformation extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.autocomplete = {};
+        this.count = 0;
+
+        this.onLoad = this.onLoad.bind(this);
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
 
     handleChange(event){
@@ -59,6 +66,21 @@ class RideInformation extends Component {
         //here you will see the current selected value of the select input
     }
 
+    onLoad(autocomplete) {
+        this.autocomplete[this.count] = autocomplete;
+        this.count += 1
+    }
+
+    onPlaceChanged(variable, number) {
+        if (this.autocomplete[number] != null) {
+            const place = this.autocomplete[number].getPlace();
+            this.props.active_ride.locations[variable].address = place.formatted_address;
+            this.props.active_ride.locations[variable].geolocation = place.geometry.location;
+        } else {
+            console.log('Autocomplete is not loaded yet!')
+        }
+    }
+
     render() {
         return (
             <Container className="RideInformation" style={{minWidth: "100%"}}>
@@ -83,32 +105,46 @@ class RideInformation extends Component {
                     <Col xs={10}>
                         <Table striped bordered hover>
                             <thead>
-                            <tr>
-                                <th></th>
-                                <th>Pickup</th>
-                                <th>Dropoff</th>
-                                <th>Return</th>
-                            </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>Pickup</th>
+                                    <th>Dropoff</th>
+                                    <th>Return</th>
+                                </tr>
                             </thead>
                             <tbody>
                             <tr>
                                 <td>Address</td>
-                                {/*<td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address'*/}
-                                {/*                  onChange={this.handleChange}*/}
-                                {/*                  value={this.props.active_ride.locations.pickup.address}/></td>*/}
-                                <td><Form.Control type="text" placeholder="Pickup Location" id='sched_pickup_address'
-                                                  onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.pickup.address}/>
-                                    < Form.Control as="select" onChange={this.onSelected} label="Address Pickup">
-                                        {this.getSelectedItems()}
-                                    </Form.Control>
+                                <td>
+                                    <Autocomplete
+                                        onLoad={this.onLoad}
+                                        onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                    >
+                                        <Form.Control type="text" placeholder="Pickup Location"
+                                                      id='sched_pickup_address' onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.pickup.address}/>
+                                    </Autocomplete>
                                 </td>
-                                <td><Form.Control type="text" placeholder="Dropoff Location" id='sched_dropoff_address'
-                                                  onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.dropoff.address}/></td>
-                                <td><Form.Control type="text" placeholder="Return" id='sched_return_address'
-                                                  onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.return.address}/></td>
+                                <td>
+                                    <Autocomplete
+                                        onLoad={this.onLoad}
+                                        onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
+                                    >
+                                        <Form.Control type="text" placeholder="Dropoff Location"
+                                                      id='sched_dropoff_address' onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.dropoff.address}/>
+                                    </Autocomplete>
+                                </td>
+                                <td>
+                                    <Autocomplete
+                                        onLoad={this.onLoad}
+                                        onPlaceChanged={() => this.onPlaceChanged('return', 2)}
+                                    >
+                                        <Form.Control type="text" placeholder="Return" id='sched_return_address'
+                                                      onChange={this.handleChange}
+                                                      value={this.props.active_ride.locations.return.address}/>
+                                    </Autocomplete>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Special Instructions</td>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
+import {LoadScript} from "@react-google-maps/api";
+
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -41,7 +43,15 @@ class Scheduler extends Component {
             case 0: //Rider
                 return (<SelectRider/>);
             case 1: //Info
-                return (<RideInformation/>);
+                return (
+                    <LoadScript
+                        id="script-loader"
+                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                        libraries={["places"]}
+                    >
+                        <RideInformation/>
+                    </LoadScript>
+                );
             case 2: //Driver
                 return (<SelectDriver/>);
             case 3: //Confirm
@@ -51,19 +61,26 @@ class Scheduler extends Component {
         }
     }
 
+
     render() {
         return (
             <Container>
                 {this.showPage()}
-                <Row>
+                <Row style={{
+                    textAlign: "center",
+                    position: "fixed",
+                    left: "0",
+                    bottom: "0",
+                    height: "60px",
+                    width: "100%",}}>
                     <Col></Col>
                     <Col>
-                        <Button id="prev_button" onClick={() => {this.changePage(-1)}}>
+                        <Button size="lg" id="prev_button" onClick={() => {this.changePage(-1)}}>
                             PREV
                         </Button>
                     </Col>
                     <Col>
-                        <Button id="next_button" onClick={() => {this.changePage(1)}}>
+                        <Button size="lg" id="next_button" onClick={() => {this.changePage(1)}}>
                             NEXT
                         </Button>
                     </Col>

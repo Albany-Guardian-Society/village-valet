@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -27,7 +27,7 @@ class VehicleInformation extends Component {
         }
 	}
 
-    generateAddressForms() {
+    generateVehicleForms() {
         let body = [];
         let index = 0;
         if (this.props.vehicles.length === 0) body.push(<br key={"break"}/>);
@@ -42,7 +42,7 @@ class VehicleInformation extends Component {
                         <Col><Form.Control id={"car_"+index+"|make_model"} placeholder="--Make/Model--" onChange={this.handleChange} value={this.props.vehicles[index].make_model}/></Col>
                         <Col sm={3} lg={2}>
                             <Button id={index} variant="danger" onClick={(e) => this.props.removeVehicle(e.target.id)}>
-                                Remove Address
+                                Remove Vehicle
                             </Button>
                         </Col>
                     </Row>
@@ -76,17 +76,19 @@ class VehicleInformation extends Component {
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Date of Last Inspection:</Form.Label>
-                        <Col><Form.Control type="date" id={"car_"+index+"|insp_date"} placeholder="--Date of Previous Inspection--" onChange={this.handleChange} value={this.props.vehicles[index].insp_date}/></Col>
+                        <Col><Form.Control type="date" id={"car_" + index + "|insp_date"}
+                                           placeholder="--Date of Previous Inspection--" onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insp_date}/></Col>
                     </Row>
                     <Row className="reg_row">
-                        <Form.Label column sm={3} lg={2} >Additional Notes:</Form.Label>
-                        <Col><Form.Control as="textarea" rows={5} id={"car_"+index+"|special"}
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.props.vehicles[index].special}/></Col>
+                        <Form.Label column sm={3} lg={2}>Additional Notes:</Form.Label>
+                        <Col><Form.Control as="textarea" rows={5} id={"car_" + index + "|special"}
+                                           placeholder=""
+                                           onChange={this.handleChange}
+                                           value={this.props.vehicles[index].special}/></Col>
                     </Row>
                 </Card.Body>
-            )
+            );
             //Divide all the vehicles (do not place a break after the last value)
             if (index !== this.props.vehicles.length-1) body.push(<hr key={index + "_break"}/>);
 
@@ -104,7 +106,7 @@ class VehicleInformation extends Component {
                         Add Vehicle
                     </Button>
                 </Card.Header>
-                {this.generateAddressForms()}
+                {this.generateVehicleForms()}
                 <h6>{" "}</h6>
             </Card>
         );
