@@ -32,7 +32,11 @@ class LoadData extends Component {
                 this.setState({message: "Loading Users"});
                 firestore.collection("users").get()
                 .then(querySnapshot => {
-                    const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                    let data = {};
+                    const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                    for (let item in raw_data) {
+                        data[raw_data[item].id] = raw_data[item];
+                    }
                     this.props.load("users", data);
                 }).then(() => {
                     this.setState({status: 60});

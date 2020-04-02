@@ -7,12 +7,15 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 
 import MapContainer from "../google-maps/MapContainer.js";
+//import sendEmail from "../../modules/emailconfirmation.js";
+
 
 class Confirmation extends Component {
     constructor(props) {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.messageTest = this.messageTest.bind(this);
     }
 
     handleChange(event){
@@ -20,10 +23,11 @@ class Confirmation extends Component {
 
     message = {
         // Comma separated list of recipients
-        to: '${riderFirstName} ${riderLastName} <${riderEmail}>, ${driverFirstName} ${driverLastName} <${driverEmail}> ',
+        to: '"' + this.props.users[this.props.active_ride.driver_1.id].personal_info.first_name + " " +this.props.users[this.props.active_ride.driver_1.id].personal_info.last_name + '" <' + this.props.users[this.props.active_ride.driver_1.id].personal_info.email + ">, " +
+            '"' + this.props.users[this.props.active_ride.rider.id].personal_info.first_name + " " +this.props.users[this.props.active_ride.rider.id].personal_info.last_name + '" <' + this.props.users[this.props.active_ride.rider.id].personal_info.email + ">",
 
         // Subject of the message
-        subject: 'AGS Village Valet Ride Confirmation' + Date.now(),
+        subject: 'AGS Village Valet Ride Confirmation: ' + Date.now(),
 
         // plaintext body
         text: '',
@@ -46,11 +50,15 @@ class Confirmation extends Component {
 
     };
 
+    messageTest() {
+        console.log(this.message);
+        //sendEmail(this.message);
+    }
+
     render() {
         return (
             <Container className="Confirmation" style={{minWidth: "100%"}}>
                 <h1>Confirmation</h1>
-                {this.message}
                 <Row>
                     <Col>
                         <MapContainer>Trip Summary</MapContainer>
@@ -92,6 +100,7 @@ class Confirmation extends Component {
                         </tbody></Table>
                     </Col>
                 </Row>
+                <button onClick={this.messageTest}>Test</button>
             </Container>
         );
     }
@@ -99,6 +108,7 @@ class Confirmation extends Component {
 
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
+    users: state.users,
 });
 
 const mapDispatchToProps = dispatch => ({
