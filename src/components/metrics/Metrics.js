@@ -5,14 +5,13 @@ import Container from "react-bootstrap/Container";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
-import Ledger from "./Ledger.js"
+import Ledger from "./Ledger.js";
 import Riders from "./Riders.js";
 import Drivers from "./Drivers.js";
+import Reports from "./Reports";
 
 class Metrics extends Component {
     constructor(props) {
@@ -35,6 +34,8 @@ class Metrics extends Component {
                 return (<Riders/>);
             case "drivers":
                 return (<Drivers/>);
+            case "reports":
+                return (<Reports/>);
             default:
                 return(<Ledger/>);
         }
@@ -43,33 +44,19 @@ class Metrics extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                <ButtonToolbar style={{paddingBottom:'1.5%'}}
+                <ButtonToolbar style={{paddingBottom:'1%'}}
                     className="justify-content-between"
-                    aria-label="Toolbar with Button groups"
-                >
-                    <ButtonGroup aria-label="First group">
-                        <Button  variant="info">Print</Button>
-                    </ButtonGroup>
-                    <InputGroup>
-                        <InputGroup.Prepend>
-                            <InputGroup.Text id="btnGroupAddon">Search</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            type="text"
-                            placeholder="Ride ID, Name, etc."
-                            aria-label="Ride ID, Name, etc."
-                            aria-describedby="btnGroupAddon"
-                        />
-                    </InputGroup>
-                </ButtonToolbar>
-
-                <ButtonToolbar style={{paddingBottom:'1%'}}>
+                    aria-label="Toolbar with Button groups">
                     <ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
                         <ToggleButton id='ledger'  value={'ledger'}>Ledger</ToggleButton>
                         <ToggleButton id='riders' value={'riders'}>Riders</ToggleButton>
                         <ToggleButton id='drivers' value={'drivers'}>Drivers</ToggleButton>
                         <ToggleButton id='reports'  value={'reports'}>Reports</ToggleButton>
                     </ToggleButtonGroup>
+
+                    <ButtonGroup aria-label="First group">
+                        <Button  variant="info">Download</Button>
+                    </ButtonGroup>
                 </ButtonToolbar>
                 {this.changeTable()}
             </Container>
