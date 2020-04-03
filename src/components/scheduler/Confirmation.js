@@ -7,8 +7,7 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 
 import MapContainer from "../google-maps/MapContainer.js";
-//import sendEmail from "../../modules/emailconfirmation.js";
-
+import axios from 'axios';
 
 class Confirmation extends Component {
     constructor(props) {
@@ -52,7 +51,7 @@ class Confirmation extends Component {
 
     messageTest() {
         console.log(this.message);
-        //sendEmail(this.message);
+        axios.post('http://localhost:4000/send', {...this.message}).then()
     }
 
     render() {
