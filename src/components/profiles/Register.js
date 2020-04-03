@@ -157,8 +157,8 @@ class Register extends Component {
     submitRegistration() {
         console.log(this.props.registration);
         firestore.collection("users").add(this.props.registration)
-        .then(() => {
-            this.props.addUser(this.props.registration);
+        .then((docRef) => {
+            this.props.addUser(this.props.registration, docRef.id);
             this.props.clearRegistration();
             //This is part of react-router and allows forced page routing
             this.props.history.push('/Profiles');
@@ -203,10 +203,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addUser: (user) => dispatch({
-        type: "add_user",
-        payload: {...user, id: "TEMP"}
-    }),
+        addUser: (user, id) => dispatch({
+            type: "add_user",
+            payload: {...user, id: id}
+        }),
     clearRegistration: () => dispatch({
         type: "clear_active_profile",
         payload: null

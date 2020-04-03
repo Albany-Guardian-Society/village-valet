@@ -203,7 +203,7 @@ const VillageReducer = (state = initialState, action) => {
 
     case "add_user": {
         let newState = _.cloneDeep(state);
-        newState.users.push(action.payload);
+        newState.users[action.payload.id] = (action.payload);
         return newState;
     }
 
