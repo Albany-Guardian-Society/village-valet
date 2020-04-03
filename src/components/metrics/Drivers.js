@@ -2,29 +2,44 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 
-const TEST = [
-    {
-        driverID:123434,
-        driver:'Rider Name',
-        mileage: 6,
-        numberRides: 2,
-        volunteerHours: 1
-    },
-    {
-        driverID:5555,
-        driver:'Rider Name',
-        mileage: 6,
-        numberRides: 3,
-        volunteerHours: 5
-    }
-];
+
 
 class Drivers extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
+        this.renderTableData = this.handleChange.bind(this);
+        this.renderTableHeader = this.handleChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    renderTableData() {
+        // let drivers = this.props.users.filter((user) => {
+        //         return(user.user_type === 'driver')
+        // });
+        // console.log(drivers);
+        // return drivers.map((driver) => {
+        //     // const { driverId, driver, numberRides, mileage, volunteerHours } = drivers; //destructuring
+        //
+        //     return (
+        //         <tr key={driver}>
+        //             <td>{driver.id}</td>
+        //             {/*<td>{driver}</td>*/}
+        //             {/*<td>{numberRides}</td>*/}
+        //             {/*<td>{mileage}</td>*/}
+        //             {/*<td>{volunteerHours}</td>*/}
+        //         </tr>
+        //     )
+        // })
+    }
+
+    renderTableHeader() {
+        console.log('here');
+        let header = ['Driver Id', 'Driver', 'Rides', 'Mileage', 'Volunteer Hours'];
+        return header.map((item) => {
+            return <th> {item} </th>
+        })
     }
 
     handleChange(event){
@@ -32,38 +47,24 @@ class Drivers extends Component {
 
     render() {
         return (
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Driver ID</th>
-                    <th>Driver</th>
-                    <th>No. Trips</th>
-                    <th>Mileage</th>
-                    <th>Volunteer Hours</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{TEST[0].driverID}</td>
-                    <td>{TEST[0].driver}</td>
-                    <td>{TEST[0].numberRides}</td>
-                    <td>{TEST[0].mileage}</td>
-                    <td>{TEST[0].volunteerHours}</td>
-                </tr>
-                <tr>
-                    <td>{TEST[1].driverID}</td>
-                    <td>{TEST[1].driver}</td>
-                    <td>{TEST[1].numberRides}</td>
-                    <td>{TEST[1].mileage}</td>
-                    <td>{TEST[1].volunteerHours}</td>
-                </tr>
-                </tbody>
-            </Table>
+            <div>
+                <h1 id='title'>Drivers123</h1>
+                <table id='driverId'>
+                    <thead>
+                    <tr>{this.renderTableHeader()}</tr>
+                    </thead>
+                    <tbody>
+                        {this.renderTableData()}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
