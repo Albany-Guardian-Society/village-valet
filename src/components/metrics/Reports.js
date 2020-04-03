@@ -71,7 +71,7 @@ class Reports extends Component {
                         <Card.Header as="th">Select a Driver (Optional)</Card.Header>
                         <Card.Body className="text-left">
                             Ignore to Select All
-                            <ProfileTable mode={ "driver"}/>
+                            <ProfileTable/>
                         </Card.Body>
                     </Card>
 
