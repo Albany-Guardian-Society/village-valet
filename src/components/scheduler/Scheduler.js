@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import firestore from "../../modules/firestore.js";
 
 import {LoadScript} from "@react-google-maps/api";
 
@@ -29,8 +30,13 @@ class Scheduler extends Component {
 
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-            console.log("Add Ride");
-            this.props.history.push("/Dashboard");
+            firestore.collection("rides").add(this.props.active_ride)
+            .then((docRef) => {
+                this.props.addRide(this.props.active_ride, docRef.id);
+                this.props.clearRide();
+                //This is part of react-router and allows forced page routing
+                this.props.history.push('/Dashboard');
+            });
         }
     }
 
@@ -44,6 +50,9 @@ class Scheduler extends Component {
             if (proposed_page > 3) proposed_page = 3;
 
             this.setState({scheduler_page: proposed_page, error_message: ""});
+        } else {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
     }
 
@@ -81,21 +90,25 @@ class Scheduler extends Component {
                 return true;
             case 1:
                 //Need to specify a date
-                console.log(Date.now())
                 if (this.props.active_ride.ride_data.date === "") {
+                    this.setState({error_message: "INVALID DATE: Please provide a date."})
                     return false;
                 } else if (new Date(this.props.active_ride.ride_data.date)+1 <= (Date.now()+6.04e+8)) {
-                    this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."})
+                    this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."});
                     return false;
                 } else if (new Date(this.props.active_ride.ride_data.date) >= (Date.now()+(6.04e+8*4))) {
-                    this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."})
+                    this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."});
                     return false;
                 }
                 //Add additional validation!
                 return true;
             case 2:
                 //Need to pick a driver
-                return this.props.active_ride.driver_1.id === "";
+                if (this.props.active_ride.driver_1.id === "") {
+                    this.setState({error_message: "INVALID DATE: Please select a driver."})
+                    return false;
+                }
+                return true;
             case 3:
                 return false;
             default:
@@ -106,8 +119,7 @@ class Scheduler extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                {this.state.error_message ? <Alert variant="danger">{this.state.error_message}</Alert>
-                : null}
+                {this.state.error_message ? <Alert variant="danger">{this.state.error_message}</Alert> : null}
                 {this.showPage()}
                 <Row style={{
                     textAlign: "center",
@@ -150,6 +162,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    addRide: (user, id) => dispatch({
+        type: "add_ride",
+        payload: {...user, id: id}
+    }),
+    clearRide: () => dispatch({
+        type: "clear_active_ride",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scheduler);

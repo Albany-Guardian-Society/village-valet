@@ -58,6 +58,7 @@ class CommonAddresses extends Component {
                     this.props.addresses[index].zip = component.short_name
                 }
             }
+            this.props.triggerUpdate();
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -178,6 +179,10 @@ const mapDispatchToProps = dispatch => ({
             value: id
         }
     }),
+    triggerUpdate: () => dispatch({
+        type: "trigger_update",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommonAddresses);
