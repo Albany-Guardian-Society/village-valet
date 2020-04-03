@@ -113,6 +113,7 @@ const BLANK_RIDE = {
         },
         dropoff: {
             address: "",
+            time: "",
             special: "",
             geolocation: ""
         },
@@ -129,6 +130,10 @@ const BLANK_RIDE = {
         time_total: "",
         traffic: "",
         date: "",
+        meta: {
+            samereturn: true,
+            givendropoff: true
+        }
     }
 };
 

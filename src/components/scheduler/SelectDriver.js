@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import MapContainer from "../google-maps/MapContainer";
 
 import ProfileTable from "../profiles/ProfileTable";
@@ -34,9 +33,6 @@ class SelectDriver extends Component {
                         <Col>
                             <Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/>
                         </Col>
-                        <Button id="search_button" onClick={this.handleSearch}>
-                            Search
-                        </Button>
                     </Form.Group>
                 </Form>
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
