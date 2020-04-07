@@ -26,7 +26,7 @@ class Confirmation extends Component {
             '"' + this.props.users[this.props.active_ride.rider.id].personal_info.first_name + " " +this.props.users[this.props.active_ride.rider.id].personal_info.last_name + '" <' + this.props.users[this.props.active_ride.rider.id].personal_info.email + ">",
 
         // Subject of the message
-        subject: 'AGS Village Valet Ride Confirmation: ' + Date.now(),
+        subject: 'AGS Village Valet Ride Confirmation: ' + this.props.active_ride.ride_data.date,
 
         // plaintext body
         text: '',
@@ -34,18 +34,21 @@ class Confirmation extends Component {
         // HTML body
         html: `<p><strong>AGS Village Valet Ride Confirmation</strong></p>\n` +
             `<p><u><strong>Rider Trip Summary</strong></u></p>\n` +
-            `<p>Rider Name: ${this.props.active_ride.rider.first_name} + \` \` + ${this.props.active_ride.rider.last_name}</p>\n` +
-            `<p>Pickup Location: ${this.props.active_ride.locations.pickup}</p>\n` +
-            `<p>Dropoff Location: ${this.props.active_ride.locations.dropoff}</p>\n` +
+            `<p>Rider Name: ${this.props.active_ride.rider.first_name}  ${this.props.active_ride.rider.last_name}</p>\n` +
+            `<p>Pickup Address: ${this.props.active_ride.locations.pickup.address}` +
+            `<p>Pickup Time: ${this.props.active_ride.locations.pickup.time}</p>\n` +
+            `<p>Dropoff Address: ${this.props.active_ride.locations.dropoff.address}</p>\n` +
+            `<p>Dropoff Time: ` +
             `<p>Trip Duration: ${this.props.active_ride.ride_data.time_total}</p>\n` +
             `<p>Expected Traffic: ${this.props.active_ride.ride_data.traffic}</p>\n` +
             `<p>\n` +
             `  <br>\n` +
             `</p>\n` +
             `<p><strong><u>Driver Trip Summary</u></strong></p>\n` +
-            `<p>Pickup Driver Name: ${this.props.active_ride.driver_1.first_name} + ' ' + ${this.props.active_ride.driver_1.last_name}&nbsp;</p>\n` +
-            `<p>Return Driver Name: ${this.props.active_ride.driver_2.first_name} + ' ' + ${this.props.active_ride.driver_2.last_name}</span>&nbsp;</p>\n` +
-            `<p>Return Destination: ${this.props.active_ride.locations.return}</p>`,
+            `<p>Pickup Driver Name: ${this.props.active_ride.driver_1.first_name} ${this.props.active_ride.driver_1.last_name}&nbsp;</p>\n` +
+            `<p>Return Driver Name: ${this.props.active_ride.driver_2.first_name} ${this.props.active_ride.driver_2.last_name}</span>&nbsp;</p>\n` +
+            `<p>Return Address: ${this.props.active_ride.locations.return.address}` +
+            `<p>Return Time: ${this.props.active_ride.locations.return.time}</p>`,
 
     };
 
