@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import CardDeck from "react-bootstrap/CardDeck";
 import ProfileTable from "../profiles/ProfileTable";
 
-
+import MileageReport from "./reports/MileageReport.js";
 
 class Reports extends Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class Reports extends Component {
                     </Card>
 
                 </CardDeck>
+                <MileageReport/>
             </Container>
         );
     }
