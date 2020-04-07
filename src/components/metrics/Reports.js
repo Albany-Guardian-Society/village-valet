@@ -39,12 +39,6 @@ class Reports extends Component {
                                         />
                                         <Form.Check
                                             type="radio"
-                                            label="Requested Rides"
-                                            name="formReportType"
-                                            id="formReportTypeRR"
-                                        />
-                                        <Form.Check
-                                            type="radio"
                                             label="Completed Rides"
                                             name="formReportType"
                                             id="formReportTypeCR"
@@ -68,7 +62,7 @@ class Reports extends Component {
                     </Card>
 
                     <Card>
-                        <Card.Header as="th">Select a Driver (Optional)</Card.Header>
+                        <Card.Header as="th">Select a Person (Optional)</Card.Header>
                         <Card.Body className="text-left">
                             Ignore to Select All
                             <ProfileTable/>
