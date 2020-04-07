@@ -41,7 +41,11 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").get()
                     .then(querySnapshot => {
-                        const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        let data = {}
+                        const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        for (let item in raw_data) {
+                            data[raw_data[item].id] = raw_data[item];
+                        }
                         this.props.load("rides", data);
                     }).then(() => {
                         this.setState({status: 100});
@@ -63,7 +67,11 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").where("village_id", "==", this.props.village_id).get()
                     .then(querySnapshot => {
-                        const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        let data = {}
+                        const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        for (let item in raw_data) {
+                            data[raw_data[item].id] = raw_data[item];
+                        }
                         this.props.load("rides", data);
                     }).then(() => {
                         this.setState({status: 100});

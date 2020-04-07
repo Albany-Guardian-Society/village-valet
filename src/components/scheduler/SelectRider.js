@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 
 import ProfileTable from "../profiles/ProfileTable";
 
@@ -27,12 +26,7 @@ class SelectRider extends Component {
             <Container className="SelectRider" style={{minWidth: "100%"}}>
                 <h1>Select Rider</h1>
                 <Row>
-                    <Col sm={10}><Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/></Col>
-                    <Col sm={2}>
-                        <Button id="search_button" onClick={this.handleSearch}>
-                            Search
-                        </Button>
-                    </Col>
+                    <Col sm={12}><Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/></Col>
                 </Row>
                 <hr/>
                 <ProfileTable search_term={this.state.search_term} mode={"rider"}/>

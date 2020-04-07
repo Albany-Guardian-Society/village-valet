@@ -113,6 +113,7 @@ const BLANK_RIDE = {
         },
         dropoff: {
             address: "",
+            time: "",
             special: "",
             geolocation: ""
         },
@@ -129,6 +130,10 @@ const BLANK_RIDE = {
         time_total: "",
         traffic: "",
         date: "",
+        meta: {
+            samereturn: true,
+            givendropoff: true
+        }
     }
 };
 
@@ -163,6 +168,11 @@ const VillageReducer = (state = initialState, action) => {
     case "dump_store": {
         console.log(state);
         return state;
+    }
+
+    case "trigger_update": {
+        let newState = _.cloneDeep(state);
+        return newState;
     }
 
     case "authenticate": {
@@ -203,7 +213,7 @@ const VillageReducer = (state = initialState, action) => {
 
     case "add_user": {
         let newState = _.cloneDeep(state);
-        newState.users.push(action.payload);
+        newState.users[action.payload.id] = (action.payload);
         return newState;
     }
 
@@ -271,6 +281,10 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         if (action.payload.type === "date"){
             newState.active_ride.ride_data.date = action.payload.value;
+        } else if (action.payload.type === "samereturn") {
+            newState.active_ride.ride_data.meta.samereturn = action.payload.value;
+        } else if (action.payload.type === "givendropoff") {
+            newState.active_ride.ride_data.meta.givendropoff = action.payload.value;
         } else {
             newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
         }
@@ -356,6 +370,18 @@ const VillageReducer = (state = initialState, action) => {
         //Delete the record (document) in firestore
         firestore.collection("users").doc(id_to_delete).delete();
 
+        return newState;
+    }
+
+    case "add_ride": {
+        let newState = _.cloneDeep(state);
+        newState.rides[action.payload.id] = (action.payload);
+        return newState;
+    }
+
+    case "clear_active_ride": {
+        let newState = _.cloneDeep(state);
+        newState.active_ride = _.cloneDeep(BLANK_RIDE);
         return newState;
     }
 
