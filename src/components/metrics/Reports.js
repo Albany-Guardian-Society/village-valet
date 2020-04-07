@@ -29,22 +29,22 @@ class Reports extends Component {
                         <Card.Header as="th">Choose the Type of Report</Card.Header>
                         <Card.Body className="text-left">
 
-                                <Form.Group as={Row}>
-                                    <Col sm={10}>
-                                        <Form.Check
-                                            type="radio"
-                                            label="Mileage"
-                                            name="formReportType"
-                                            id="formReportTypeMileage"
-                                        />
-                                        <Form.Check
-                                            type="radio"
-                                            label="Completed Rides"
-                                            name="formReportType"
-                                            id="formReportTypeCR"
-                                        />
-                                    </Col>
-                                </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col sm={10}>
+                                    <Form.Check
+                                        type="radio"
+                                        label="Mileage"
+                                        name="formReportType"
+                                        id="formReportTypeMileage"
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        label="Completed Rides"
+                                        name="formReportType"
+                                        id="formReportTypeCR"
+                                    />
+                                </Col>
+                            </Form.Group>
 
                         </Card.Body>
                     </Card>
@@ -62,10 +62,24 @@ class Reports extends Component {
                     </Card>
 
                     <Card>
-                        <Card.Header as="th">Select a Person (Optional)</Card.Header>
+                        <Card.Header as="th">Select a Person</Card.Header>
                         <Card.Body className="text-left">
-                            Ignore to Select All
-                            <ProfileTable/>
+                            <Form.Group as={Row}>
+                                <Col>
+                                    <Form.Check
+                                        type="radio"
+                                        label="Select All"
+                                        name="formReportPeople"
+                                        id="formReportPeopleSA"
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        label={<ProfileTable/>}
+                                        name="formReportPeople"
+                                        id="formReportPeopleIndividual"
+                                    />
+                                </Col>
+                            </Form.Group>
                         </Card.Body>
                     </Card>
 
