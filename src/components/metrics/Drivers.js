@@ -14,15 +14,27 @@ class Drivers extends Component {
         let drivers = this.props.users.filter((user) => {
                 return(user.user_type === 'driver')
         });
-        console.log(drivers);
+
+        const result = {};
+
+        // Object.keys(drivers)
+        //     .forEach(key => result[key] = drivers[key]);
+        //
+        // Object.keys(this.props.rides)
+        //     .forEach(key => result[key] = this.props.rides[key]);
+        //
+        // // console.log(result);
+        // console.log(this.props.rides);
+        // console.log(drivers);
+        // console.log(result);
         return drivers.map((driver) => {
             return (
                 <tr key={driver.id}>
                     <td>{driver.id}</td>
-                    {/*<td>{driver}</td>*/}
-                    {/*<td>{numberRides}</td>*/}
-                    {/*<td>{mileage}</td>*/}
-                    {/*<td>{volunteerHours}</td>*/}
+                    <td>{driver.personal_info.first_name}</td>
+                    {/*<td>{driver.numberRides}</td>*/}
+                    {/*<td>{driver.mileage}</td>*/}
+                    {/*<td>{driver.volunteer_hours}</td>*/}
                 </tr>
             )
         })

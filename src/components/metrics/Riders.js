@@ -2,74 +2,68 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 
-const TEST= [
-    {
-        riderID:123434,
-        rider:'Rider Name',
-        mileage: 6,
-        numberRides: 2,
-        villageID: 1
-    },
-    {
-        riderID:5555,
-        rider:'Rider Name',
-        mileage: 6,
-        numberRides: 3,
-        villageID: 5
-    }
-];
-
 class Riders extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
-
-
         this.handleChange = this.handleChange.bind(this);
     }
 
-    // renderTableData() {
-    //     return this.state.drivers.map((rider, index) => {
-    //         const { riderId, rider, mileage, numberRides, villageID } = rider; //destructuring
-    //         return (
-    //             <tr key={riderId}>
-    //                 <td>{riderId}</td>
-    //                 <td>{rider}</td>
-    //                 <td>{mileage}</td>
-    //                 <td>{numberRides}</td>
-    //                 <td>{villageID}</td>
-    //             </tr>
-    //         )
-    //     })
-    // }
-    //
-    // renderTableHeader() {
-    //     let header = Object.keys(this.state.riders[0]);
-    //     return header.map((key, index) => {
-    //         return <th key={index}>{key.toUpperCase()}</th>
-    //     })
-    // }
-    //
-    // handleChange(event){
-    // };
-    //
-    // render() {
-    //     return (
-    //         <div>
-    //             <h1 id='title'>Riders</h1>
-    //             <table id='riderId'>
-    //                 <tbody>
-    //                 <tr>{this.renderTableHeader()}</tr>
-    //                 {this.renderTableData()}
-    //                 </tbody>
-    //             </table>
-    //         </div>
-    //     );
-    // }
+    renderTableData() {
+        let riders = this.props.users.filter((user) => {
+            return(user.user_type === 'rider')
+        });
+
+        console.log(riders);
+        return riders.map((rider) => {
+            return (
+                <tr key={rider.id}>
+                    <td>{rider.id}</td>
+                    <td>{rider.personal_info.first_name}</td>
+                    {/*<td>{rider.number_rides}</td>*/}
+                    {/*<td>{driver.mileage}</td>*/}
+                    <td>{rider.village_id}</td>
+                    <td>{rider.village_id}</td>
+                    <td>{rider.village_id}</td>
+                </tr>
+            )
+        })
+    }
+
+    renderTableHeader() {
+        console.log('here');
+        let header = ['Rider Id', 'Rider', 'Rides', 'Mileage', 'Village'];
+        return header.map((item) => {
+            return <th key={item}>{item}</th>
+        })
+    }
+
+    handleChange(event){
+    };
+
+    render() {
+        return (
+            <div>
+                <h1 id='title'>Riders</h1>
+                <Table>
+                    <thead>
+                    <tr>
+                        {this.renderTableHeader()}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.renderTableData()}
+                    </tbody>
+                </Table>
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
