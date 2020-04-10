@@ -41,7 +41,7 @@ class Metrics extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                <ButtonToolbar style={{paddingBottom:'1%'}}
+                <ButtonToolbar
                     className="justify-content-between"
                     aria-label="Toolbar with Button groups">
                     <ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
@@ -49,11 +49,11 @@ class Metrics extends Component {
                         <ToggleButton id='drivers' value={'drivers'}>Drivers</ToggleButton>
                         <ToggleButton id='reports'  value={'reports'}>Reports</ToggleButton>
                     </ToggleButtonGroup>
-
                     <ButtonGroup aria-label="First group">
                         <Button  variant="info">Download</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
+                <hr/>
                 {this.changeTable()}
             </Container>
         );
