@@ -45,7 +45,7 @@ class Metrics extends Component {
                 <ButtonToolbar
                     className="justify-content-between"
                     aria-label="Toolbar with Button groups">
-                    
+
                     <ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
                         <ToggleButton id='riders' value={'riders'}>Riders</ToggleButton>
                         <ToggleButton id='drivers' value={'drivers'}>Drivers</ToggleButton>
