@@ -1,11 +1,11 @@
 FROM node:12-alpine as builder
-WORKDIR /app
-COPY . ./
+WORKDIR /usr/src/app
+COPY . /usr/src/app/
 RUN npm install
 CMD npm run build
 
 FROM nginx:alpine
 COPY etc/app.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
