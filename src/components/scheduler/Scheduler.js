@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
 
 import {LoadScript} from "@react-google-maps/api";
@@ -91,7 +91,7 @@ class Scheduler extends Component {
             case 1:
                 //Need to specify a date
                 if (this.props.active_ride.ride_data.date === "") {
-                    this.setState({error_message: "INVALID DATE: Please provide a date."})
+                    this.setState({error_message: "INVALID DATE: Please provide a date."});
                     return false;
                 } else if (new Date(this.props.active_ride.ride_data.date)+1 <= (Date.now()+6.04e+8)) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."});
@@ -105,7 +105,7 @@ class Scheduler extends Component {
             case 2:
                 //Need to pick a driver
                 if (this.props.active_ride.driver_1.id === "") {
-                    this.setState({error_message: "INVALID DATE: Please select a driver."})
+                    this.setState({error_message: "INVALID DATE: Please select a driver."});
                     return false;
                 }
                 return true;

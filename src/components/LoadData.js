@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import firestore from "../modules/firestore.js";
 
 import Container from "react-bootstrap/Container";
@@ -41,8 +41,10 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").get()
                     .then(querySnapshot => {
-                        let data = {}
-                        const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        let data = {};
+                        const raw_data = querySnapshot.docs.map(doc => {
+                            return {...doc.data(), id: doc.id}
+                        });
                         for (let item in raw_data) {
                             data[raw_data[item].id] = raw_data[item];
                         }
@@ -67,8 +69,10 @@ class LoadData extends Component {
                     this.setState({message: "Loading Rides"});
                     firestore.collection("rides").where("village_id", "==", this.props.village_id).get()
                     .then(querySnapshot => {
-                        let data = {}
-                        const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+                        let data = {};
+                        const raw_data = querySnapshot.docs.map(doc => {
+                            return {...doc.data(), id: doc.id}
+                        });
                         for (let item in raw_data) {
                             data[raw_data[item].id] = raw_data[item];
                         }
