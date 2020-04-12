@@ -5,10 +5,10 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import MapContainer from "../google-maps/MapContainer";
 
 import ProfileTable from "../profiles/ProfileTable";
+import Table from "react-bootstrap/Table";
 
 class SelectDriver extends Component {
     constructor(props) {
@@ -29,36 +29,31 @@ class SelectDriver extends Component {
                 <h1>Select Driver</h1>
                 <Form>
                     <Form.Group as={Row}>
-                        <Form.Label>Driver</Form.Label>
-                        <Form.Check></Form.Check>
                         <Col>
-                            <Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/>
+                            <Form.Control type="search" id="search" placeholder="Search Drivers" onChange={this.handleChange}/>
                         </Col>
-                        <Button id="search_button" onClick={this.handleSearch}>
-                            Search
-                        </Button>
                     </Form.Group>
                 </Form>
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
-                        <Row>
-                            Driver
-                        </Row>
-                        <Row>
-                            Return Driver
-                        </Row>
+                        <MapContainer>Driver to Rider Pickup</MapContainer>
                     </Col>
                     <Col>
-                        <MapContainer>Trip Summary</MapContainer>
-                    </Col>
-                    <Col>
-                        <Row>
-                            Trip Duration
-                        </Row>
-                        <Row>
-                            Expected Traffic
-                        </Row>
+                        <Table><tbody>
+                            <tr>
+                                <td>Trip Duration:</td>
+                                <td>{this.props.active_ride.ride_data.time_total}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected Traffic:</td>
+                                <td>{this.props.active_ride.ride_data.traffic}</td>
+                            </tr>
+                            <tr>
+                                <td>Driver:</td>
+                                <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
+                            </tr>
+                        </tbody></Table>
                     </Col>
                 </Row>
             </Container>
@@ -67,6 +62,7 @@ class SelectDriver extends Component {
 }
 
 const mapStateToProps = state => ({
+    active_ride: state.active_ride
 });
 
 const mapDispatchToProps = dispatch => ({

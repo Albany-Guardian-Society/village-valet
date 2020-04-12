@@ -93,13 +93,7 @@ const BLANK_RIDE = {
             last_name: "",
             id: "",
     },
-    driver_1: {
-        first_name: "",
-            last_name: "",
-            id: "",
-    },
-    //Optional second driver
-    driver_2: {
+    driver: {
         first_name: "",
             last_name: "",
             id: "",
@@ -112,12 +106,6 @@ const BLANK_RIDE = {
             geolocation: ""
         },
         dropoff: {
-            address: "",
-            special: "",
-            geolocation: ""
-        },
-        //Optional return location
-        return: {
             address: "",
             time: "",
             special: "",

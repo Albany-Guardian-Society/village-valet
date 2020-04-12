@@ -3,10 +3,10 @@ import {connect} from "react-redux";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import {Autocomplete} from "@react-google-maps/api";
+import MapContainer from "../google-maps/MapContainer";
 
 //import './pic_placeholder.png';
 
@@ -86,91 +86,62 @@ class RideInformation extends Component {
             <Container className="RideInformation" style={{minWidth: "100%"}}>
                 <h1>Ride Information</h1>
                 <Row>
-                    <Col>
-                        <Row>
-                            <Form.Control readOnly type="text" placeholder="First Name"
-                                          value={this.props.active_ride.rider.first_name}/>
-                            <Form.Control readOnly type="text" placeholder="Last Name"
-                                          value={this.props.active_ride.rider.last_name}/>
-                        </Row>
-                        <Row>
-                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
-                                          value={this.props.active_ride.ride_data.date}/>
-                        </Row>
-                    </Col>
+                    <Table><tbody>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name}</td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td><Form.Control type="date" placeholder="Date" id='sched_date' onChange={this.handleChange}
+                                              value={this.props.active_ride.ride_data.date}/></td>
+                        </tr>
+                    </tbody></Table>
+                    <Table><tbody>
+                        <tr>
+                            <td>Address</td>
+                            <td>
+                                <Autocomplete
+                                    onLoad={this.onLoad}
+                                    onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                >
+                                <Form.Control type="text" placeholder="Pickup Location"
+                                              id='sched_pickup_address' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.pickup.address}/>
+                                </Autocomplete>
+                            </td>
+                            <td>
+                                <Autocomplete
+                                    onLoad={this.onLoad}
+                                    onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
+                                >
+                                <Form.Control type="text" placeholder="Dropoff Location"
+                                              id='sched_dropoff_address' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.dropoff.address}/>
+                                </Autocomplete>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Special Instructions</td>
+                            <td><Form.Control type="text" placeholder="Pickup Instructions"
+                                              id='sched_pickup_special' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.pickup.special}/></td>
+                            <td><Form.Control type="text" placeholder="Dropoff Instructions"
+                                              id='sched_dropoff_special' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.dropoff.special}/></td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td><Form.Control type="time" placeholder="Pickup Time" id='sched_pickup_time'
+                                              onChange={(e) => this.handleChange(e)}
+                                              value={this.props.active_ride.locations.pickup.time}/></td>
+                            <td><Form.Control type="time" placeholder="Dropoff Time" id='sched_dropoff_time'
+                                              onChange={(e) => this.handleChange(e)}
+                                              value={this.props.active_ride.locations.dropoff.time}/></td>
+                        </tr>
+                    </tbody></Table>
                 </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Pickup</th>
-                                    <th>Dropoff</th>
-                                    <th>Return</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Address</td>
-                                <td>
-                                    <Autocomplete
-                                        onLoad={this.onLoad}
-                                        onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
-                                    >
-                                        <Form.Control type="text" placeholder="Pickup Location"
-                                                      id='sched_pickup_address' onChange={this.handleChange}
-                                                      value={this.props.active_ride.locations.pickup.address}/>
-                                    </Autocomplete>
-                                </td>
-                                <td>
-                                    <Autocomplete
-                                        onLoad={this.onLoad}
-                                        onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
-                                    >
-                                        <Form.Control type="text" placeholder="Dropoff Location"
-                                                      id='sched_dropoff_address' onChange={this.handleChange}
-                                                      value={this.props.active_ride.locations.dropoff.address}/>
-                                    </Autocomplete>
-                                </td>
-                                <td>
-                                    <Autocomplete
-                                        onLoad={this.onLoad}
-                                        onPlaceChanged={() => this.onPlaceChanged('return', 2)}
-                                    >
-                                        <Form.Control type="text" placeholder="Return" id='sched_return_address'
-                                                      onChange={this.handleChange}
-                                                      value={this.props.active_ride.locations.return.address}/>
-                                    </Autocomplete>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Special Instructions</td>
-                                <td><Form.Control type="text" placeholder="Pickup Instructions"
-                                                  id='sched_pickup_special' onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.pickup.special}/></td>
-                                <td><Form.Control type="text" placeholder="Dropoff Instructions"
-                                                  id='sched_dropoff_special' onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.dropoff.special}/></td>
-                                <td><Form.Control type="text" placeholder="Return Instructions"
-                                                  id='sched_return_special' onChange={this.handleChange}
-                                                  value={this.props.active_ride.locations.return.special}/></td>
-                            </tr>
-                            <tr>
-                                <td>Time</td>
-                                <td><Form.Control type="time" placeholder="pickup time" id='sched_pickup_time'
-                                                  onChange={(e) => this.handleChange(e)}
-                                                  value={this.props.active_ride.locations.pickup.time}/></td>
-                                <td></td>
-                                <td><Form.Control type="time" placeholder="return time" id='sched_return_time'
-                                                  onChange={(e) => this.handleChange(e)}
-                                                  value={this.props.active_ride.locations.return.time}/></td>
-                            </tr>
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
+                <MapContainer>Pickup to Dropoff Map</MapContainer>
             </Container>
         );
     }
