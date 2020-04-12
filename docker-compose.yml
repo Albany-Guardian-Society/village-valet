@@ -1,26 +1,27 @@
 version: '3'
 services:
-    village-valet:
-        build: https://github.com/ItsAMeNick/village-valet.git
-        container_name: village-valet
-        restart: always
-        mem_limit: 500m
-        env_file: village-valet/.env
-  nginx:
-    image: nginx:1.15-alpine
-    restart: unless-stopped
-    volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+  traefik:
+    image: traefik:v2.1
+    container_name: traefik
+    restart: always
     ports:
-      - "80:3000"
-      - "443:3000"
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
+      - 80:80
+      - 443:443
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - /etc/traefik/acme/acme.json:/letsencrypt/acme.json
+
+  village-valet:
+      build: https://github.com/ItsAMeNick/village-valet.git
+      container_name: village-valet
+      restart: always
+      mem_limit: 500m
+      env_file: village-valet/.env
+      labels:
+        - traefik.http.routers.at-channel.rule=Host(`beta.village-valet.tk`, `village-valet.tk`, `www.village-valet.tk`)
+        - traefik.http.middlewares.at-channel.redirectscheme.scheme=https
+        - traefik.http.middlewares.at-channel.redirectscheme.permanent=true
+        - traefik.http.routers.at-channel.tls=true
+        - traefik.http.routers.at-channel.tls.certresolver=tls
+
