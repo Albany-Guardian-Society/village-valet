@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import {LoadScript} from "@react-google-maps/api";
 
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -10,6 +12,7 @@ import Table from "react-bootstrap/Table";
 
 import GI from "../registration/GeneralInformation.js";
 import EC from "../registration/EmergencyInformation.js";
+import CI from "../registration/CaregiveInformation.js"
 import CA from "../registration/CommonAddresses.js";
 import SA from "../registration/SpecialAccommodations.js";
 
@@ -42,58 +45,114 @@ class Profile extends Component {
                                 <th>First Name</th><td>{this.props.user.personal_info.first_name}</td>
                             </tr>
                             <tr>
-                                <th>Last Name</th><td>{this.props.user.personal_info.last_name}</td>
+                                <th>Last Name</th>
+                                <td>{this.props.user.personal_info.last_name}</td>
                             </tr>
                             <tr>
-                                <th>Email</th><td>{this.props.user.personal_info.email}</td>
+                                <th>Email</th>
+                                <td>{this.props.user.personal_info.email}</td>
                             </tr>
                             <tr>
-                                <th>Home Phone</th><td>{this.props.user.personal_info.phone_home}</td>
+                                <th>Home Phone</th>
+                                <td>{this.props.user.personal_info.phone_home}</td>
                             </tr>
                             <tr>
-                                <th>Mobile Phone</th><td>{this.props.user.personal_info.phone_mobile}</td>
+                                <th>Mobile Phone</th>
+                                <td>{this.props.user.personal_info.phone_mobile}</td>
                             </tr>
                             <tr>
-                                <th>Preferred Communcation</th><td>{this.props.user.personal_info.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                                <th>Preferred Communication</th>
+                                <td>{this.props.user.personal_info.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
                             </tr>
                             <tr>
-                                <th>Language</th><td>{this.props.user.personal_info.language.map((l) => {return l.replace(/^\w/, c => c.toUpperCase()) + ", "})}</td>
+                                <th>Language</th>
+                                <td>{this.props.user.personal_info.language.map((l) => {
+                                    return l.replace(/^\w/, c => c.toUpperCase()) + ", "
+                                })}</td>
                             </tr>
                             <tr>
-                                <th>Status</th><td>{this.props.user.status.replace(/^\w/, c => c.toUpperCase())}</td>
+                                <th>Status</th>
+                                <td>{this.props.user.status.replace(/^\w/, c => c.toUpperCase())}</td>
                             </tr>
-                        </tbody></Table>
+                        </tbody>
+                        </Table>
                     );
                 } else if (this.state.mode === "edit") {
                     return <GI partial={true}/>;
                 }
                 break;
+            case "caregiver":
+                if (this.state.mode === "view") {
+                    return (
+                        <Table striped bordered>
+                            {this.props.user.caregiver ?
+                                <tbody>
+                                <tr>
+                                    <th>First Name</th>
+                                    <td>{this.props.user.caregiver.first_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Name</th>
+                                    <td>{this.props.user.caregiver.last_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{this.props.user.caregiver.email}</td>
+                                </tr>
+                                <tr>
+                                    <th>Home Phone</th>
+                                    <td>{this.props.user.caregiver.phone_home}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mobile Phone</th>
+                                    <td>{this.props.user.caregiver.phone_mobile}</td>
+                                </tr>
+                                <tr>
+                                    <th>Preferred Communication</th>
+                                    <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                                </tr>
+                                </tbody>
+                                : null}
+                        </Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                    return <CI/>;
+                }
+                break;
             case "emergency":
                 if (this.state.mode === "view") {
                     return (
-                        <Table striped bordered><tbody>
+                        <Table striped bordered>
+                            <tbody>
                             <tr>
-                                <th>First Name</th><td>{this.props.user.emergency_contact.first_name}</td>
+                                <th>First Name</th>
+                                <td>{this.props.user.emergency_contact.first_name}</td>
                             </tr>
                             <tr>
-                                <th>Last Name</th><td>{this.props.user.emergency_contact.last_name}</td>
+                                <th>Last Name</th>
+                                <td>{this.props.user.emergency_contact.last_name}</td>
                             </tr>
                             <tr>
-                                <th>Email</th><td>{this.props.user.emergency_contact.email}</td>
+                                <th>Email</th>
+                                <td>{this.props.user.emergency_contact.email}</td>
                             </tr>
                             <tr>
-                                <th>Home Phone</th><td>{this.props.user.emergency_contact.phone_home}</td>
+                                <th>Home Phone</th>
+                                <td>{this.props.user.emergency_contact.phone_home}</td>
                             </tr>
                             <tr>
-                                <th>Mobile Phone</th><td>{this.props.user.emergency_contact.phone_mobile}</td>
+                                <th>Mobile Phone</th>
+                                <td>{this.props.user.emergency_contact.phone_mobile}</td>
                             </tr>
                             <tr>
-                                <th>Preferred Communcation</th><td>{this.props.user.emergency_contact.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                                <th>Preferred Communcation</th>
+                                <td>{this.props.user.emergency_contact.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
                             </tr>
-                        </tbody></Table>
+                            </tbody>
+                        </Table>
                     );
                 } else if (this.state.mode === "edit") {
-                   return <EC/>;
+                    return <EC/>;
                 }
                 break;
             case "vehicles":
@@ -241,7 +300,15 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                   return <CA/>;
+                    return (
+                        <LoadScript
+                            id="script-loader"
+                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                            libraries={["places"]}
+                        >
+                            <CA/>
+                        </LoadScript>
+                    );
                 }
                 break;
             case "special":
@@ -354,8 +421,14 @@ class Profile extends Component {
                                 </>
                             :
                                 <>
-                                <ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "special"} onClick={() => this.changePage("special")}>Special Accommodations</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "caregiver"}
+                                                    onClick={() => this.changePage("caregiver")}>Caregiver
+                                        Information</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "addresses"}
+                                                    onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "special"}
+                                                    onClick={() => this.changePage("special")}>Special
+                                        Accommodations</ListGroup.Item>
                                 </>
                             }
                         </ListGroup>
