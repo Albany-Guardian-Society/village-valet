@@ -93,16 +93,12 @@ const BLANK_RIDE = {
             last_name: "",
             id: "",
     },
-    driver_1: {
+    driver: {
         first_name: "",
-            last_name: "",
-            id: "",
-    },
-    //Optional second driver
-    driver_2: {
-        first_name: "",
-            last_name: "",
-            id: "",
+        last_name: "",
+        id: "",
+        vehicle: VEHICLE_TEMPLATE,
+        home_geolocation: ""
     },
     locations: {
         pickup: {
@@ -116,20 +112,23 @@ const BLANK_RIDE = {
             time: "",
             special: "",
             geolocation: ""
-        },
-        //Optional return location
-        return: {
-            address: "",
-            time: "",
-            special: "",
-            geolocation: ""
-        },
+        }
     },
     ride_data: {
-        distance: "",
-        time_total: "",
+        mileage: {
+            driver: "",
+            rider: ""
+        },
+        time_total: {
+            driver: "",
+            rider: "",
+        },
         traffic: "",
         date: "",
+        associated_ride: {
+            ride_id: "",
+            driver_id: ""
+        },
         meta: {
             samereturn: true,
             givendropoff: true
@@ -144,13 +143,6 @@ const initialState = {
         first_name: "",
         last_name: "",
         village_id: "",
-    },
-    ridebreakdown: {
-        id: "",
-        rider: '',
-        driver: '',
-        pickup: "",
-        dropoff: ""
     },
     villages: {},
     users: {},
@@ -171,8 +163,7 @@ const VillageReducer = (state = initialState, action) => {
     }
 
     case "trigger_update": {
-        let newState = _.cloneDeep(state);
-        return newState;
+        return _.cloneDeep(state);
     }
 
     case "authenticate": {
@@ -373,20 +364,33 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
-    case "add_ride": {
-        let newState = _.cloneDeep(state);
-        newState.rides[action.payload.id] = (action.payload);
-        return newState;
-    }
+        case "add_ride": {
+            let newState = _.cloneDeep(state);
+            newState.rides[action.payload.id] = (action.payload);
+            return newState;
+        }
 
-    case "clear_active_ride": {
-        let newState = _.cloneDeep(state);
-        newState.active_ride = _.cloneDeep(BLANK_RIDE);
-        return newState;
-    }
+        case "update_active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
+            firestore.collection("rides").doc(newState.active_ride.id).update(action.payload);
+            return newState;
+        }
 
-    default:
-        return state;
+        case "active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
+            return newState;
+        }
+
+        case "clear_active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(BLANK_RIDE);
+            return newState;
+        }
+
+        default:
+            return state;
     }
 };
 
