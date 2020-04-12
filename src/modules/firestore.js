@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 
+
 var firebaseConfig = {
     apiKey: process.env.REACT_APP_FIRESTORE_API_KEY,
     authDomain: "village-valet.firebaseapp.com",
