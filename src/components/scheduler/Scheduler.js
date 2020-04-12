@@ -104,7 +104,7 @@ class Scheduler extends Component {
                 return true;
             case 2:
                 //Need to pick a driver
-                if (this.props.active_ride.driver_1.id === "") {
+                if (this.props.active_ride.driver.id === "") {
                     this.setState({error_message: "INVALID DATE: Please select a driver."});
                     return false;
                 }

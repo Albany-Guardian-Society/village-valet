@@ -94,13 +94,7 @@ const BLANK_RIDE = {
         last_name: "",
         id: "",
     },
-    driver_1: {
-        first_name: "",
-        last_name: "",
-        id: "",
-    },
-    //Optional second driver
-    driver_2: {
+    driver: {
         first_name: "",
         last_name: "",
         id: "",
@@ -113,13 +107,6 @@ const BLANK_RIDE = {
             geolocation: ""
         },
         dropoff: {
-            address: "",
-            time: "",
-            special: "",
-            geolocation: ""
-        },
-        //Optional return location
-        return: {
             address: "",
             time: "",
             special: "",
@@ -298,14 +285,10 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.rider.first_name = action.payload.user.personal_info.first_name;
             newState.active_ride.rider.last_name = action.payload.user.personal_info.last_name;
             newState.active_ride.rider.id = action.payload.user.id;
-        } else if (action.payload.type === "driver_1") {
-            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
-            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
-            newState.active_ride.driver_1.id = action.payload.user.id;
-        } else if (action.payload.type === "driver_2") {
-            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
-            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
-            newState.active_ride.driver_1.id = action.payload.user.id;
+        } else if (action.payload.type === "driver") {
+            newState.active_ride.driver.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver.id = action.payload.user.id;
         }
         return newState;
     }

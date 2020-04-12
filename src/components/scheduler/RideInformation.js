@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import {Autocomplete} from "@react-google-maps/api";
+import MapContainer from "../google-maps/MapContainer";
 
 //import './pic_placeholder.png';
 
@@ -94,21 +95,31 @@ class RideInformation extends Component {
                                 <h5>Options</h5>
                             </Card.Header>
                             <Card.Body>
-                                <Form.Control readOnly type="text" placeholder="First Name"
-                                              value={this.props.active_ride.rider.first_name}/>
-                                <Form.Control readOnly type="text" placeholder="Last Name"
-                                              value={this.props.active_ride.rider.last_name}/>
-                                <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
-                                              value={this.props.active_ride.ride_data.date}/>
-                                <Form.Label>Return address same as Pickup?</Form.Label>
-                                <Form.Check id='sched_meta_samereturn' onChange={this.handleChange}
-                                            checked={this.props.active_ride.ride_data.meta.samereturn}/>
-                                <Form.Label>Calculate route given pickup/dropoff time</Form.Label>
-                                <Form.Control as="select" id='sched_meta_givendropoff' onChange={this.handleChange}
-                                              value={this.props.active_ride.ride_data.meta.givendropoff}>
-                                    <option value={true} label="Dropoff"/>
-                                    <option value={false} label="Pickup"/>
-                                </Form.Control>
+                                <Row>
+                                    <Col>Name:</Col>
+                                    <Col>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}</Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Label>Date:</Form.Label>
+                                    </Col>
+                                    <Col>
+                                        <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                                         value={this.props.active_ride.ride_data.date}/>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Label>Calculate route given pickup/dropoff time</Form.Label>
+                                    </Col>
+                                    <Col>
+                                        <Form.Control as="select" id='sched_meta_givendropoff' onChange={this.handleChange}
+                                                      value={this.props.active_ride.ride_data.meta.givendropoff}>
+                                            <option value={true} label="Dropoff"/>
+                                            <option value={false} label="Pickup"/>
+                                        </Form.Control>
+                                    </Col>
+                                </Row>
                             </Card.Body>
                         </Card>
                     </Col> <Col>
@@ -176,36 +187,7 @@ class RideInformation extends Component {
                             </Card.Body>
                         </Card>
                     </Col>
-                    {!this.props.active_ride.ride_data.meta.samereturn ? <Col>
-                        <Card>
-                            <Card.Header>
-                                <h5>Return</h5>
-                            </Card.Header>
-                            <Card.Body>
-                                <Row>
-                                    <Col>
-                                        <Form.Label>Return Address:</Form.Label>
-                                        <Autocomplete
-                                            onLoad={this.onLoad}
-                                            onPlaceChanged={() => this.onPlaceChanged('return', 2)}
-                                        >
-                                            <Form.Control type="text" placeholder="Return" id='sched_return_address'
-                                                          onChange={this.handleChange}
-                                                          value={this.props.active_ride.locations.return.address}/>
-                                        </Autocomplete>
-                                        <Form.Label>Return Time:</Form.Label>
-                                        <Form.Control type="time" placeholder="return time" id='sched_return_time'
-                                                      onChange={(e) => this.handleChange(e)}
-                                                      value={this.props.active_ride.locations.return.time}/>
-                                        <Form.Label>Special Instructions:</Form.Label>
-                                        <Form.Control type="text" placeholder="Return Instructions"
-                                                      id='sched_return_special' onChange={this.handleChange}
-                                                      value={this.props.active_ride.locations.return.special}/>
-                                    </Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </Col> : null}
+                    <Col><MapContainer>Pickup to Dropoff</MapContainer></Col>
                 </Row>
                 <br/>
             </Container>

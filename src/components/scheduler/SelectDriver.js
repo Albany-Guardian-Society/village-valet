@@ -28,8 +28,6 @@ class SelectDriver extends Component {
                 <h1>Select Driver</h1>
                 <Form>
                     <Form.Group as={Row}>
-                        <Form.Label>Driver</Form.Label>
-                        <Form.Check></Form.Check>
                         <Col>
                             <Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/>
                         </Col>
@@ -38,22 +36,16 @@ class SelectDriver extends Component {
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
-                        <Row>
-                            Driver
-                        </Row>
-                        <Row>
-                            Return Driver
-                        </Row>
-                    </Col>
-                    <Col>
                         <MapContainer>Trip Summary</MapContainer>
                     </Col>
                     <Col>
                         <Row>
-                            Trip Duration
+                            <Col>Driver:</Col>
+                            <Col>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</Col>
                         </Row>
                         <Row>
-                            Expected Traffic
+                            <Col>Trip Duration:</Col>
+                            <Col>{`${this.props.active_ride.ride_data.time_total}`}</Col>
                         </Row>
                     </Col>
                 </Row>
@@ -63,6 +55,7 @@ class SelectDriver extends Component {
 }
 
 const mapStateToProps = state => ({
+    active_ride: state.active_ride
 });
 
 const mapDispatchToProps = dispatch => ({
