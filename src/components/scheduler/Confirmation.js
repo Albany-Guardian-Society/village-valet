@@ -18,7 +18,7 @@ class Confirmation extends Component {
     }
 
     handleChange(event){
-    };
+    };/*
 
     message = {
         // Comma separated list of recipients
@@ -50,7 +50,7 @@ class Confirmation extends Component {
             `<p>Return Address: ${this.props.active_ride.locations.return.address}` +
             `<p>Return Time: ${this.props.active_ride.locations.return.time}</p>`,
 
-    };
+    };*/
 
     messageTest() {
         console.log(this.message);
@@ -72,32 +72,28 @@ class Confirmation extends Component {
                                 <td>{this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name}</td>
                             </tr>
                             <tr>
-                                <td>Pickup:</td>
+                                <td>Pickup Location:</td>
                                 <td>{this.props.active_ride.locations.pickup.address}</td>
                             </tr>
                             <tr>
-                                <td>Dropoff:</td>
+                                <td>Pickup Time:</td>
+                                <td>{this.props.active_ride.locations.pickup.time}</td>
+                            </tr>
+                            <tr>
+                                <td>Dropoff Location:</td>
                                 <td>{this.props.active_ride.locations.dropoff.address}</td>
+                            </tr>
+                            <tr>
+                                <td>Dropoff Time:</td>
+                                <td>{this.props.active_ride.locations.dropoff.time}</td>
                             </tr>
                             <tr>
                                 <td>Trip Duration:</td>
                                 <td>{this.props.active_ride.ride_data.time_total}</td>
                             </tr>
                             <tr>
-                                <td>Expected Traffic:</td>
-                                <td>{this.props.active_ride.ride_data.traffic}</td>
-                            </tr>
-                            <tr>
                                 <td>Driver:</td>
-                                <td>{this.props.active_ride.driver_1.first_name} {this.props.active_ride.driver_1.last_name}</td>
-                            </tr>
-                            <tr>
-                                <td>Return Driver:</td>
-                                <td>{this.props.active_ride.driver_2.first_name} {this.props.active_ride.driver_2.last_name}</td>
-                            </tr>
-                            <tr>
-                                <td>Return Destination:</td>
-                                <td>{this.props.active_ride.locations.return.address}</td>
+                                <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
                             </tr>
                         </tbody></Table>
                     </Col>
