@@ -21,14 +21,15 @@ class SelectDriver extends Component {
 
     handleChange(event){
         if (event.target.id === "search") this.setState({search_term: event.target.value});
-        else if (event.target.id === "sched_vehicle") this.props.updateScheduler("vehicle", null, event.target.value);
+        else if (event.target.id === "sched_vehicle") this.props.updateScheduler("vehicle", this.props.active_ride.driver.id, event.target.value);
     };
 
     vehicleOptions() {
         let options = [<option value={""} label={""}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            return <option value={car} label={car.year + " " + car.make_model}/>
+            console.log(car);
+            return <option value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;
     };
@@ -58,7 +59,7 @@ class SelectDriver extends Component {
                         <Row>
                             <Col>Select Vehicle:</Col>
                             <Col>
-                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange} value={this.props.active_ride.driver.vehicle}>
+                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange} value={this.props.active_ride.driver.vehicle.lp}>
                                     {this.vehicleOptions()}
                                 </Form.Control>
                             </Col>
