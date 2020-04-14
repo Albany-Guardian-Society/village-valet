@@ -31,49 +31,66 @@ class Ledger extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    renderTableData() {
+        let rides = this.props.rides;
+        console.log(rides);
+        let keys = Object.keys(rides);
+        for ( let i = 0, len = keys.length; i < len; i++) {
+            return (
+                <tr>
+                    <td>{rides[keys[i]].id}</td>
+                    <td>{rides[keys[i]].driver.first_name}</td>
+                    <td>{rides[keys[i]].rider.first_name}</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+
+                </tr>
+            )
+
+        }
+        return rides.map((ride) => {
+            return(
+                <tr key={ride.id}>
+                    <td>{ride.id}</td>
+                </tr>
+                )
+
+        })
+    }
+
+    renderTableHeader() {
+        console.log('here');
+        let header = ['Ride', 'Driver', 'Rider', 'Mileage', 'Volunteer Hours'];
+        return header.map((item) => {
+            return <th key={item}>{item}</th>
+        })
+    }
+
     handleChange(event){
     };
 
     render() {
         return (
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Ride ID</th>
-                    <th>Driver</th>
-                    <th>Rider</th>
-                    <th>Origin</th>
-                    <th>Destination</th>
-                    <th>Mileage</th>
-                    <th>Timestamp</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{TEST[0].id}</td>
-                    <td>{TEST[0].driver}</td>
-                    <td>{TEST[0].rider}</td>
-                    <td>{TEST[0].pickup}</td>
-                    <td>{TEST[0].dropoff}</td>
-                    <td>{TEST[0].mileage}</td>
-                    <td>{TEST[0].timestamp}</td>
-                </tr>
-                <tr>
-                    <td>{TEST[1].id}</td>
-                    <td>{TEST[1].driver}</td>
-                    <td>{TEST[1].rider}</td>
-                    <td>{TEST[1].pickup}</td>
-                    <td>{TEST[1].dropoff}</td>
-                    <td>{TEST[1].mileage}</td>
-                    <td>{TEST[1].timestamp}</td>
-                </tr>
-                </tbody>
-            </Table>
+            <div>
+                <h1 id='title'>Ledger</h1>
+                <Table>
+                    <thead>
+                    <tr>
+                        {this.renderTableHeader()}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.renderTableData()}
+                    </tbody>
+                </Table>
+            </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({

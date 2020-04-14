@@ -32,9 +32,9 @@ class Drivers extends Component {
                 <tr key={driver.id}>
                     <td>{driver.id}</td>
                     <td>{driver.personal_info.first_name}</td>
-                    {/*<td>{driver.numberRides}</td>*/}
-                    {/*<td>{driver.mileage}</td>*/}
-                    {/*<td>{driver.volunteer_hours}</td>*/}
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
                 </tr>
             )
         })

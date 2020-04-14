@@ -21,11 +21,9 @@ class Riders extends Component {
                 <tr key={rider.id}>
                     <td>{rider.id}</td>
                     <td>{rider.personal_info.first_name}</td>
-                    {/*<td>{rider.number_rides}</td>*/}
-                    {/*<td>{driver.mileage}</td>*/}
-                    <td>{rider.village_id}</td>
-                    <td>{rider.village_id}</td>
-                    <td>{rider.village_id}</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
                 </tr>
             )
         })
