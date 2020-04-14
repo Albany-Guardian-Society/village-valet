@@ -52,8 +52,6 @@ class RideInformation extends Component {
         let items = [];
         let addresses = [];
         for (let i = 0; i < this.props.users.length; i++) {
-            console.log(this.props.users[i].id);
-            console.log(this.props.active_ride.rider.id);
             if (this.props.users[i].id === this.props.active_ride.rider.id) {
                 // this.setState({addresses: this.props.users[i].addresses});
                 let addresses = this.props.users[i].addresses
@@ -78,12 +76,6 @@ class RideInformation extends Component {
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
-            // //The store should REALLY NOT be updated like this.
-            // this.props.active_ride.locations[variable].address = place.formatted_address;
-            // this.props.active_ride.locations[variable].geolocation = new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng());
-
-            //Sould use the reducer
-            console.log(variable);
             this.props.updateScheduler(variable, "address", place.formatted_address);
             this.props.updateScheduler(variable, "geolocation", new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng()));
 
@@ -135,7 +127,7 @@ class RideInformation extends Component {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col>{/*<MapContainer>Pickup to Dropoff</MapContainer>*/}</Col>
+                    <Col>Pickup to Dropoff<MapContainer/></Col>
                 </Row>
                 <br/>
                 <Row>
@@ -203,7 +195,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
-                                                onPlaceChanged={() => this.onPlaceChanged('dropoff', 0)}
+                                                onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
                                             >
                                                 <Form.Control type="text" placeholder="Dropoff Location"
                                                               id='sched_dropoff_address' onChange={this.handleChange}
