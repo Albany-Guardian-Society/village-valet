@@ -11,8 +11,13 @@ const TODAY = new Date();
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'col',
-    backgroundColor: '#E4E4E4'
+    backgroundColor: '#E4E4E4',
+    margin: '20px'
   },
+  table: { display: "table", width: "auto", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
+  tableRow: { margin: "auto", flexDirection: "row" },
+  tableCol: { width: "25%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableCell: { margin: "auto", marginTop: 5, fontSize: 10 },
 });
 
 //PDF
@@ -27,8 +32,9 @@ class MileageReportPDF extends Component {
         let myRides = this.props.rides.filter((ride) => {
             return ride.driver.id === this.props.driver.id;
         }).map((item) => {
-            <tr>
-            </tr>>
+            return (<tr>
+                <td>Hello</td>
+            </tr>)
         });
     }
 
@@ -52,6 +58,25 @@ class MileageReportPDF extends Component {
                     <View>
                         <Text>{"From: [DATE]"}</Text>
                         <Text>{"To: [DATE]"}</Text>
+                    </View>
+                    <View style={styles.table}>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Item Number</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Ride ID</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Trip Date</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Trip Time</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Trip Mileage</Text>
+                            </View>
+                        </View>
                     </View>
                 </Page>
             </Document>
