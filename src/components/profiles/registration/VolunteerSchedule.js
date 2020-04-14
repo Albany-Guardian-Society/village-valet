@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -31,20 +31,24 @@ class VolunteerSchedule extends Component {
         for (let index in this.props.volunteer_hours) {
             hour_rows.push(
                 <Row className="reg_row" key={index}>
-                    <Col><Form.Control as="select" id={"vol_"+index+"|day"} onChange={this.handleChange} value={this.props.volunteer_hours[index].day}>
-                        <option label="Sunday" value="sunday" />
-                        <option label="Monday" value="monday" />
-                        <option label="Tuesday" value="tuesday" />
-                        <option label="Wednesday" value="wednesday" />
-                        <option label="Thursday" value="thursday" />
-                        <option label="Friday" value="friday" />
-                        <option label="Saturday" value="saturday" />
+                    <Col><Form.Control as="select" id={"vol_" + index + "|day"} onChange={this.handleChange}
+                                       value={this.props.volunteer_hours[index].day}>
+                        <option label="Sunday" value="sunday"/>
+                        <option label="Monday" value="monday"/>
+                        <option label="Tuesday" value="tuesday"/>
+                        <option label="Wednesday" value="wednesday"/>
+                        <option label="Thursday" value="thursday"/>
+                        <option label="Friday" value="friday"/>
+                        <option label="Saturday" value="saturday"/>
                     </Form.Control></Col>
                     <Form.Label column sm={2} lg={2}>Starting Time:</Form.Label>
-                    <Col><Form.Control type="time" id={"vol_"+index+"|start"} onChange={this.handleChange} value={this.props.volunteer_hours[index].start}/></Col>
+                    <Col><Form.Control type="time" id={"vol_" + index + "|start"} onChange={this.handleChange}
+                                       value={this.props.volunteer_hours[index].start}/></Col>
                     <Form.Label column sm={2} lg={2}>Ending Time:</Form.Label>
-                    <Col><Form.Control type="time" id={"vol_"+index+"|end"} onChange={this.handleChange} value={this.props.volunteer_hours[index].end}/></Col>
-                    <Col><Button variant="danger" onClick={(e) => this.props.removeVolHours(e.target.id)}>Delete</Button></Col>
+                    <Col><Form.Control type="time" id={"vol_" + index + "|end"} onChange={this.handleChange}
+                                       value={this.props.volunteer_hours[index].end}/></Col>
+                    <Col><Button variant="danger"
+                                 onClick={(e) => this.props.removeVolHours(e.target.id)}>Delete</Button></Col>
                 </Row>
             );
             if (index !== last_index) hour_rows.push(<hr key={"break_"+index}/>);
@@ -56,8 +60,8 @@ class VolunteerSchedule extends Component {
         return (
             <Card>
                 <Card.Header>
-                    <h5 style={{float:"left"}}>Volunteer Hours</h5>
-                    <Button variant="dark" style={{float:"right"}} onClick={() => this.props.addVolHours()}>
+                    <h5 style={{float: "left"}}>Volunteer Hours</h5>
+                    <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addVolHours()}>
                         Add Volunteer Day
                     </Button>
                 </Card.Header>

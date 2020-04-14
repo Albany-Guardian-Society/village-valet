@@ -1,11 +1,26 @@
-version: '2'
+version: '3'
 services:
-    village-valet:
-        build: https://github.com/ItsAMeNick/village-valet.git
-        container_name: village-valet
-        restart: always
-        mem_limit: 500m
-        ports:
-         - "80:3000"
-         - "443:3000"
-        env_file: village-valet/.env
+  traefik:
+    image: traefik:v2.1
+    container_name: traefik
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - /etc/traefik/acme/acme.json:/letsencrypt/acme.json
+
+  village-valet:
+      build: https://github.com/ItsAMeNick/village-valet.git
+      container_name: village-valet
+      restart: always
+      mem_limit: 500m
+      env_file: village-valet/.env
+      labels:
+        - traefik.http.routers.at-channel.rule=Host(`beta.village-valet.tk`, `village-valet.tk`, `www.village-valet.tk`)
+        - traefik.http.middlewares.at-channel.redirectscheme.scheme=https
+        - traefik.http.middlewares.at-channel.redirectscheme.permanent=true
+        - traefik.http.routers.at-channel.tls=true
+        - traefik.http.routers.at-channel.tls.certresolver=tls

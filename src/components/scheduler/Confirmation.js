@@ -4,9 +4,9 @@ import {connect} from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
+import Table from "react-bootstrap/Table"
 
-import MapContainer from "../google-maps/MapContainer.js";
+import MapContainer from "../google-maps/MapContainer";
 
 class Confirmation extends Component {
     constructor(props) {
@@ -16,51 +16,47 @@ class Confirmation extends Component {
     }
 
     handleChange(event){
+
     };
 
     render() {
         return (
-            <Container className="Confirmation" style={{minWidth: "100%"}}>
-                <h1>Confirmation</h1>
+            <Container>
                 <Row>
                     <Col>
                         <MapContainer>Trip Summary</MapContainer>
                     </Col>
                     <Col>
-                        <Table><tbody>
+                        <Table>
                             <tr>
                                 <td>Name:</td>
-                                <td>{this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name}</td>
+                                <td>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}</td>
                             </tr>
                             <tr>
-                                <td>Pickup:</td>
-                                <td>{this.props.active_ride.locations.pickup.address}</td>
+                                <td>Pickup Location:</td>
+                                <td>{`${this.props.active_ride.locations.pickup.address}`}</td>
                             </tr>
                             <tr>
-                                <td>Dropoff:</td>
-                                <td>{this.props.active_ride.locations.dropoff.address}</td>
+                                <td>Dropoff Location:</td>
+                                <td>{`${this.props.active_ride.locations.dropoff.address}`}</td>
+                            </tr>
+                            <tr>
+                                <td>Pickup Time:</td>
+                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
+                            </tr>
+                            <tr>
+                                <td>Dropoff Time:</td>
+                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
                             </tr>
                             <tr>
                                 <td>Trip Duration:</td>
-                                <td>{this.props.active_ride.ride_data.time_total}</td>
-                            </tr>
-                            <tr>
-                                <td>Expected Traffic:</td>
-                                <td>{this.props.active_ride.ride_data.traffic}</td>
+                                <td>{`${this.props.active_ride.ride_data.time_total}`}</td>
                             </tr>
                             <tr>
                                 <td>Driver:</td>
-                                <td>{this.props.active_ride.driver_1.first_name} {this.props.active_ride.driver_1.last_name}</td>
+                                <td>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</td>
                             </tr>
-                            <tr>
-                                <td>Return Driver:</td>
-                                <td>{this.props.active_ride.driver_2.first_name} {this.props.active_ride.driver_2.last_name}</td>
-                            </tr>
-                            <tr>
-                                <td>Return Destination:</td>
-                                <td>{this.props.active_ride.locations.return.address}</td>
-                            </tr>
-                        </tbody></Table>
+                        </Table>
                     </Col>
                 </Row>
             </Container>
@@ -69,7 +65,7 @@ class Confirmation extends Component {
 }
 
 const mapStateToProps = state => ({
-    active_ride: state.active_ride,
+    active_ride: state.active_ride
 });
 
 const mapDispatchToProps = dispatch => ({
