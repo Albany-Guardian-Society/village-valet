@@ -16,6 +16,7 @@ import Profile from './components/profiles/profile/Profile.js';
 import Ledger from './components/ledger/Ledger.js'
 import Metrics from './components/metrics/Metrics.js';
 import Error from './components/Error.js';
+import {LoadScript} from "@react-google-maps/api";
 
 class App extends Component {
     render() {
@@ -28,9 +29,15 @@ class App extends Component {
                     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
                     crossOrigin="anonymous"
                 />
-                {this.props.authenticated ?
+                {!this.props.authenticated ?
+                    <Login/> :
                     this.props.loaded ?
                         <div>
+                            <LoadScript
+                                id="script-loader"
+                                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                                libraries={["places"]}
+                            >
                             <Navigation />
                             <Switch>
                                 <Route path="/Dashboard" component={Dashboard}/>
@@ -42,9 +49,9 @@ class App extends Component {
                                 <Route path="/Metrics" component={Metrics}/>
                                 <Route path="/" component={Error}/>
                             </Switch>
+                            </LoadScript>
                         </div>
-                    : <LoadData/>
-                : <Login/>}
+                    : <LoadData/>}
                 </BrowserRouter>
             </div>
         );
