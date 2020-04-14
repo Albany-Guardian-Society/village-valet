@@ -203,17 +203,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-<<<<<<< HEAD
-        addUser: (user, id) => dispatch({
-            type: "add_user",
-            payload: {...user, id: id}
-        }),
-=======
     addUser: (user, id) => dispatch({
         type: "add_user",
         payload: {...user, id: id}
     }),
->>>>>>> dev
     clearRegistration: () => dispatch({
         type: "clear_active_profile",
         payload: null
