@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: 'col',
     backgroundColor: '#E4E4E4',
-    margin: '20px'
+    margin: '20px',
+    width: '1000px',
   },
   table: { display: "table", width: "auto", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
   tableRow: { margin: "auto", flexDirection: "row" },
@@ -29,13 +30,55 @@ class MileageReportPDF extends Component {
     }
 
     generateRideItems() {
-        let myRides = this.props.rides.filter((ride) => {
-            return ride.driver.id === this.props.driver.id;
+        let counter = 0;
+        let total_time = 0;
+        let total_miles = 0;
+        let ride_ids = Object.keys(this.props.rides)
+        let myRides = ride_ids.filter((ride) => {
+            return this.props.rides[ride].driver.id === this.props.driver.id;
         }).map((item) => {
-            return (<tr>
-                <td>Hello</td>
-            </tr>)
+            counter += 1;
+            total_time += 0;
+            total_miles += 0;
+            return (<View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{counter}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{this.props.rides[item].id}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>Trip Date</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>Trip Time</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>Trip Mileage</Text>
+                </View>
+            </View>)
         });
+        myRides.push(<View>
+            <Text>{"Totals:"}</Text>
+        </View>);
+        myRides.push(<View style={styles.tableRow}>
+            <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{counter}</Text>
+            </View>
+            <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>{this.props.rides[item].id}</Text>
+            </View>
+            <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>Trip Date</Text>
+            </View>
+            <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>Trip Time</Text>
+            </View>
+            <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>Trip Mileage</Text>
+            </View>
+        </View>);
+        return myRides;
     }
 
     render() {
@@ -77,6 +120,7 @@ class MileageReportPDF extends Component {
                                 <Text style={styles.tableCell}>Trip Mileage</Text>
                             </View>
                         </View>
+                        {this.generateRideItems()}
                     </View>
                 </Page>
             </Document>
