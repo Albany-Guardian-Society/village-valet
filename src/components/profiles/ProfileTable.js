@@ -37,7 +37,7 @@ class ProfileTable extends Component {
             if (this.props.mode === "rider") {
                 this.props.setRideParticipant("rider", this.props.users[event.target.id]);
             } else if (this.props.mode === "driver") {
-                this.props.setRideParticipant("driver", this.props.users[index])
+                this.props.setRideParticipant("driver", this.props.users[event.target.id])
             }
         }
     }
