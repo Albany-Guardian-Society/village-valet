@@ -98,6 +98,8 @@ const BLANK_RIDE = {
         first_name: "",
         last_name: "",
         id: "",
+        vehicle: VEHICLE_TEMPLATE,
+        home_geolocation: ""
     },
     locations: {
         pickup: {
@@ -114,10 +116,20 @@ const BLANK_RIDE = {
         },
     },
     ride_data: {
-        distance: "",
-        time_total: "",
+        mileage: {
+            driver: "",
+            rider: ""
+        },
+        time_total: {
+            driver: "",
+            rider: "",
+        },
         traffic: "",
         date: "",
+        associated_ride: {
+            ride_id: "",
+            driver_id: ""
+        },
         meta: {
             samereturn: true,
             givendropoff: true
@@ -132,13 +144,6 @@ const initialState = {
         first_name: "",
         last_name: "",
         village_id: "",
-    },
-    ridebreakdown: {
-        id: "",
-        rider: '',
-        driver: '',
-        pickup: "",
-        dropoff: ""
     },
     villages: {},
     users: {},
@@ -362,6 +367,19 @@ const VillageReducer = (state = initialState, action) => {
         case "add_ride": {
             let newState = _.cloneDeep(state);
             newState.rides[action.payload.id] = (action.payload);
+            return newState;
+        }
+
+        case "update_active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
+            firestore.collection("rides").doc(newState.active_ride.id).update(action.payload);
+            return newState;
+        }
+
+        case "active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
             return newState;
         }
 

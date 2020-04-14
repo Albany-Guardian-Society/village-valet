@@ -17,7 +17,6 @@ class CommonAddresses extends Component {
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
-        this.count = 0;
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
