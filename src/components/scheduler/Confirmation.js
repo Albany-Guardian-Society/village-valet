@@ -6,12 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table"
 
-<<<<<<< HEAD
 import MapContainer from "../google-maps/MapContainer.js";
 import axios from 'axios';
-=======
-import MapContainer from "../google-maps/MapContainer";
->>>>>>> dev
 
 class Confirmation extends Component {
     constructor(props) {
@@ -85,7 +81,6 @@ class Confirmation extends Component {
                             </tr>
                             <tr>
                                 <td>Pickup Location:</td>
-<<<<<<< HEAD
                                 <td>{this.props.active_ride.locations.pickup.address}</td>
                             </tr>
                             <tr>
@@ -107,29 +102,6 @@ class Confirmation extends Component {
                             <tr>
                                 <td>Driver:</td>
                                 <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
-=======
-                                <td>{`${this.props.active_ride.locations.pickup.address}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Dropoff Location:</td>
-                                <td>{`${this.props.active_ride.locations.dropoff.address}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Pickup Time:</td>
-                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Dropoff Time:</td>
-                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Trip Duration:</td>
-                                <td>{`${this.props.active_ride.ride_data.time_total}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Driver:</td>
-                                <td>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</td>
->>>>>>> dev
                             </tr>
                         </Table>
                     </Col>
@@ -141,12 +113,8 @@ class Confirmation extends Component {
 }
 
 const mapStateToProps = state => ({
-<<<<<<< HEAD
     active_ride: state.active_ride,
     users: state.users,
-=======
-    active_ride: state.active_ride
->>>>>>> dev
 });
 
 const mapDispatchToProps = dispatch => ({

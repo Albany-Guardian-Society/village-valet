@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
 
-import {LoadScript} from "@react-google-maps/api";
-
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
@@ -68,13 +66,7 @@ class Scheduler extends Component {
                 return (<SelectRider/>);
             case 1: //Info
                 return (
-                    <LoadScript
-                        id="script-loader"
-                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                        libraries={["places"]}
-                    >
                         <RideInformation/>
-                    </LoadScript>
                 );
             case 2: //Driver
                 return (<SelectDriver/>);

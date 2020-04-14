@@ -20,12 +20,8 @@
     "fuzzysort": "^1.1.4",
     "googleapis": "^48.0.0",
     "lodash": "^4.17.15",
-<<<<<<< HEAD
-    "nodemailer": "latest",
-=======
     "moment": "^2.24.0",
     "nodemailer": "^6.4.4",
->>>>>>> dev
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",

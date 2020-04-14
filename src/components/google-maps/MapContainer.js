@@ -39,13 +39,18 @@ class MapContainer extends Component {
 
     checkTimeInPast() {
         this.timeNow = moment();
+        if (this.props.ride.ride_data.date === '' || this.props.ride.locations.pickup.time === '')  {
+            this.timePast = true;
+            return
+        }
         this.timePast = moment(this.props.ride.ride_data.date + ' ' + this.props.ride.locations.pickup.time, "YYYY-MM-DD HH:mm").isBefore(this.timeNow);
     }
 
-    directionsCallback(response, rideId) {
-        if (response !== null && rideId != null) {
+    directionsCallback(response) {
+        console.log(response);
+        if (response !== null) {
             if (response.status === 'OK') {
-                this.state.directions_cache.set(rideId, response);
+                this.state.directions_cache.set(this.locations['origin'].lat + this.locations['destination'].lat, response);
                 this.setState({directions_cache: this.state.directions_cache});
                 this.storeRouteInfo(response)
             } else {
@@ -61,21 +66,21 @@ class MapContainer extends Component {
 
     locationOrder() {
         if (this.props.ride.locations.dropoff == null || this.props.ride.locations.pickup == null) return;
-        if (this.props.ride.driver) {
+        if (this.props.ride.driver.id) {
             if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
                 this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation);
                 this.locations['destination'] = this.convertGeoPointToLatLng(this.props.ride.driver.home_geolocation);
-                this.locations['waypoint'] = {
+                this.locations['waypoint'] = [{
                     location: this.convertGeoPointToLatLng(this.props.ride.locations.dropoff.geolocation),
                     stopover: true
-                };
+                }];
             } else {
                 this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.driver.home_geolocation);
                 this.locations['destination'] = this.convertGeoPointToLatLng(this.props.ride.locations.dropoff.geolocation);
-                this.locations['waypoint'] = {
+                this.locations['waypoint'] =[ {
                     location: this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation),
                     stopover: true
-                };
+                }];
             }
         } else {
             this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation);
@@ -83,8 +88,8 @@ class MapContainer extends Component {
         }
     }
 
-    makeDirections(rideId) {
-        if (this.state.directions_cache.has(rideId) || this.locations['origin'] == null) {
+    makeDirections() {
+        if ( this.locations['origin'].lat == null || this.locations['destination'].lat == null || this.state.directions_cache.has(this.locations['origin'].lat + this.locations['destination'].lat)) {
             return;
         }
         return <DirectionsService
@@ -92,7 +97,7 @@ class MapContainer extends Component {
                 origin: this.locations['origin'],
                 destination: this.locations['destination'],
                 travelMode: 'DRIVING',
-                waypoints: [this.locations['waypoint']],
+                waypoints: this.locations['waypoint'],
                 optimizeWaypoints: false,
                 drivingOptions: {
                     departureTime: this.timePast ? this.timeNow.toDate() : moment(this.props.ride.ride_data.date + ' ' + this.props.ride.locations.pickup.time, "YYYY-MM-DD HH:mm").toDate(),
@@ -100,7 +105,7 @@ class MapContainer extends Component {
                 }
             }}
             callback={resp => {
-                this.directionsCallback(resp, rideId);
+                this.directionsCallback(resp);
             }}
             onLoad={directionsService => {
                 console.log('DirectionsService onLoad directionsService: ', directionsService)
@@ -111,9 +116,8 @@ class MapContainer extends Component {
         />;
     }
 
-    renderDirections(rideId) {
-        if (rideId === undefined) return;
-        const response = this.state.directions_cache.get(rideId);
+    renderDirections() {
+        const response = this.state.directions_cache.get(this.locations['origin'].lat + this.locations['destination'].lat);
         if (response == null) return;
         return <DirectionsRenderer
             options={{
@@ -130,31 +134,24 @@ class MapContainer extends Component {
 
 
     render() {
-        return (
-            <LoadScript
-                id="script-loader"
-                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-            >
+        return  (
                 <GoogleMap
                     id='map'
                     zoom={8}
                     mapContainerStyle={{width: "100%", height: "100%"}}
                     center={{lat: 42.6526, lng: -73.7562}}
                 >
-                    {this.locationOrder()}
+                    {this.locationOrder() }
                     {this.checkTimeInPast()}
-                    {this.props.ride.locations.pickup.geolocation && this.makeDirections(this.props.ride.ride_id || this.props.driver.ride.driver.id || this.props.ride.rider.id)}
-                    {this.props.ride.locations.pickup.geolocation && this.renderDirections(this.props.ride.ride_id || this.props.driver.ride.driver.id || this.props.ride.rider.id)}
+                    {this.locations && this.makeDirections()}
+                    {this.locations && this.renderDirections()}
                 </GoogleMap>
-            </LoadScript>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    ride: state.active_ride,
-    rides: state.rides
-
+    ride: state.active_ride
 });
 
 const mapDispatchToProps = dispatch => ({
