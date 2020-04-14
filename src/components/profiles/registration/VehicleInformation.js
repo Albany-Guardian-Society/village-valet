@@ -64,15 +64,23 @@ class VehicleInformation extends Component {
                     </div>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Provider:</Form.Label>
-                        <Col><Form.Control id={"car_"+index+"|insur_provider"} placeholder="--Insurance Provider--" onChange={this.handleChange} value={this.props.vehicles[index].insur_provider}/></Col>
+                        <Col><Form.Control id={"car_" + index + "|insur_provider"} placeholder="--Insurance Provider--"
+                                           onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_provider}/></Col>
                         <Form.Label column sm={3} lg={2}>Policy Number:</Form.Label>
-                        <Col><Form.Control id={"car_"+index+"|insur_policy"} placeholder="--Policy Number--" onChange={this.handleChange} value={this.props.vehicles[index].insur_policy}/></Col>
+                        <Col><Form.Control id={"car_" + index + "|insur_policy"} placeholder="--Policy Number--"
+                                           onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_policy}/></Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Insurance Expiration:</Form.Label>
-                        <Col><Form.Control type="date" id={"car_"+index+"|insur_exp"} placeholder="--Expiration Date--" onChange={this.handleChange} value={this.props.vehicles[index].insur_exp}/></Col>
+                        <Col><Form.Control type="date" id={"car_" + index + "|insur_exp"}
+                                           placeholder="--Expiration Date--" onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_exp}/></Col>
                         <Form.Label column sm={3} lg={2}>Coverage Amount:</Form.Label>
-                        <Col><Form.Control type="number" id={"car_"+index+"|insur_coverage"} placeholder="--Coverage Amount--" onChange={this.handleChange} value={this.props.vehicles[index].insur_coverage}/></Col>
+                        <Col><Form.Control type="number" id={"car_" + index + "|insur_coverage"}
+                                           placeholder="--Coverage Amount--" onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_coverage}/></Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Date of Last Inspection:</Form.Label>

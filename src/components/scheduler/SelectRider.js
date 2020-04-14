@@ -26,7 +26,8 @@ class SelectRider extends Component {
             <Container className="SelectRider" style={{minWidth: "100%"}}>
                 <h1>Select Rider</h1>
                 <Row>
-                    <Col sm={12}><Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/></Col>
+                    <Col sm={12}><Form.Control type="search" id="search" placeholder="Search"
+                                               onChange={this.handleChange}/></Col>
                 </Row>
                 <hr/>
                 <ProfileTable search_term={this.state.search_term} mode={"rider"}/>

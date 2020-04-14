@@ -24,4 +24,3 @@ services:
         - traefik.http.middlewares.at-channel.redirectscheme.permanent=true
         - traefik.http.routers.at-channel.tls=true
         - traefik.http.routers.at-channel.tls.certresolver=tls
-
