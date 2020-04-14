@@ -22,7 +22,15 @@ class SelectDriver extends Component {
         this.setState({search_term: event.target.value})
     };
 
-
+    vehicleOptions() {
+        let options = [<option value={""} label={""}/>];
+        if (!this.props.active_ride.driver.id) return options;
+        console.log(this.props.active_ride.driver.id);
+        options = this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
+            return <option value={car} label={car.year + " " + car.make_model}/>
+        });
+        return options;
+    };
 
     render() {
         return (
@@ -49,7 +57,9 @@ class SelectDriver extends Component {
                         <Row>
                             <Col>Select Vehicle:</Col>
                             <Col>
-
+                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange} value={this.props.active_ride.driver.vehicle}>
+                                    {this.vehicleOptions()}
+                                </Form.Control>
                             </Col>
                         </Row>
                         <Row>
