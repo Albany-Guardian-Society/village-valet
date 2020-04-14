@@ -38,6 +38,9 @@ class Navigation extends Component {
                     <Link to="/Profiles" style={{ textDecoration: 'none' }}>Profiles</Link>
                 </Col>
                 <Col>
+                    <Link to="/Ledger" style={{ textDecoration: 'none' }}>Ledger</Link>
+                </Col>
+                <Col>
                     <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
                 </Col>
                 <Col><Button variant="dark" onClick={this.props.debug}> DEBUG </Button></Col>
