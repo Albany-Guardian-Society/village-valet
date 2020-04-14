@@ -33,6 +33,7 @@ class SelectDriver extends Component {
                         </Col>
                     </Form.Group>
                 </Form>
+                <hr/>
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
