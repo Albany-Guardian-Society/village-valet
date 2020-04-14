@@ -20,16 +20,16 @@ class SelectDriver extends Component {
     }
 
     handleChange(event){
-        this.setState({search_term: event.target.value})
+        if (event.target.id === "search") this.setState({search_term: event.target.value});
+        else if (event.target.id === "sched_vehicle") this.props.updateScheduler("vehicle", null, event.target.value);
     };
 
     vehicleOptions() {
         let options = [<option value={""} label={""}/>];
         if (!this.props.active_ride.driver.id) return options;
-        console.log(this.props.active_ride.driver.id);
-        options = this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
+        options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
             return <option value={car} label={car.year + " " + car.make_model}/>
-        });
+        }));
         return options;
     };
 
@@ -80,6 +80,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    updateScheduler: (type, field, value) => dispatch({
+        type: "scheduler",
+        payload: {
+            type: type,
+            field: field,
+            value: value
+        }
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectDriver);

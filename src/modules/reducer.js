@@ -278,6 +278,8 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.ride_data.meta.samereturn = action.payload.value;
         } else if (action.payload.type === "givendropoff") {
             newState.active_ride.ride_data.meta.givendropoff = action.payload.value;
+        } else if (action.payload.type === "vehicle") {
+            newState.active_ride.driver.vehicle = action.payload.value;
         } else {
             newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
         }
