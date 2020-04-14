@@ -5,8 +5,8 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import MapContainer from "../google-maps/MapContainer";
 
+import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
 
 class SelectDriver extends Component {
@@ -21,6 +21,8 @@ class SelectDriver extends Component {
     handleChange(event){
         this.setState({search_term: event.target.value})
     };
+
+
 
     render() {
         return (
@@ -45,6 +47,12 @@ class SelectDriver extends Component {
                             <Col>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</Col>
                         </Row>
                         <Row>
+                            <Col>Select Vehicle:</Col>
+                            <Col>
+
+                            </Col>
+                        </Row>
+                        <Row>
                             <Col>Trip Duration:</Col>
                             <Col>{`${this.props.active_ride.ride_data.time_total}`}</Col>
                         </Row>
@@ -56,7 +64,8 @@ class SelectDriver extends Component {
 }
 
 const mapStateToProps = state => ({
-    active_ride: state.active_ride
+    active_ride: state.active_ride,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({

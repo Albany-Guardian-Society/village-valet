@@ -131,7 +131,7 @@ const BLANK_RIDE = {
             driver_id: ""
         },
         meta: {
-            samereturn: true,
+            return: false,
             givendropoff: "true"
         }
     }
@@ -375,6 +375,19 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride = _.cloneDeep(action.payload);
             firestore.collection("rides").doc(newState.active_ride.id).update(action.payload);
             return newState;
+        }
+
+        case "setup_return_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(BLANK_RIDE);
+            newState.active_ride.locations.dropoff.address = state.active_ride.locations.pickup.address;
+            newState.active_ride.locations.pickup.address = state.active_ride.locations.dropoff.address;
+            newState.active_ride.locations.dropoff.geolocation = state.active_ride.locations.pickup.geolocation;
+            newState.active_ride.locations.pickup.geolocation = state.active_ride.locations.dropoff.geolocation;
+            newState.active_ride.ride_data.date = state.active_ride.ride_data.date;
+            newState.active_ride.rider = state.active_ride.rider;
+            newState.active_ride.ride_data.meta.return = true;
+            return newState
         }
 
         case "active_ride": {

@@ -33,9 +33,15 @@ class Scheduler extends Component {
             firestore.collection("rides").add(this.props.active_ride)
                 .then((docRef) => {
                     this.props.addRide(this.props.active_ride, docRef.id);
-                    this.props.clearRide();
-                    //This is part of react-router and allows forced page routing
-                    this.props.history.push('/Dashboard');
+                    if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+                        this.props.returnRide();
+                        this.setState({scheduler_page : 1});
+                    }
+                    else {
+                        this.props.clearRide();
+                        //This is part of react-router and allows forced page routing
+                        this.props.history.push('/Dashboard');
+                    }
                 });
         }
     }
@@ -179,6 +185,10 @@ const mapDispatchToProps = dispatch => ({
         type: "clear_active_ride",
         payload: null
     }),
+    returnRide: () => dispatch({
+        type: "setup_return_ride",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scheduler);
