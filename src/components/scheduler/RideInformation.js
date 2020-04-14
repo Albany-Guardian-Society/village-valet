@@ -78,8 +78,15 @@ class RideInformation extends Component {
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
-            this.props.active_ride.locations[variable].address = place.formatted_address;
-            this.props.active_ride.locations[variable].geolocation = new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng());
+            // //The store should REALLY NOT be updated like this.
+            // this.props.active_ride.locations[variable].address = place.formatted_address;
+            // this.props.active_ride.locations[variable].geolocation = new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng());
+
+            //Sould use the reducer
+            console.log(variable);
+            this.props.updateScheduler(variable, "address", place.formatted_address);
+            this.props.updateScheduler(variable, "geolocation", new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng()));
+
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -93,10 +100,53 @@ class RideInformation extends Component {
                     <Col>
                         <Card>
                             <Card.Header>
+                                <h5>Options</h5>
+                            </Card.Header>
+                            <Card.Body>
+                                <Table borderless>
+                                <tbody>
+                                    <tr>
+                                        <td>Name:</td>
+                                        <td>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <Form.Label>Date:</Form.Label>
+                                        </td>
+                                        <td>
+                                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                                          value={this.props.active_ride.ride_data.date}/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <Form.Label>Calculate route given pickup/dropoff time</Form.Label>
+                                        </td>
+                                        <td>
+                                            <Form.Control as="select" id='sched_meta_givendropoff' onChange={this.handleChange}
+                                                          value={this.props.active_ride.ride_data.meta.givendropoff}>
+                                                <option value={true} label="Dropoff"/>
+                                                <option value={false} label="Pickup"/>
+                                            </Form.Control>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>{/*<MapContainer>Pickup to Dropoff</MapContainer>*/}</Col>
+                </Row>
+                <br/>
+                <Row>
+                    <Col>
+                        <Card>
+                            <Card.Header>
                                 <h5>Pickup</h5>
                             </Card.Header>
                             <Card.Body>
                                 <Table borderless>
+                                    <tbody>
                                     <tr>
                                         <td>
                                             <Form.Label>Address:</Form.Label>
@@ -133,49 +183,11 @@ class RideInformation extends Component {
                                                           value={this.props.active_ride.locations.pickup.special}/>
                                         </td>
                                     </tr>
+                                    </tbody>
                                 </Table>
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col>
-                        <Card>
-                            <Card.Header>
-                                <h5>Options</h5>
-                            </Card.Header>
-                            <Card.Body>
-                                <Table borderless>
-                                    <tr>
-                                        <td>Name:</td>
-                                        <td>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <Form.Label>Date:</Form.Label>
-                                        </td>
-                                        <td>
-                                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
-                                                          value={this.props.active_ride.ride_data.date}/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <Form.Label>Calculate route given pickup/dropoff time</Form.Label>
-                                        </td>
-                                        <td>
-                                            <Form.Control as="select" id='sched_meta_givendropoff' onChange={this.handleChange}
-                                                          value={this.props.active_ride.ride_data.meta.givendropoff}>
-                                                <option value={true} label="Dropoff"/>
-                                                <option value={false} label="Pickup"/>
-                                            </Form.Control>
-                                        </td>
-                                    </tr>
-                                </Table>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
                     <Col>
                         <Card>
                             <Card.Header>
@@ -183,6 +195,7 @@ class RideInformation extends Component {
                             </Card.Header>
                             <Card.Body>
                                 <Table borderless>
+                                <tbody>
                                     <tr>
                                         <td>
                                             <Form.Label>Address:</Form.Label>
@@ -219,11 +232,11 @@ class RideInformation extends Component {
                                                           value={this.props.active_ride.locations.dropoff.special}/>
                                         </td>
                                     </tr>
+                                </tbody>
                                 </Table>
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col><MapContainer>Pickup to Dropoff</MapContainer></Col>
                 </Row>
                 <br/>
             </Container>

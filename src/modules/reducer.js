@@ -132,7 +132,7 @@ const BLANK_RIDE = {
         },
         meta: {
             samereturn: true,
-            givendropoff: true
+            givendropoff: "true"
         }
     }
 };
