@@ -5,7 +5,11 @@ import firebase from 'firebase/app';
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+<<<<<<< HEAD
+import Table from "react-bootstrap/Table";
+=======
 import Col from "react-bootstrap/Col";
+>>>>>>> dev
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
@@ -97,6 +101,64 @@ class RideInformation extends Component {
             <Container className="RideInformation" style={{minWidth: "100%"}}>
                 <h1>Ride Information</h1>
                 <Row>
+<<<<<<< HEAD
+                    <Table><tbody>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name}</td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td><Form.Control type="date" placeholder="Date" id='sched_date' onChange={this.handleChange}
+                                              value={this.props.active_ride.ride_data.date}/></td>
+                        </tr>
+                    </tbody></Table>
+                    <Table><tbody>
+                        <tr>
+                            <td>Address</td>
+                            <td>
+                                <Autocomplete
+                                    onLoad={this.onLoad}
+                                    onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                >
+                                <Form.Control type="text" placeholder="Pickup Location"
+                                              id='sched_pickup_address' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.pickup.address}/>
+                                </Autocomplete>
+                            </td>
+                            <td>
+                                <Autocomplete
+                                    onLoad={this.onLoad}
+                                    onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
+                                >
+                                <Form.Control type="text" placeholder="Dropoff Location"
+                                              id='sched_dropoff_address' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.dropoff.address}/>
+                                </Autocomplete>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Special Instructions</td>
+                            <td><Form.Control type="text" placeholder="Pickup Instructions"
+                                              id='sched_pickup_special' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.pickup.special}/></td>
+                            <td><Form.Control type="text" placeholder="Dropoff Instructions"
+                                              id='sched_dropoff_special' onChange={this.handleChange}
+                                              value={this.props.active_ride.locations.dropoff.special}/></td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td><Form.Control type="time" placeholder="Pickup Time" id='sched_pickup_time'
+                                              onChange={(e) => this.handleChange(e)}
+                                              value={this.props.active_ride.locations.pickup.time}/></td>
+                            <td><Form.Control type="time" placeholder="Dropoff Time" id='sched_dropoff_time'
+                                              onChange={(e) => this.handleChange(e)}
+                                              value={this.props.active_ride.locations.dropoff.time}/></td>
+                        </tr>
+                    </tbody></Table>
+                </Row>
+                <MapContainer>Pickup to Dropoff Map</MapContainer>
+=======
                     <Col>
                         <Card>
                             <Card.Header>
@@ -239,6 +301,7 @@ class RideInformation extends Component {
                     </Col>
                 </Row>
                 <br/>
+>>>>>>> dev
             </Container>
         );
     }

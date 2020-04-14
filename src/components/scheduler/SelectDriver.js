@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 
 import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
+import Table from "react-bootstrap/Table";
 
 class SelectDriver extends Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class SelectDriver extends Component {
                 <Form>
                     <Form.Group as={Row}>
                         <Col>
-                            <Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/>
+                            <Form.Control type="search" id="search" placeholder="Search Drivers" onChange={this.handleChange}/>
                         </Col>
                     </Form.Group>
                 </Form>
@@ -47,6 +48,25 @@ class SelectDriver extends Component {
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
+<<<<<<< HEAD
+                        <MapContainer>Driver to Rider Pickup</MapContainer>
+                    </Col>
+                    <Col>
+                        <Table><tbody>
+                            <tr>
+                                <td>Trip Duration:</td>
+                                <td>{this.props.active_ride.ride_data.time_total}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected Traffic:</td>
+                                <td>{this.props.active_ride.ride_data.traffic}</td>
+                            </tr>
+                            <tr>
+                                <td>Driver:</td>
+                                <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
+                            </tr>
+                        </tbody></Table>
+=======
                         <MapContainer>Trip Summary</MapContainer>
                     </Col>
                     <Col>
@@ -66,6 +86,7 @@ class SelectDriver extends Component {
                             <Col>Trip Duration:</Col>
                             <Col>{`${this.props.active_ride.ride_data.time_total}`}</Col>
                         </Row>
+>>>>>>> dev
                     </Col>
                 </Row>
             </Container>

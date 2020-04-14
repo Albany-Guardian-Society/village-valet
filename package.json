@@ -3,18 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@buttercup/google-oauth2-client": "^0.2.1",
     "@react-google-maps/api": "^1.8.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "body-parser": "latest",
     "bootstrap": "^4.4.1",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv-flow": "^3.1.0",
+    "express": "^4.17.1",
     "firebase": "^7.8.1",
     "fuzzysort": "^1.1.4",
+    "googleapis": "^48.0.0",
     "lodash": "^4.17.15",
+<<<<<<< HEAD
+    "nodemailer": "latest",
+=======
     "moment": "^2.24.0",
     "nodemailer": "^6.4.4",
+>>>>>>> dev
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",
@@ -24,10 +35,11 @@
     "redux": "^4.0.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"react-scripts start\"  \"node -r dotenv-flow/config server/server.js --node-env=development\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": " node -r dotenv-flow/config server/server.js --node-env=development"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,5 +55,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
