@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import * as moment from "moment";
 
 import Container from "react-bootstrap/Container";
 
@@ -16,13 +17,16 @@ class RideDetails extends Component {
     }
 
     displayDetails() {
-        if (this.props.ride === undefined) {
+        if (this.props.ride.ride_id === "") {
             return <div/>
         }
         return <div>
-            Ride Id: {this.props.ride.id}<br/>
-            Rider Name: {this.props.ride.rider}<br/>
-            Driver Name: {this.props.ride.rider}
+            Ride Id: {this.props.ride.ride_id}<br/>
+            Rider Name: {`${this.props.ride.rider.first_name} ${this.props.ride.rider.last_name}`} <br/>
+            Driver Name: {`${this.props.ride.driver.first_name} ${this.props.ride.driver.last_name}`} <br/>
+            Date: {this.props.ride.ride_data.date} <br/>
+            Pickup Time: {moment(this.props.ride.locations.pickup.time, "HH:mm").format('hh:mm a')} <br/>
+            Dropoff Time: {moment(this.props.ride.locations.dropoff.time, "HH:mm").format('hh:mm a')} <br/>
         </div>
 
     }
@@ -38,7 +42,7 @@ class RideDetails extends Component {
 }
 
 const mapStateToProps = state => ({
-    ride: state.ridebreakdown
+    ride: state.active_ride
 
 });
 

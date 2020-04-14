@@ -45,13 +45,16 @@ class Profile extends Component {
                                 <th>First Name</th><td>{this.props.user.personal_info.first_name}</td>
                             </tr>
                             <tr>
-                                <th>Last Name</th><td>{this.props.user.personal_info.last_name}</td>
+                                <th>Last Name</th>
+                                <td>{this.props.user.personal_info.last_name}</td>
                             </tr>
                             <tr>
-                                <th>Email</th><td>{this.props.user.personal_info.email}</td>
+                                <th>Email</th>
+                                <td>{this.props.user.personal_info.email}</td>
                             </tr>
                             <tr>
-                                <th>Home Phone</th><td>{this.props.user.personal_info.phone_home}</td>
+                                <th>Home Phone</th>
+                                <td>{this.props.user.personal_info.phone_home}</td>
                             </tr>
                             <tr>
                                 <th>Mobile Phone</th>
@@ -82,34 +85,34 @@ class Profile extends Component {
                 if (this.state.mode === "view") {
                     return (
                         <Table striped bordered>
-                        {this.props.user.caregiver ?
-                            <tbody>
-                            <tr>
-                                <th>First Name</th>
-                                <td>{this.props.user.caregiver.first_name}</td>
-                            </tr>
-                            <tr>
-                                <th>Last Name</th>
-                                <td>{this.props.user.caregiver.last_name}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>{this.props.user.caregiver.email}</td>
-                            </tr>
-                            <tr>
-                                <th>Home Phone</th>
-                                <td>{this.props.user.caregiver.phone_home}</td>
-                            </tr>
-                            <tr>
-                                <th>Mobile Phone</th>
-                                <td>{this.props.user.caregiver.phone_mobile}</td>
-                            </tr>
-                            <tr>
-                                <th>Preferred Communication</th>
-                                <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
-                            </tr>
-                            </tbody>
-                            : null}
+                            {this.props.user.caregiver ?
+                                <tbody>
+                                <tr>
+                                    <th>First Name</th>
+                                    <td>{this.props.user.caregiver.first_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Name</th>
+                                    <td>{this.props.user.caregiver.last_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{this.props.user.caregiver.email}</td>
+                                </tr>
+                                <tr>
+                                    <th>Home Phone</th>
+                                    <td>{this.props.user.caregiver.phone_home}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mobile Phone</th>
+                                    <td>{this.props.user.caregiver.phone_mobile}</td>
+                                </tr>
+                                <tr>
+                                    <th>Preferred Communication</th>
+                                    <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                                </tr>
+                                </tbody>
+                                : null}
                         </Table>
                     );
                 } else if (this.state.mode === "edit") {
@@ -297,15 +300,15 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                   return (
+                    return (
                         <LoadScript
-                        id="script-loader"
-                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                        libraries={["places"]}
+                            id="script-loader"
+                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
+                            libraries={["places"]}
                         >
                             <CA/>
                         </LoadScript>
-                   );
+                    );
                 }
                 break;
             case "special":

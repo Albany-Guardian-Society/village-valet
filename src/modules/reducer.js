@@ -35,11 +35,12 @@ const VEHICLE_TEMPLATE = {
     special: "",
 };
 
-const VOL_HOURS_TEMPLATE = (day="monday") => {return {
-    day: day,
-    start: "",
-    end: ""
-}
+const VOL_HOURS_TEMPLATE = (day = "monday") => {
+    return {
+        day: day,
+        start: "",
+        end: ""
+    }
 };
 
 const BLANK_PROFILE = {
@@ -90,13 +91,15 @@ const BLANK_RIDE = {
     ride_id: "",
     rider: {
         first_name: "",
-            last_name: "",
-            id: "",
+        last_name: "",
+        id: "",
     },
     driver: {
         first_name: "",
-            last_name: "",
-            id: "",
+        last_name: "",
+        id: "",
+        vehicle: VEHICLE_TEMPLATE,
+        home_geolocation: ""
     },
     locations: {
         pickup: {
@@ -113,10 +116,24 @@ const BLANK_RIDE = {
         },
     },
     ride_data: {
-        distance: "",
-        time_total: "",
+        mileage: {
+            driver: "",
+            rider: ""
+        },
+        time_total: {
+            driver: "",
+            rider: "",
+        },
         traffic: "",
         date: "",
+        associated_ride: {
+            ride_id: "",
+            driver_id: ""
+        },
+        meta: {
+            samereturn: true,
+            givendropoff: "true"
+        }
     }
 };
 
@@ -127,13 +144,6 @@ const initialState = {
         first_name: "",
         last_name: "",
         village_id: "",
-    },
-    ridebreakdown: {
-        id: "",
-        rider: '',
-        driver: '',
-        pickup: "",
-        dropoff: ""
     },
     villages: {},
     users: {},
@@ -148,39 +158,44 @@ const initialState = {
 
 const VillageReducer = (state = initialState, action) => {
     switch (action.type) {
-    case "dump_store": {
-        console.log(state);
-        return state;
-    }
+        case "dump_store": {
+            console.log(state);
+            return state;
+        }
 
-    case "authenticate": {
-        let newState = _.cloneDeep(state);
-        newState.authenticated = true;
-        newState.operator.first_name = action.payload.first_name;
-        newState.operator.last_name = action.payload.last_name;
-        newState.operator.village_id = action.payload.village_id;
-        return newState;
-    }
+        case "trigger_update": {
+            let newState = _.cloneDeep(state);
+            return newState;
+        }
 
-    case "logout": {
-        let newState = _.cloneDeep(state);
-        newState.authenticated = false;
-        newState.loaded = false;
-        return newState;
-    }
+        case "authenticate": {
+            let newState = _.cloneDeep(state);
+            newState.authenticated = true;
+            newState.operator.first_name = action.payload.first_name;
+            newState.operator.last_name = action.payload.last_name;
+            newState.operator.village_id = action.payload.village_id;
+            return newState;
+        }
 
-    case "load": {
-        let newState = _.cloneDeep(state);
-        switch (action.payload.tag) {
-            case "loaded":
-                newState.loaded = action.payload.data;
-                break;
-            case "villages":
-                newState.villages = action.payload.data;
-                break;
-            case "users":
-                newState.users = action.payload.data;
-                break;
+        case "logout": {
+            let newState = _.cloneDeep(state);
+            newState.authenticated = false;
+            newState.loaded = false;
+            return newState;
+        }
+
+        case "load": {
+            let newState = _.cloneDeep(state);
+            switch (action.payload.tag) {
+                case "loaded":
+                    newState.loaded = action.payload.data;
+                    break;
+                case "villages":
+                    newState.villages = action.payload.data;
+                    break;
+                case "users":
+                    newState.users = action.payload.data;
+                    break;
             case "rides":
                 newState.rides = action.payload.data;
                 break;
@@ -257,8 +272,12 @@ const VillageReducer = (state = initialState, action) => {
 
     case "scheduler": {
         let newState = _.cloneDeep(state);
-        if (action.payload.type === "date"){
+        if (action.payload.type === "date") {
             newState.active_ride.ride_data.date = action.payload.value;
+        } else if (action.payload.type === "samereturn") {
+            newState.active_ride.ride_data.meta.samereturn = action.payload.value;
+        } else if (action.payload.type === "givendropoff") {
+            newState.active_ride.ride_data.meta.givendropoff = action.payload.value;
         } else {
             newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
         }
@@ -271,14 +290,10 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.rider.first_name = action.payload.user.personal_info.first_name;
             newState.active_ride.rider.last_name = action.payload.user.personal_info.last_name;
             newState.active_ride.rider.id = action.payload.user.id;
-        } else if (action.payload.type === "driver_1") {
-            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
-            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
-            newState.active_ride.driver_1.id = action.payload.user.id;
-        } else if (action.payload.type === "driver_2") {
-            newState.active_ride.driver_1.first_name = action.payload.user.personal_info.first_name;
-            newState.active_ride.driver_1.last_name = action.payload.user.personal_info.last_name;
-            newState.active_ride.driver_1.id = action.payload.user.id;
+        } else if (action.payload.type === "driver") {
+            newState.active_ride.driver.first_name = action.payload.user.personal_info.first_name;
+            newState.active_ride.driver.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver.id = action.payload.user.id;
         }
         return newState;
     }
@@ -333,7 +348,9 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         //Now edit the local copy, then update the DB:
         let id_to_delete = newState.active_profile.id;
-        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        let index = newState.users.findIndex((i) => {
+            return i.id === newState.active_profile.id
+        });
         if (index >= 0) {
             delete newState.users[index];
         }
@@ -346,8 +363,33 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
 
-    default:
-        return state;
+        case "add_ride": {
+            let newState = _.cloneDeep(state);
+            newState.rides[action.payload.id] = (action.payload);
+            return newState;
+        }
+
+        case "update_active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
+            firestore.collection("rides").doc(newState.active_ride.id).update(action.payload);
+            return newState;
+        }
+
+        case "active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(action.payload);
+            return newState;
+        }
+
+        case "clear_active_ride": {
+            let newState = _.cloneDeep(state);
+            newState.active_ride = _.cloneDeep(BLANK_RIDE);
+            return newState;
+        }
+
+        default:
+            return state;
     }
 };
 

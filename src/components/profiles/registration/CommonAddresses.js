@@ -17,7 +17,6 @@ class CommonAddresses extends Component {
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
-        this.count = 0;
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
@@ -58,6 +57,7 @@ class CommonAddresses extends Component {
                     this.props.addresses[index].zip = component.short_name
                 }
             }
+            this.props.triggerUpdate();
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -110,7 +110,9 @@ class CommonAddresses extends Component {
                         <Col><Form.Control id={"addr_" + index + "|city"} placeholder="--City--"
                                            onChange={this.handleChange} value={this.props.addresses[index].city}/></Col>
                         <Form.Label column sm={2} lg={2}>State:</Form.Label>
-                        <Col><Form.Control id={"addr_"+index+"|state"} placeholder="--State--" onChange={this.handleChange} value={this.props.addresses[index].state}/></Col>
+                        <Col><Form.Control id={"addr_" + index + "|state"} placeholder="--State--"
+                                           onChange={this.handleChange}
+                                           value={this.props.addresses[index].state}/></Col>
                         <Form.Label column sm={2} lg={2}>Zip:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|zip"} placeholder="--ZIP--"
                                            onChange={this.handleChange} value={this.props.addresses[index].zip}/></Col>
@@ -134,16 +136,16 @@ class CommonAddresses extends Component {
 
     render() {
         return (
-                <Card>
-                    <Card.Header>
-                        <h5 style={{float: "left"}}>Common Addresses</h5>
-                        <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
-                            Add Address
-                        </Button>
-                    </Card.Header>
-                    {this.generateAddressForms()}
-                    <h6>{" "}</h6>
-                </Card>
+            <Card>
+                <Card.Header>
+                    <h5 style={{float: "left"}}>Common Addresses</h5>
+                    <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
+                        Add Address
+                    </Button>
+                </Card.Header>
+                {this.generateAddressForms()}
+                <h6>{" "}</h6>
+            </Card>
         );
     }
 }
@@ -178,6 +180,10 @@ const mapDispatchToProps = dispatch => ({
             value: id
         }
     }),
+    triggerUpdate: () => dispatch({
+        type: "trigger_update",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommonAddresses);

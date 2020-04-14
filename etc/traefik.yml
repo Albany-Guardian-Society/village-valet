@@ -1,0 +1,28 @@
+providers:
+  docker: {}
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+
+#providers:
+#  file:
+#    directory = /dynamic/
+
+certificatesResolvers:
+  tls:
+    acme:
+      email: example@example.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web
+
+log:
+  level: DEBUG
+  filePath: /var/log/traefik.log
+  format: json
+

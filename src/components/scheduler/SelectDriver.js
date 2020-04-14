@@ -34,9 +34,11 @@ class SelectDriver extends Component {
                         </Col>
                     </Form.Group>
                 </Form>
+                <hr/>
                 <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
                 <Row>
                     <Col>
+<<<<<<< HEAD
                         <MapContainer>Driver to Rider Pickup</MapContainer>
                     </Col>
                     <Col>
@@ -54,6 +56,19 @@ class SelectDriver extends Component {
                                 <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
                             </tr>
                         </tbody></Table>
+=======
+                        <MapContainer>Trip Summary</MapContainer>
+                    </Col>
+                    <Col>
+                        <Row>
+                            <Col>Driver:</Col>
+                            <Col>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</Col>
+                        </Row>
+                        <Row>
+                            <Col>Trip Duration:</Col>
+                            <Col>{`${this.props.active_ride.ride_data.time_total}`}</Col>
+                        </Row>
+>>>>>>> dev
                     </Col>
                 </Row>
             </Container>

@@ -37,7 +37,7 @@ class ProfileTable extends Component {
             if (this.props.mode === "rider") {
                 this.props.setRideParticipant("rider", this.props.users[event.target.id]);
             } else if (this.props.mode === "driver") {
-                this.props.setRideParticipant("driver_1", this.props.users[event.target.id])
+                this.props.setRideParticipant("driver", this.props.users[index])
             }
         }
     }
@@ -127,7 +127,12 @@ class ProfileTable extends Component {
         for (let index in filtered_users) {
             let user = filtered_users[index];
             profile_table.push(
-                <tr key={user.id} style={this.state.selected_row === user.id ? {background: "#cce4ff", display: "table", width: '100%', tableLayout: 'fixed'} : {display: "table", width: '100%', tableLayout: 'fixed'}}>
+                <tr key={user.id} style={this.state.selected_row === user.id ? {
+                    background: "#cce4ff",
+                    display: "table",
+                    width: '100%',
+                    tableLayout: 'fixed'
+                } : {display: "table", width: '100%', tableLayout: 'fixed'}}>
                     {this.props.mode === "all" ?
                         <td id={user.id}
                             onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>
