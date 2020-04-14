@@ -43,6 +43,7 @@ const VOL_HOURS_TEMPLATE = (day="monday") => {return {
 };
 
 const BLANK_PROFILE = {
+    id: "",
     user_type: "",
     village_id: "",
     status: "active",
