@@ -132,7 +132,9 @@ const BLANK_RIDE = {
         },
         meta: {
             return: false,
-            givendropoff: "true"
+            givendropoff: "true",
+            pickup_CA: true,
+            dropoff_CA: true,
         }
     }
 };
@@ -283,6 +285,30 @@ const VillageReducer = (state = initialState, action) => {
                 return car.lp === action.payload.value;
             })[0];
             newState.active_ride.driver.vehicle = vehicle;
+        } else if (action.payload.type === "common_address") {
+            let mode = action.payload.field.split("|");
+            if (mode[0] === "set") {
+                if (mode[1] === "pickup") {
+                    newState.active_ride.ride_data.meta.pickup_CA = false;
+                } else if (mode[1] === "dropoff") {
+                    newState.active_ride.ride_data.meta.dropoff_CA = false;
+                }
+            } else {
+                console.log(action.payload.value);
+                let addr_id = action.payload.value.split("|");
+                let address = state.users[addr_id[0]].addresses.filter((a) => {
+                    return a.line_1 === addr_id[1];
+                })[0];
+                console.log(address);
+                if (mode[0] === "pickup") {
+                    newState.active_ride.locations[action.payload.field].address = address.line_1;
+                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
+                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
+                    newState.active_ride.ride_data.meta.pickup_CA = true;
+                } else if (mode[0] === "dropoff") {
+                    newState.active_ride.ride_data.meta.dropoff_CA = true;
+                }
+            }
         } else {
             newState.active_ride.locations[action.payload.type][action.payload.field] = action.payload.value;
         }

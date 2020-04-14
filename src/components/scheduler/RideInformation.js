@@ -17,10 +17,11 @@ class RideInformation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            addresses: {}
+            addresses: {},
         };
-
         this.handleChange = this.handleChange.bind(this);
+        this.handleCommonAddress = this.handleCommonAddress.bind(this);
+
         this.autocomplete = {};
         this.count = 0;
 
@@ -47,6 +48,15 @@ class RideInformation extends Component {
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
         }
     };
+
+    handleCommonAddress(event, type) {
+        if (event.target.value === "other") {
+            //Update store
+            this.props.updateScheduler("common_address", "set"+"|"+type, null)
+        } else {
+            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""))
+        }
+    }
 
     getSelectedItems() {
         let items = [];
@@ -83,6 +93,27 @@ class RideInformation extends Component {
             console.log('Autocomplete is not loaded yet!')
         }
     }
+
+    getCommonAddresses(mode) {
+        let options = [];
+        if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);
+        if (!this.props.active_ride.rider.id) return options;
+        options.push(...this.props.users[this.props.active_ride.rider.id].addresses.map((loc)=>{
+            return <option value={"addr_"+loc.line_1} label={loc.name} key={loc.name}/>
+        }));
+        options.push(<option value={"other"} label={"--Other--"} key="other"/>)
+        return options;
+    }
+
+    vehicleOptions() {
+        let options = [<option value={""} label={""}/>];
+        if (!this.props.active_ride.driver.id) return options;
+        options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
+            console.log(car);
+            return <option value={car.lp} label={car.year + " " + car.make_model}/>
+        }));
+        return options;
+    };
 
     render() {
         return (
@@ -143,16 +174,28 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
+                                            <td>
+                                                <Form.Control as="select"
+                                                              id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}
+                                                              value={!this.props.active_ride.locations.pickup.address ? "" : (!this.props.active_ride.ride_data.meta.pickup_CA ? "other" : "addr_"+this.props.active_ride.locations.pickup.address)}>
+                                                      {this.getCommonAddresses("pickup")}
+                                                </Form.Control>
+                                            </td>
+                                    </tr>
+                                    <tr>
                                         <td>
-                                            <Autocomplete
-                                                onLoad={this.onLoad}
-                                                onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
-                                            >
-                                                <Form.Control type="text" placeholder="Pickup Location"
-                                                              id='sched_pickup_address' onChange={this.handleChange}
-                                                              value={this.props.active_ride.locations.pickup.address}/>
-                                            </Autocomplete>
                                         </td>
+                                            <td>
+                                                <Autocomplete
+                                                    onLoad={this.onLoad}
+                                                    onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                                >
+                                                    <Form.Control type="text" placeholder="Pickup Location"
+                                                                  disabled = {this.props.active_ride.ride_data.meta.pickup_CA}
+                                                                  id='sched_pickup_address' onChange={this.handleChange}
+                                                                  value={this.props.active_ride.locations.pickup.address}/>
+                                                </Autocomplete>
+                                            </td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -192,6 +235,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
+
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
