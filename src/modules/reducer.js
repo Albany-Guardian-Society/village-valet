@@ -306,6 +306,9 @@ const VillageReducer = (state = initialState, action) => {
                     //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.pickup_CA = true;
                 } else if (mode[0] === "dropoff") {
+                    newState.active_ride.locations[action.payload.field].address = address.line_1;
+                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
+                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.dropoff_CA = true;
                 }
             }
