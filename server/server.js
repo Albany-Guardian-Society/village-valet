@@ -24,4 +24,5 @@ app.use("/", routes);
 
 const routerFirestore = app.router();
 app.use('/firestore',routerFirestore);
-routerFirestore.get('/users')
+routerFirestore.get('/users');
+

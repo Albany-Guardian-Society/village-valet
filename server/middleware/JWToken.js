@@ -5,10 +5,7 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
-class JWToken {
-
-    static checkJWT = (req, res, next) => {
+export const checkJWT = (req, res, next) => {
         //Get the jwt token from the head
         let bearerHeader = req.headers["authorization"];
         let bearerToken = null;
@@ -38,5 +35,4 @@ class JWToken {
         });
         res.setHeader("token", newToken);
         next()
-    }
-}
+};

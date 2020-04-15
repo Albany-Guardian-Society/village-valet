@@ -1,13 +1,13 @@
 import firestore from "../server";
 
 
-const villages = async(village_id) => {
+export const getRides = async(village_id) => {
     let querySnapshot;
     if (village_id === 'admin') {
-        querySnapshot = await firestore.collection('villages').get()
+        querySnapshot = await firestore.collection('rides').get()
     }
     else {
-        querySnapshot = await firestore.collection('villages').where('village_id', 'array-contains', village_id).get();
+        querySnapshot = await firestore.collection('rides').where('village_id', '==', village_id).get();
     }
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
@@ -15,28 +15,57 @@ const villages = async(village_id) => {
 };
 
 
-const village = async(village_id) => {
+export const getRide = async(village_id, ride_id) => {
+    const querySnapshot = await firestore.collection('rides').doc(ride_id).get();
+    const data = querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    });
+    if (village_id === 'admin') return data;
+    if (data) {
+        if (data[ride_id]['village_id'].indexOf(village_id)  !== -1) {
+            return data
+        }
+    }
+    return {}
+};
+
+export const getRidesByDate = async(village_id, date) => {
     let querySnapshot;
-    querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get()
+    if (village_id === 'admin') {
+        querySnapshot = await firestore.collection('rides').where('date', '==', date).get();
+    }
+    else {
+        querySnapshot = await firestore.collection('rides').where('village_id', '==', village_id).where('date', '==', date).get();
+    }
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
     });
 };
 
-const addVillage = async(village) => {
-    firestore.collection('villages').add(village)
+
+export const addRide = async(ride) => {
+    firestore.collection('rides').add(ride)
         .then(() => {return true})
-        .catch(() => {return false})
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
 };
 
-const removeVillage = async(village_id) => {
-    firestore.collection('villages').doc(village_id).delete()
+export const removeRide = async(ride_id) => {
+    firestore.collection('rides').doc(ride_id).delete()
         .then(() => {return true})
-        .catch(() => {return false})
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
 };
 
-const updateVillage = async(village) => {
-    firestore.collection('villages').doc(village.id).update(village)
+export const updateRide = async(ride) => {
+    firestore.collection('rides').doc(ride.id).update(ride)
         .then(() => {return true})
-        .catch(() => {return false})
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
 };
