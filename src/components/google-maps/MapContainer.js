@@ -24,7 +24,7 @@ class MapContainer extends Component {
     }
 
     storeRouteInfo(response) {
-        if (this.props.ride.driver == null || this.timePast) return;
+        if (!this.props.ride.driver.id || this.timePast) return;
         if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
             this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[0].distance.value);
             this.props.ride.ride_data.time_total.rider = response.routes[0].legs[0].duration.value

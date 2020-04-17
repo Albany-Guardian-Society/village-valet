@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import moment from 'moment';
 
 import SelectRider from "./SelectRider";
 import RideInformation from "./RideInformation";
@@ -97,13 +98,27 @@ class Scheduler extends Component {
                 } else if (new Date(this.props.active_ride.ride_data.date) >= (Date.now() + (6.04e+8 * 4))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."});
                     return false;
+                } else if (!this.props.active_ride.locations.pickup.geolocation) {
+                    this.setState({error_message: "INVALID PICKUP ADDRESS: Please provide pickup address."});
+                    return false;
+                } else if (!this.props.active_ride.locations.dropoff.geolocation) {
+                    this.setState({error_message: "INVALID DROPOFF ADDRESS: Please provide dropoff address."});
+                    return false;
+                } else if (!this.props.active_ride.locations.pickup.time) {
+                    this.setState({error_message: "INVALID PICKUP TIME: Please provide pickup time."});
+                    return false;
+                } else if (!this.props.active_ride.locations.dropoff.time || moment(this.props.active_ride.locations.dropoff.time, "HH:mm").isBefore(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))) {
+                    this.setState({error_message: "INVALID DROPOFF TIME: Please provide dropoff time."});
+                    return false;
                 }
-                //Add additional validation!
                 return true;
             case 2:
                 //Need to pick a driver
                 if (this.props.active_ride.driver.id === "") {
                     this.setState({error_message: "INVALID DATE: Please select a driver."});
+                    return false;
+                } else if (!this.props.active_ride.driver.vehicle.make_model) {
+                    this.setState({error_message: "INVALID VEHICLE: Please select a vehicle."});
                     return false;
                 }
                 return true;
