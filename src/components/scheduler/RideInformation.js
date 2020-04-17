@@ -125,7 +125,7 @@ class RideInformation extends Component {
                             <Card.Header>
                                 <h5>Options</h5>
                             </Card.Header>
-                            <Card.Body>
+                            <Card.Body style={{width: "100%", height: "30vh"}}>
                                 <Table borderless>
                                 <tbody>
                                     <tr>
@@ -158,7 +158,16 @@ class RideInformation extends Component {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col>Pickup to Dropoff<MapContainer/></Col>
+                    <Col>
+                        <Card>
+                        <Card.Header>
+                            <h5>Pickup to Dropoff</h5>
+                        </Card.Header>
+                        <Card.Body style={{width: "100%", height: "30vh", padding: "0px"}}>
+                            <MapContainer/>
+                        </Card.Body>
+                        </Card>
+                    </Col>
                 </Row>
                 <br/>
                 <Row>
