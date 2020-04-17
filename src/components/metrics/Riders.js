@@ -2,23 +2,6 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 
-const TEST = [
-    {
-        riderID:123434,
-        rider:'Rider Name',
-        mileage: 6,
-        numberRides: 2,
-        villageID: 1
-    },
-    {
-        riderID:5555,
-        rider:'Rider Name',
-        mileage: 6,
-        numberRides: 3,
-        villageID: 5
-    }
-];
-
 class Riders extends Component {
     constructor(props) {
         super(props);
@@ -27,43 +10,58 @@ class Riders extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    renderTableData() {
+        let riders = this.props.users.filter((user) => {
+            return(user.user_type === 'rider')
+        });
+
+        console.log(riders);
+        return riders.map((rider) => {
+            return (
+                <tr key={rider.id}>
+                    <td>{rider.id}</td>
+                    <td>{rider.personal_info.first_name}</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                </tr>
+            )
+        })
+    }
+
+    renderTableHeader() {
+        console.log('here');
+        let header = ['Rider Id', 'Rider', 'Rides', 'Mileage', 'Village'];
+        return header.map((item) => {
+            return <th key={item}>{item}</th>
+        })
+    }
+
     handleChange(event){
     };
 
     render() {
         return (
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Rider ID</th>
-                    <th>Rider</th>
-                    <th>No. Trips</th>
-                    <th>Mileage</th>
-                    <th>Village ID</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{TEST[0].riderID}</td>
-                    <td>{TEST[0].rider}</td>
-                    <td>{TEST[0].numberRides}</td>
-                    <td>{TEST[0].mileage}</td>
-                    <td>{TEST[0].villageID}</td>
-                </tr>
-                <tr>
-                    <td>{TEST[1].riderID}</td>
-                    <td>{TEST[1].rider}</td>
-                    <td>{TEST[1].numberRides}</td>
-                    <td>{TEST[1].mileage}</td>
-                    <td>{TEST[1].villageID}</td>
-                </tr>
-                </tbody>
-            </Table>
+            <div>
+                <h1 id='title'>Riders</h1>
+                <Table>
+                    <thead>
+                    <tr>
+                        {this.renderTableHeader()}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.renderTableData()}
+                    </tbody>
+                </Table>
+            </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({

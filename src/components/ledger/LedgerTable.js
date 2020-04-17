@@ -1,28 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
-
-const TEST = [
-    {
-        id:1234,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
-        mileage: 6,
-        timestamp: 1400
-    },
-    {
-        id:5555,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        pickup: "555 Test Ave, Troy, NY 12343",
-        dropoff: "4534 Pizza St, Troy, NY 12432",
-        mileage: 6,
-        timestamp: 1400
-    }
-];
+import Container from "react-bootstrap/Container";
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -32,43 +11,56 @@ class LedgerTable extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    renderTableData() {
+        let rides = this.props.rides;
+        console.log(rides);
+        let keys = Object.keys(rides);
+        for ( let i = 0, len = keys.length; i < len; i++) {
+            return (
+                <tr>
+                    <td>{rides[keys[i]].id}</td>
+                    <td>{rides[keys[i]].driver.first_name}</td>
+                    <td>{rides[keys[i]].rider.first_name}</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+
+                </tr>
+            )
+
+        }
+        return rides.map((ride) => {
+            return(
+                <tr key={ride.id}>
+                    <td>{ride.id}</td>
+                </tr>
+            )
+
+        })
+    }
+
+    renderTableHeader() {
+        console.log('here');
+        let header = ['Ride', 'Driver', 'Rider', 'Mileage', 'Volunteer Hours'];
+        return header.map((item) => {
+            return <th key={item}>{item}</th>
+        })
+    }
+
     handleChange(event){
     };
 
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
+                <h1 id='title'>Ledger</h1>
                 <Table striped bordered hover>
                     <thead>
                     <tr>
-                        <th>Ride ID</th>
-                        <th>Driver</th>
-                        <th>Rider</th>
-                        <th>Origin</th>
-                        <th>Destination</th>
-                        <th>Mileage</th>
-                        <th>Timestamp</th>
+                        {this.renderTableHeader()}
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>{TEST[0].id}</td>
-                        <td>{TEST[0].driver}</td>
-                        <td>{TEST[0].rider}</td>
-                        <td>{TEST[0].pickup}</td>
-                        <td>{TEST[0].dropoff}</td>
-                        <td>{TEST[0].mileage}</td>
-                        <td>{TEST[0].timestamp}</td>
-                    </tr>
-                    <tr>
-                        <td>{TEST[1].id}</td>
-                        <td>{TEST[1].driver}</td>
-                        <td>{TEST[1].rider}</td>
-                        <td>{TEST[1].pickup}</td>
-                        <td>{TEST[1].dropoff}</td>
-                        <td>{TEST[1].mileage}</td>
-                        <td>{TEST[1].timestamp}</td>
-                    </tr>
+                    {this.renderTableData()}
                     </tbody>
                 </Table>
             </Container>
@@ -77,6 +69,8 @@ class LedgerTable extends Component {
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
