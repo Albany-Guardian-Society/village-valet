@@ -15,7 +15,7 @@ class Drivers extends Component {
             return(user.user_type === 'driver')
         });
 
-        const result = {};
+        //const result = {};
 
         // Object.keys(drivers)
         //     .forEach(key => result[key] = drivers[key]);
