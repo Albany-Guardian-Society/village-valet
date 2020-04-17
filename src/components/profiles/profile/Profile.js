@@ -300,15 +300,7 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                    return (
-                        <LoadScript
-                            id="script-loader"
-                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                            libraries={["places"]}
-                        >
-                            <CA/>
-                        </LoadScript>
-                    );
+                    return (<CA/>);
                 }
                 break;
             case "special":
@@ -415,20 +407,19 @@ class Profile extends Component {
                             <ListGroup.Item active={this.state.sub_page === "emergency"} onClick={() => this.changePage("emergency")}>Emergency Contact</ListGroup.Item>
                             {this.props.user.user_type === "driver" ?
                                 <>
-                                <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Address</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
                                 </>
                             :
                                 <>
                                     <ListGroup.Item active={this.state.sub_page === "caregiver"}
-                                                    onClick={() => this.changePage("caregiver")}>Caregiver
-                                        Information</ListGroup.Item>
+                                                    onClick={() => this.changePage("caregiver")}>Caregiver Information</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "addresses"}
                                                     onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "special"}
-                                                    onClick={() => this.changePage("special")}>Special
-                                        Accommodations</ListGroup.Item>
+                                                    onClick={() => this.changePage("special")}>Special Accommodations</ListGroup.Item>
                                 </>
                             }
                         </ListGroup>

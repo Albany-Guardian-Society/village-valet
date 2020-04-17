@@ -75,9 +75,11 @@ class CommonAddresses extends Component {
                         <Col><Form.Control id={"addr_" + index + "|name"} placeholder="--Address Name--"
                                            onChange={this.handleChange} value={this.props.addresses[index].name}/></Col>
                         <Col sm={3} lg={2}>
+                            {this.props.mode === "rider" ?
                             <Button id={index} variant="danger" onClick={(e) => this.props.removeAddress(e.target.id)}>
                                 Remove Address
                             </Button>
+                            : null }
                         </Col>
                     </Row>
 
@@ -138,10 +140,16 @@ class CommonAddresses extends Component {
         return (
             <Card>
                 <Card.Header>
-                    <h5 style={{float: "left"}}>Common Addresses</h5>
+                    {this.props.mode === "rider" ?
+                        <h5 style={{float: "left"}}>Common Addresses</h5>
+                    :
+                        <h5 style={{float: "left"}}>Address</h5>
+                    }
+                    {this.props.mode === "rider" ?
                     <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
                         Add Address
                     </Button>
+                    : null}
                 </Card.Header>
                 {this.generateAddressForms()}
                 <h6>{" "}</h6>

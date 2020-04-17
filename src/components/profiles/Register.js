@@ -22,7 +22,7 @@ import CaregiverInformation from "./registration/CaregiveInformation";
 // It should hopefully not "hit" the reducer to minimize clutter.
 // Once a user is made it should be added to the store so another pull is not needed tho!
 
-const DRIVER_MAX = 4;
+const DRIVER_MAX = 5;
 const RIDER_MAX = 4;
 
 class Register extends Component {
@@ -62,30 +62,19 @@ class Register extends Component {
             switch(this.state.page) {
                 case 0: return (<GeneralInformation/>);
                 case 1: return (<EmergencyInformation/>);
-                case 2: return (<VehicleInformation/>);
-                case 3: return (<VolunteerSchedule/>);
-                case 4: return (<DriverSpecific/>);
+                case 2: return (<CommonAddresses mode="driver"/>);
+                case 3: return (<VehicleInformation/>);
+                case 4: return (<VolunteerSchedule/>);
+                case 5: return (<DriverSpecific/>);
                 default: break;
             }
         } else {
             switch (this.state.page) {
-                case 0:
-                    return (<GeneralInformation/>);
-                case 1:
-                    return (<CaregiverInformation/>);
-                case 2:
-                    return (<EmergencyInformation/>);
-                case 3:
-                    return (
-                        <LoadScript
-                            id="script-loader"
-                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                            libraries={["places"]}
-                        >
-                            <CommonAddresses/>
-                        </LoadScript>);
-                case 4:
-                    return (<SpecialAccommodations/>);
+                case 0: return (<GeneralInformation/>);
+                case 1: return (<CaregiverInformation/>);
+                case 2: return (<EmergencyInformation/>);
+                case 3: return (<CommonAddresses mode="rider"/>);
+                case 4: return (<SpecialAccommodations/>);
                 default:
                     break;
             }
