@@ -39,9 +39,6 @@ class RideInformation extends Component {
             if (label_flag[2] === "samereturn") {
                 //updating the date
                 this.props.updateScheduler(label_flag[2], null, event.target.checked)
-            } else if (label_flag[2] === "givendropoff") {
-                //updating the date
-                this.props.updateScheduler(label_flag[2], null, event.target.value)
             }
         } else {
             //updating the location
@@ -143,14 +140,18 @@ class RideInformation extends Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Form.Label>Calculate route given pickup/dropoff time</Form.Label>
+                                            Mobility Aid:
                                         </td>
                                         <td>
-                                            <Form.Control as="select" id='sched_meta_givendropoff' onChange={this.handleChange}
-                                                          value={this.props.active_ride.ride_data.meta.givendropoff}>
-                                                <option value={true} label="Dropoff"/>
-                                                <option value={false} label="Pickup"/>
-                                            </Form.Control>
+                                            {`${this.props.users[this.props.active_ride.rider.id].mobility_aid}`}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Special Accommodations:
+                                        </td>
+                                        <td>
+                                            {`${this.props.users[this.props.active_ride.rider.id].special}`}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -158,7 +159,18 @@ class RideInformation extends Component {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col>Pickup to Dropoff<MapContainer/></Col>
+                    <Col>
+                        <Card>
+                            <Card.Header>
+                                Pickup to Dropoff
+                            </Card.Header>
+                            <Card.Body>
+                                <div style={{ position: 'relative', width: '100%', height: '250px' }}>
+                                    <MapContainer/>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 </Row>
                 <br/>
                 <Row>
@@ -203,8 +215,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Control type="time" id='sched_pickup_time'
                                                           onChange={(e) => this.handleChange(e)}
-                                                          value={this.props.active_ride.locations.pickup.time}
-                                                          readOnly={this.props.active_ride.ride_data.meta.givendropoff === "true"}/>
+                                                          value={this.props.active_ride.locations.pickup.time}/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -263,8 +274,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Control type="time" id='sched_dropoff_time'
                                                           onChange={(e) => this.handleChange(e)}
-                                                          value={this.props.active_ride.locations.dropoff.time}
-                                                          readOnly={this.props.active_ride.ride_data.meta.givendropoff === "false"}/>
+                                                          value={this.props.active_ride.locations.dropoff.time}/>
                                         </td>
                                     </tr>
                                     <tr>
