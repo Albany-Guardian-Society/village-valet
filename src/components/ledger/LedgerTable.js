@@ -13,7 +13,6 @@ class LedgerTable extends Component {
 
     renderTableData() {
         let rides = this.props.rides;
-        console.log(rides);
         let keys = Object.keys(rides);
         for ( let i = 0, len = keys.length; i < len; i++) {
             return (
@@ -39,7 +38,6 @@ class LedgerTable extends Component {
     }
 
     renderTableHeader() {
-        console.log('here');
         let header = ['Ride', 'Driver', 'Rider', 'Mileage', 'Volunteer Hours'];
         return header.map((item) => {
             return <th key={item}>{item}</th>

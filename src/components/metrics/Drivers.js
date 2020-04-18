@@ -29,7 +29,7 @@ class Drivers extends Component {
         // console.log(result);
         return drivers.map((driver) => {
             return (
-                <tr key={driver.id}>
+                <tr key={driver.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{driver.id}</td>
                     <td>{driver.personal_info.first_name}</td>
                     <td>N/A</td>
@@ -54,12 +54,12 @@ class Drivers extends Component {
         return (
             <div>
                 <Table striped bordered hover>
-                    <thead>
-                    <tr>
+                    <thead style={{display: "table", width: 'calc( 100% - 17px )'}}>
+                    <tr style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                         {this.renderTableHeader()}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{display: 'block', height: '400px', width: '100%', overflow: 'auto'}}>
                     {this.renderTableData()}
                     </tbody>
                 </Table>

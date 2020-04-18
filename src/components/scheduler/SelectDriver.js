@@ -8,7 +8,7 @@ import Col from "react-bootstrap/Col";
 
 import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
-import Table from "react-bootstrap/Table";
+//import Table from "react-bootstrap/Table";
 
 class SelectDriver extends Component {
     constructor(props) {
