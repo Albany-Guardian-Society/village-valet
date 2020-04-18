@@ -18,8 +18,8 @@ class LedgerTable extends Component {
             return (
                 <tr>
                     <td>{rides[keys[i]].id}</td>
-                    <td>{rides[keys[i]].driver.first_name}</td>
-                    <td>{rides[keys[i]].rider.first_name}</td>
+                    <td>{rides[keys[i]].driver.first_name} {rides[keys[i]].driver.last_name}</td>
+                    <td>{rides[keys[i]].rider.first_name} {rides[keys[i]].rider.last_name}</td>
                     <td>n/a</td>
                     <td>n/a</td>
 
