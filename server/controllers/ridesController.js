@@ -28,7 +28,7 @@ export const postRide = async(req,res) => {
         res.status(400).send({error:'Missing from body: ride'});
         return
     }
-    if (ride.village_id !== village_id) {
+    if (ride.village_id !== village_id && village_id !== 'admin') {
         res.status(401).send({error:'Access forbidden'});
         return
     }
@@ -46,8 +46,13 @@ export const putRide = async(req,res) => {
         res.status(400).send({error:'Missing from body: ride'});
         return
     }
-    const oldRide = await getRide(village_id, ride.id);
-        if (oldRide[0].village_id !== village_id || village_id !== ride.village_id) {
+    const oldRideArray = await getRide(village_id, ride.id);
+    if (oldRideArray.length === 0) {
+        res.status(404).send({error:'Ride not found'});
+        return
+    }
+    const oldRide = oldRideArray[0];
+    if (oldRide.village_id !== village_id || village_id !== ride.village_id) {
         res.status(401).send({error:'Access forbidden'});
         return
     }

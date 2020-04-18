@@ -26,7 +26,7 @@ export const getRide = async(village_id, ride_id) => {
             return data
         }
     }
-    return {}
+    return []
 };
 
 export const getRidesByDate = async(village_id, date) => {

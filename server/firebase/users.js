@@ -26,7 +26,7 @@ export const getUser = async(village_id, user_id) => {
             return data
         }
     }
-    return {}
+    return []
 };
 
 export const addUser = async(user) => {
