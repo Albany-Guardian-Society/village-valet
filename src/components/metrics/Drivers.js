@@ -31,7 +31,7 @@ class Drivers extends Component {
             return (
                 <tr key={driver.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{driver.id}</td>
-                    <td>{driver.personal_info.first_name}</td>
+                    <td>{driver.personal_info.first_name} {driver.personal_info.last_name}</td>
                     <td>N/A</td>
                     <td>N/A</td>
                     <td>N/A</td>

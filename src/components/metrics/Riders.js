@@ -19,7 +19,7 @@ class Riders extends Component {
             return (
                 <tr key={rider.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{rider.id}</td>
-                    <td>{rider.personal_info.first_name}</td>
+                    <td>{rider.personal_info.first_name} {rider.personal_info.last_name}</td>
                     <td>N/A</td>
                     <td>N/A</td>
                     <td>N/A</td>
