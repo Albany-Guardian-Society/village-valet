@@ -11,11 +11,10 @@ class Riders extends Component {
     }
 
     renderTableData() {
-        let riders = this.props.users.filter((user) => {
+        let riders = Object.values(this.props.users).filter((user) => {
             return(user.user_type === 'rider')
         });
 
-        console.log(riders);
         return riders.map((rider) => {
             return (
                 <tr key={rider.id}>
@@ -30,7 +29,6 @@ class Riders extends Component {
     }
 
     renderTableHeader() {
-        console.log('here');
         let header = ['Rider Id', 'Rider', 'Rides', 'Mileage', 'Village'];
         return header.map((item) => {
             return <th key={item}>{item}</th>
@@ -43,8 +41,7 @@ class Riders extends Component {
     render() {
         return (
             <div>
-                <h1 id='title'>Riders</h1>
-                <Table>
+                <Table striped bordered hover>
                     <thead>
                     <tr>
                         {this.renderTableHeader()}

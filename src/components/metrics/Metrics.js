@@ -35,7 +35,7 @@ class Metrics extends Component {
             case "reports":
                 return (<Reports/>);
             default:
-                return(<Riders/>);
+                return(<Reports/>);
         }
     }
 

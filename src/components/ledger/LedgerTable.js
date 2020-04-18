@@ -52,7 +52,6 @@ class LedgerTable extends Component {
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-                <h1 id='title'>Ledger</h1>
                 <Table striped bordered hover>
                     <thead>
                     <tr>

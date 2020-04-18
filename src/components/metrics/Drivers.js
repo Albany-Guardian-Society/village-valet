@@ -11,7 +11,7 @@ class Drivers extends Component {
     }
 
     renderTableData() {
-        let drivers = this.props.users.filter((user) => {
+        let drivers = Object.values(this.props.users).filter((user) => {
             return(user.user_type === 'driver')
         });
 
@@ -41,7 +41,6 @@ class Drivers extends Component {
     }
 
     renderTableHeader() {
-        console.log('here');
         let header = ['Driver Id', 'Driver', 'Rides', 'Mileage', 'Volunteer Hours'];
         return header.map((item) => {
             return <th key={item}>{item}</th>
@@ -54,8 +53,7 @@ class Drivers extends Component {
     render() {
         return (
             <div>
-                <h1 id='title'>Drivers</h1>
-                <Table>
+                <Table striped bordered hover>
                     <thead>
                     <tr>
                         {this.renderTableHeader()}
