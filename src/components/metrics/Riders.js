@@ -17,7 +17,7 @@ class Riders extends Component {
 
         return riders.map((rider) => {
             return (
-                <tr key={rider.id}>
+                <tr key={rider.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{rider.id}</td>
                     <td>{rider.personal_info.first_name}</td>
                     <td>N/A</td>
@@ -42,12 +42,12 @@ class Riders extends Component {
         return (
             <div>
                 <Table striped bordered hover>
-                    <thead>
-                    <tr>
+                    <thead style={{display: "table", width: 'calc( 100% - 17px )'}}>
+                    <tr style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                         {this.renderTableHeader()}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{display: 'block', height: '400px', width: '100%', overflow: 'auto'}}>
                     {this.renderTableData()}
                     </tbody>
                 </Table>
