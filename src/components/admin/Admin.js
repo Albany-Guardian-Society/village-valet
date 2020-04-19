@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
+import Operator from "./Operator.js";
+import Village from "./Village.js";
+
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -106,16 +109,12 @@ class Admin extends Component {
                 <Col xs={6}>
                     <Row>
                         <Col><Card>
-                            <Card.Header>
-                                <h5 style={{float:"left"}}>{this.state.show_village ? this.props.villages[this.state.show_village].village_name : "Select a Village"}</h5>
-                            </Card.Header>
+                            <Village show_village={this.state.show_village}/>
                         </Card></Col>
                     </Row>
                     <Row>
                         <Col><Card>
-                            <Card.Header>
-                                <h5 style={{float:"left"}}>{(this.state.show_village && this.state.show_operator) ? this.props.operators[this.state.show_village][this.state.show_operator].first_name +" "+ this.props.operators[this.state.show_village][this.state.show_operator].last_name : "Select an Operator"}</h5>
-                            </Card.Header>
+                            <Operator show_village={this.state.show_village} show_operator={this.state.show_operator}/>
                         </Card></Col>
                     </Row>
                 </Col>
