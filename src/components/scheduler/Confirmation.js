@@ -21,6 +21,10 @@ class Confirmation extends Component {
 
     };
 
+    /**
+     * @type {object}
+     * This object is used as the contents for an email message
+     */
     message = {
         // Comma separated list of recipients
         to: '"' + this.props.users[this.props.active_ride.rider.id].personal_info.first_name + " " +this.props.users[this.props.active_ride.rider.id].personal_info.last_name + '" <' + this.props.users[this.props.active_ride.rider.id].personal_info.email + ">",
