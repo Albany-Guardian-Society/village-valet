@@ -16,6 +16,7 @@ import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 import VolunteerSchedule from "./registration/VolunteerSchedule.js";
 import CaregiverInformation from "./registration/CaregiveInformation";
+import moment from "moment";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
@@ -83,6 +84,21 @@ class Register extends Component {
         }
     }
 
+    validateEmail(email) {
+        let emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailPattern.test(email);
+    }
+
+    validatePhoneNumber(number){
+        let phoneNumberPattern = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+        return phoneNumberPattern.test(number);
+    }
+
+    validateZipCode(zip){
+        let zipCodePattern = /^\d{5}$|^\d{5}-\d{4}$/;
+        return zipCodePattern.test(zip);
+    }
+
     validateRegistration() {
         //Validate the registration
         // Might want to have a "list of errors and then display a bunch of them? might be ugly"
@@ -98,29 +114,75 @@ class Register extends Component {
                 } else if (!this.props.registration.personal_info.last_name) {
                     this.setState({error_message: "INVALID LAST NAME: Please provide a last name."});
                     return false;
+                } else if (this.props.registration.personal_info.email) {
+                    if (!this.validateEmail(this.props.registration.personal_info.email)) {
+                        this.setState({error_message: "INVALID EMAIL: Please provide a properly formatted email."});
+                        return false;
+                    }
                 } else if (!this.props.registration.personal_info.phone_home && !this.props.registration.personal_info.phone_mobile) {
                     this.setState({error_message: "INVALID PHONE NUMBER: Please provide a phone number."});
                     return false;
+                } else if (this.props.registration.personal_info.phone_home) {
+                    if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_home)) {
+                        this.setState({error_message: "INVALID HOME PHONE: Please provide a properly formatted home phone number."});
+                        return false;
+                    }
+                } else if (this.props.registration.personal_info.phone_mobile) {
+                    if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_mobile)) {
+                        this.setState({error_message: "INVALID MOBILE PHONE: Please provide a properly formatted mobile phone number."});
+                        return false;
+                    }
                 }
                 return true;
             case 1:
-                if (!this.props.registration.addresses[0].name) {
-                    this.setState({error_message: "INVALID ADDRESS NAME: Please provide an address name."});
-                    return false;
-                } else if (!this.props.registration.addresses[0].line_1) {
-                    this.setState({error_message: "INVALID ADDRESS LINE 1: Please provide an address."});
-                    return false;
-                } else if (!this.props.registration.addresses[0].city) {
-                    this.setState({error_message: "INVALID CITY: Please provide a city."});
-                    return false;
-                } else if (!this.props.registration.addresses[0].state) {
-                    this.setState({error_message: "INVALID STATE: Please provide a state."});
-                    return false;
-                } else if (!this.props.registration.addresses[0].zip) {
-                    this.setState({error_message: "INVALID ZIP CODE: Please provide a zip code."});
-                    return false;
+                if (this.props.registration.user_type === "rider") {
+                    let address_names = new Set();
+                    for (let i = 0; i < this.props.registration.addresses.length; i++) {
+                        if (address_names.has(this.props.registration.addresses[i].name)) {
+                            this.setState({error_message: "REDUNDANT ADDRESS NAME: Please provide a unique address name."});
+                            address_names.clear();
+                            return false;
+                        } else if (!this.props.registration.addresses[i].name) {
+                            this.setState({error_message: "INVALID ADDRESS NAME: Please provide an address name."});
+                            return false;
+                        } else if (!this.props.registration.addresses[i].line_1) {
+                            this.setState({error_message: "INVALID ADDRESS LINE 1: Please provide an address."});
+                            return false;
+                        } else if (!this.props.registration.addresses[i].city) {
+                            this.setState({error_message: "INVALID CITY: Please provide a city."});
+                            return false;
+                        } else if (!this.props.registration.addresses[i].state) {
+                            this.setState({error_message: "INVALID STATE: Please provide a state."});
+                            return false;
+                        } else if (!this.props.registration.addresses[i].zip) {
+                            this.setState({error_message: "INVALID ZIP CODE: Please provide a zip code."});
+                            return false;
+                        }
+                        address_names.add(this.props.registration.addresses[i].name);
+                    }
+                    address_names.clear();
+                    return true;
                 }
-                return true;
+                else if (this.props.registration.user_type === "driver") {
+                    if (!this.props.registration.addresses[0].name) {
+                        this.setState({error_message: "INVALID ADDRESS NAME: Please provide an address name."});
+                        return false;
+                    } else if (!this.props.registration.addresses[0].line_1) {
+                        this.setState({error_message: "INVALID ADDRESS LINE 1: Please provide an address."});
+                        return false;
+                    } else if (!this.props.registration.addresses[0].city) {
+                        this.setState({error_message: "INVALID CITY: Please provide a city."});
+                        return false;
+                    } else if (!this.props.registration.addresses[0].state) {
+                        this.setState({error_message: "INVALID STATE: Please provide a state."});
+                        return false;
+                    } else if (!this.validateZipCode(this.props.registration.addresses[0].zip)) {
+                        this.setState({error_message: "INVALID ZIP CODE: Please provide a zip code."});
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
             case 2:
                 if (!this.props.registration.emergency_contact.first_name) {
                     this.setState({error_message: "INVALID FIRST NAME: Please provide a first name."});
@@ -128,9 +190,24 @@ class Register extends Component {
                 } else if (!this.props.registration.emergency_contact.last_name) {
                     this.setState({error_message: "INVALID LAST NAME: Please provide a last name."});
                     return false;
+                } else if (this.props.registration.emergency_contact.email) {
+                    if (!this.validateEmail(this.props.registration.emergency_contact.email)) {
+                        this.setState({error_message: "INVALID EMAIL: Please provide a properly formatted email."});
+                        return false;
+                    }
                 } else if (!this.props.registration.emergency_contact.phone_home && !this.props.registration.emergency_contact.phone_mobile) {
                     this.setState({error_message: "INVALID PHONE NUMBER: Please provide a phone number."});
                     return false;
+                } else if (this.props.registration.emergency_contact.phone_home) {
+                    if (!this.validatePhoneNumber(this.props.registration.emergency_contact.phone_home)) {
+                        this.setState({error_message: "INVALID HOME PHONE: Please provide a properly formatted home phone number."});
+                        return false;
+                    }
+                } else if (this.props.registration.emergency_contact.phone_mobile) {
+                    if (!this.validatePhoneNumber(this.props.registration.emergency_contact.phone_mobile)) {
+                        this.setState({error_message: "INVALID MOBILE PHONE: Please provide a properly formatted mobile phone number."});
+                        return false;
+                    }
                 } else if (!this.props.registration.emergency_contact.relationship) {
                     this.setState({error_message: "INVALID RELATIONSHIP: Please provide a relationship."});
                     return false;
@@ -141,8 +218,13 @@ class Register extends Component {
                     return true;
                 }
                 else if (this.props.registration.user_type === "driver") {
+                    let license_plates = new Set();
                     for (let i = 0; i < this.props.registration.vehicles.length; i++) {
-                        if (!this.props.registration.vehicles[i].make_model) {
+                        if (license_plates.has(this.props.registration.vehicles[i].lp)) {
+                            this.setState({error_message: "REDUNDANT LICENSE PLATE: Please provide a unique license plate."});
+                            license_plates.clear();
+                            return false;
+                        } else if (!this.props.registration.vehicles[i].make_model) {
                             this.setState({error_message: "INVALID VEHICLE MAKE/MODEL: Please provide a vehicle make/model."});
                             return false;
                         } else if (!this.props.registration.vehicles[i].year) {
@@ -173,7 +255,9 @@ class Register extends Component {
                             this.setState({error_message: "INVALID INSPECTION DATE: Please provide an inspection date."});
                             return false;
                         }
+                        license_plates.add(this.props.registration.vehicles[i].lp);
                     }
+                    license_plates.clear();
                     return true;
                 }
                 return false;
@@ -186,6 +270,19 @@ class Register extends Component {
                     return true;
                 }
                 else if (this.props.registration.user_type === "driver") {
+                    for (let i = 0; i < this.props.registration.volunteer_hours.length; i++) {
+                        if (this.props.registration.volunteer_hours[i].start) {
+                            if (!this.props.registration.volunteer_hours[i].end || moment(this.props.registration.volunteer_hours[i].start, "HH:mm").isAfter(moment(this.props.registration.volunteer_hours[i].end, "HH:mm"))) {
+                                this.setState({error_message: "INVALID END TIME: Please provide an end time after start time."});
+                                return false;
+                            }
+                        } else if (this.props.registration.volunteer_hours[i].end) {
+                            if (!this.props.registration.volunteer_hours[i].start) {
+                                this.setState({error_message: "INVALID START TIME: Please provide a start time."});
+                                return false;
+                            }
+                        }
+                    }
                     return true;
                 }
                 return false;
