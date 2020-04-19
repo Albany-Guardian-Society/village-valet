@@ -33,7 +33,7 @@ export const postRide = async(req,res) => {
         return
     }
     if (await addRide(ride)) {
-        res.status(200).send({success:true});
+        res.status(201).send({success:true});
         return
     }
     res.status(500).send({error:"Could not add ride to database"})

@@ -4,7 +4,9 @@ import firestore from "../server";
 export const getOperators = async() => {
     const querySnapshot = await firestore.collection('operators').get();
     return querySnapshot.docs.map(doc => {
-        return {...doc.data(), id: doc.id}
+        const data = doc.data();
+        delete data['password'];
+        return {...data, id: doc.id}
     });
 };
 
@@ -12,7 +14,9 @@ export const getOperators = async() => {
 export const getOperatorById = async(operator_id) => {
     const querySnapshot = await firestore.collection('operators').doc(operator_id).get();
     return querySnapshot.docs.map(doc => {
-        return {...doc.data(), id: doc.id}
+        const data = doc.data();
+        delete data['password'];
+        return {...data, id: doc.id}
     })
 };
 

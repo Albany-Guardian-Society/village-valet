@@ -29,10 +29,10 @@ export const postUser = async(req,res) => {
         return
     }
     if (await addUser(user)) {
-        res.status(200).send({success:true});
+        res.status(201).send({success:true});
         return
     }
-    res.status(500).send({error:"Could not add ride to database"})
+    res.status(500).send({error:"Could not add user to database"})
 };
 
 export const putUser = async(req,res) => {
@@ -95,12 +95,42 @@ export const deleteUser = async(req,res) => {
     else if (oldUser.villages.indexOf(village_id) !== -1) {
         oldUser.villages = oldUser.villages.filter(vId => vId !== village_id);
         oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
-        if (await updateUser(user_id)) {
+        if (await updateUser(oldUser)) {
             res.status(200).send({success:true});
             return
         }
     }
-    res.status(500).send({error:"Could not delete ride from database"})
+    res.status(500).send({error:"Could not delete user from database"})
+};
+
+const patchUser = async(req,res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const {user_id, vetting_info} = req.body;
+    if (user_id === null) {
+        res.status(400).send({error:'Missing from body: user'});
+        return
+    }
+    const oldUserArray = await getUser(village_id, user_id);
+    if (oldUserArray.length === 0) {
+        res.status(404).send({error:'User not found'});
+        return
+    }
+    const oldUser = oldUserArray[0];
+    if (oldUser[0].user_type !== 'driver') {
+        res.status(400).send({error:'Can not change vetting info for non driver'});
+        return
+    }
+    if (oldUser.villages.indexOf(village_id) === -1 || (vetting_info.village_id !== village_id && village_id !== 'admin')) {
+        res.status(401).send({error:'Access forbidden'});
+        return
+    }
+    oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
+    oldUser.vetting.push(vetting_info);
+    if (await updateUser(oldUser)) {
+        res.status(200).send({success:true});
+        return
+    }
+    res.status(500).send({error:"Could not update user in database"})
 };
 
 

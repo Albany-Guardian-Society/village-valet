@@ -1,13 +1,13 @@
 import firestore from "../server";
 
 
-const getVillages = async(village_id) => {
+export const getVillages = async(village_id) => {
     let querySnapshot;
     if (village_id === 'admin') {
         querySnapshot = await firestore.collection('villages').get()
     }
     else {
-        querySnapshot = await firestore.collection('villages').where('village_id', '==', village_id).get();
+        querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get();
     }
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
@@ -15,16 +15,16 @@ const getVillages = async(village_id) => {
 };
 
 
-const getVillage = async(village_id) => {
+export const getVillage = async(village_id) => {
     let querySnapshot;
-    querySnapshot = await firestore.collection('villages').where('village_id', '==', village_id).get()
+    querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get()
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
     });
 };
 
 
-const addVillage = async(village) => {
+export const addVillage = async(village) => {
     firestore.collection('villages').add(village)
         .then(() => {return true})
         .catch((e) => {
@@ -33,7 +33,7 @@ const addVillage = async(village) => {
         })
 };
 
-const removeVillage = async(village_id) => {
+export const removeVillage = async(village_id) => {
     firestore.collection('villages').doc(village_id).delete()
         .then(() => {return true})
         .catch((e) => {
@@ -42,7 +42,7 @@ const removeVillage = async(village_id) => {
         })
 };
 
-const updateVillage = async(village) => {
+export const updateVillage = async(village) => {
     firestore.collection('villages').doc(village.id).update(village)
         .then(() => {return true})
         .catch((e) => {
