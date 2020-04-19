@@ -18,6 +18,7 @@ import DriverSpecific from "./registration/DriverSpecific.js";
 import VehicleInformation from "./registration/VehicleInformation.js";
 import VolunteerSchedule from "./registration/VolunteerSchedule.js";
 import CaregiverInformation from "./registration/CaregiveInformation";
+import moment from "moment";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
@@ -271,6 +272,19 @@ class Register extends Component {
                     return true;
                 }
                 else if (this.props.registration.user_type === "driver") {
+                    for (let i = 0; i < this.props.registration.volunteer_hours.length; i++) {
+                        if (this.props.registration.volunteer_hours[i].start) {
+                            if (!this.props.registration.volunteer_hours[i].end || moment(this.props.registration.volunteer_hours[i].start, "HH:mm").isAfter(moment(this.props.registration.volunteer_hours[i].end, "HH:mm"))) {
+                                this.setState({error_message: "INVALID END TIME: Please provide an end time after start time."});
+                                return false;
+                            }
+                        } else if (this.props.registration.volunteer_hours[i].end) {
+                            if (!this.props.registration.volunteer_hours[i].start) {
+                                this.setState({error_message: "INVALID START TIME: Please provide a start time."});
+                                return false;
+                            }
+                        }
+                    }
                     return true;
                 }
                 return false;
