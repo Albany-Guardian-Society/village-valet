@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import firestore from "../../modules/firestore.js";
 
-import {LoadScript} from "@react-google-maps/api";
-
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";

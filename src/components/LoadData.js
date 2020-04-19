@@ -20,7 +20,11 @@ class LoadData extends Component {
         this.setState({message: "Loading Village"});
         firestore.collection("villages").get()
         .then(querySnapshot => {
-            const data = querySnapshot.docs.map(doc => doc.data());
+            let data = {};
+            const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
+            for (let item in raw_data) {
+                data[raw_data[item].id] = raw_data[item];
+            }
             this.props.load("villages", data);
         }).then(() => {
             this.setState({status: 20});
@@ -54,11 +58,31 @@ class LoadData extends Component {
                         }
                         this.props.load("rides", data);
                     }).then(() => {
-                        this.setState({status: 100});
+                        this.setState({status: 80});
+                    }).then(() => {
+                        //Load the operators - ADMIN ONLY
+                        //This will be handled by an API call that never lets the encrypted passwords touch the frontend
+                        this.setState({message: "Loading Operators"});
+                        firestore.collection("operators").get()
+                        .then(querySnapshot => {
+                            let data = {};
+                            const raw_data = querySnapshot.docs.map(doc => {
+                                let new_doc = {...doc.data(), id: doc.id};
+                                new_doc.password = "";
+                                return new_doc;
+                            });
+                            for (let item in raw_data) {
+                                if (!data[raw_data[item].village_id]) data[raw_data[item].village_id] = {};
+                                data[raw_data[item].village_id][raw_data[item].id] = raw_data[item];
+                            }
+                            this.props.load("operators", data);
+                        }).then(() => {
+                            this.setState({status: 100});
                     }).then(() => {
                         this.props.load("loaded", true);
                     })
                 })
+            })
             } else {
                 //Load the Users
                 this.setState({message: "Loading Users"});

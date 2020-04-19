@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 
-import {LoadScript} from "@react-google-maps/api";
-
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
