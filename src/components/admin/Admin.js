@@ -27,12 +27,14 @@ class Admin extends Component {
 	handleChange(event) {
 	}
 
-    showVillage(id) {
-        this.setState({show_village: id, show_operator: ""});
+    showVillage(village) {
+        this.setState({show_village: village, show_operator: ""});
+        this.props.show("", village);
     }
 
     showOperator(id, village) {
         this.setState({show_operator: id, show_village: village});
+        this.props.show(id, village);
     }
 
     genVillageRows() {
@@ -132,6 +134,13 @@ const mapDispatchToProps = dispatch => ({
     debug: () => dispatch({
         type: "dump_store",
         payload: null
+    }),
+    show: (id, village) => dispatch({
+        type: "admin_page",
+        payload: {
+            id: id,
+            village: village
+        }
     })
 });
 

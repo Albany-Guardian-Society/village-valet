@@ -139,6 +139,21 @@ const BLANK_RIDE = {
     }
 };
 
+const BLANK_VILLAGE = {
+    village_name: "",
+    vetting: [],
+    defaults: {}
+}
+
+const BLANK_OPERATOR = {
+    email: "",
+    first_name: "",
+    last_name: "",
+    password: "",
+    username: "",
+    village_id: ""
+}
+
 const initialState = {
     authenticated: false,
     loaded: false,
@@ -154,6 +169,8 @@ const initialState = {
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
     active_ride: _.cloneDeep(BLANK_RIDE),
+    active_village: _.cloneDeep(BLANK_VILLAGE),
+    active_operator:_.cloneDeep(BLANK_OPERATOR),
 };
 
 //The authentication should be cached for a period of time
@@ -206,6 +223,21 @@ const VillageReducer = (state = initialState, action) => {
                     newState.operators = action.payload.data;
                     break;
             default:
+        }
+        return newState;
+    }
+
+    case "admin_page": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.village === "") {
+            newState.active_village = _.cloneDeep(BLANK_VILLAGE);
+        } else {
+            newState.active_village = state.villages[action.payload.village];
+        }
+        if (action.payload.id === "") {
+            newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+        } else {
+            newState.active_operator = state.operators[action.payload.village][action.payload.id];
         }
         return newState;
     }
