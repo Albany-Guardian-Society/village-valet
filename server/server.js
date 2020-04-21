@@ -11,19 +11,30 @@ import {
     putOperator
 } from "./controllers/operatorController";
 import {confirmRide} from "./controllers/administrationController";
+import * as dotenv from "dotenv";
 
-const app = require('express')();
+const path = require('path');
+
+
+const express = require('express')
+const app = express();
 const helmet = require("helmet");
 const cors = require('cors');
-const bodyParser = require("body-parser");
+const {urlencoded, json} = require('body-parser');
 
 const admin = require("firebase-admin");
 const serviceAccount = require("path/to/serviceAccountKey.json");
+
+dotenv.config();
+
+
+const PORT = process.env.PORT || 3000;
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://village-valet.firebaseio.com"
 });
+
 
 const firestore = admin.firestore();
 firestore.collection()
@@ -31,7 +42,8 @@ export default firestore
 
 app.use(cors());
 app.use(helmet());
-app.use(bodyParser.json());
+app.use(urlencoded({extended: true}));
+app.use(json());
 
 const routerDatabase = app.router();
 app.use('/api/database', routerDatabase);
@@ -73,6 +85,12 @@ routerDatabase.delete('/operators/operator', checkJWT, deleteOperator);
 routerAdminstration.get('/confirm_ride', checkParameterJWT, confirmRide)
 routerAdminstration.get('/login', login)
 
+// UI Routes
+app.use(express.static(path.resolve('./build/')));
+app.get('/*', (req, res) => res.sendFile(path.resolve('./build/index.html')));
+
+
+app.listen(PORT, () => console.log('Server running on ' + PORT));
 
 
 
