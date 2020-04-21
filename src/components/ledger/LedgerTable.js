@@ -12,6 +12,13 @@ class LedgerTable extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    handleCancel(rideID) {
+        if (window.confirm("Are you sure you want to CANCEL this ride?")) {
+            this.props.cancelRide(rideID);
+            window.alert("DEACTIVATED: " + rideID);
+        }
+    }
+
     renderTableData() {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
@@ -25,7 +32,7 @@ class LedgerTable extends Component {
                     <td>{rides[keys[i]].locations.dropoff.address}</td>
                     <td>{rides[keys[i]].ride_data.date}</td>
                     <td>
-                        <Button id={rides[keys[i]].id} variant="danger">
+                        <Button id={rides[keys[i]].id} variant="danger" onClick={() => this.handleCancel(rides[keys[i]].id)}>
                             Cancel Ride
                         </Button>
                     </td>
@@ -77,6 +84,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    cancelRide: (rideID) => dispatch({
+        type: "ride_cancel",
+        payload: rideID
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LedgerTable);

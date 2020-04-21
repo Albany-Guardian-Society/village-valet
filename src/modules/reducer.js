@@ -383,23 +383,42 @@ const VillageReducer = (state = initialState, action) => {
         return newState;
     }
     case "user_perma_delete": {
-        let newState = _.cloneDeep(state);
-        //Now edit the local copy, then update the DB:
-        let id_to_delete = newState.active_profile.id;
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            delete newState.users[index];
+            let newState = _.cloneDeep(state);
+            //Now edit the local copy, then update the DB:
+            let id_to_delete = newState.active_profile.id;
+            let index = newState.users.findIndex((i) => {
+                return i.id === newState.active_profile.id
+            });
+            if (index >= 0) {
+                delete newState.users[index];
+            }
+
+            newState.active_profile = _.cloneDeep(BLANK_PROFILE);
+
+            //Delete the record (document) in firestore
+            firestore.collection("users").doc(id_to_delete).delete();
+
+            return newState;
         }
 
-        newState.active_profile = _.cloneDeep(BLANK_PROFILE);
+        case "ride_cancel": {
+            let newState = _.cloneDeep(state);
+            //Now edit the local copy, then update the DB:
+            let id_to_delete = action.payload;
+            let index = newState.users.findIndex((i) => {
+                return i.id === newState.active_profile.id
+            });
+            if (index >= 0) {
+                delete newState.users[index];
+            }
 
-        //Delete the record (document) in firestore
-        firestore.collection("users").doc(id_to_delete).delete();
+            newState.active_profile = _.cloneDeep(BLANK_PROFILE);
 
-        return newState;
-    }
+            //Delete the record (document) in firestore
+            firestore.collection("users").doc(id_to_delete).delete();
+
+            return newState;
+        }
 
         case "add_ride": {
             let newState = _.cloneDeep(state);
