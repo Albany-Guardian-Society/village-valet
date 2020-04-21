@@ -1,14 +1,15 @@
-import {addRide, getRide, getRides, removeRide, updateRide} from "../firebase/rides";
+import {addRide, getRide, getRides, getRidesByDate, removeRide, updateRide} from "../firebase/rides";
+import {sendConfirmationEmail} from "../functions/administration";
 
 
-export const getAllRides = async(req,res) => {
+export const getAllRides = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const date = req.query.date;
     if (date == null) {
         res.status(200).send(await getRides(village_id));
         return
     }
-    res.status(200).send(await getRide(village_id, date))
+    res.status(200).send(await getRidesByDate(village_id, date))
 };
 
 export const getOneRide = async(req,res) => {
@@ -33,7 +34,8 @@ export const postRide = async(req,res) => {
         return
     }
     if (await addRide(ride)) {
-        res.status(201).send({success:true});
+        res.status(201).send({success: true});
+        await sendConfirmationEmail(ride)
         return
     }
     res.status(500).send({error:"Could not add ride to database"})

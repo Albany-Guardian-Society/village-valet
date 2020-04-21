@@ -12,6 +12,7 @@ import * as jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+
 export const login = async(req,res) => {
     const {username, password} = req.body;
     const operator = await getOperatorByUsername(username);
@@ -25,14 +26,23 @@ export const login = async(req,res) => {
             res.status(200).send();
             return
         }
-        res.status(401).send({error:'Username/Password Combination Incorrect'})
+        res.status(401).send({error: 'Username/Password Combination Incorrect'});
         return
     }
     res.status(404).send({error:'Username not found'})
 };
 
 export const changePassword = async(req,res) => {
-    const {id, password} = req.body;
+    const {password} = req.body;
+    if (!password) {
+        res.status(400).send({error: "No password"});
+        return
+    }
+    if (password.length < 8) {
+        res.status(400).send({error: "Password needs to be at least 8 characters"});
+        return
+    }
+    const {id} = res.locals.jwtPayload;
     const operator = await getOperatorById(id);
     if (operator) {
         operator[0]['password'] = await bcrypt.hash(password, 10);

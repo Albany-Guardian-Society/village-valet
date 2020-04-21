@@ -17,6 +17,7 @@ export const getOneUser = async(req,res) => {
     res.status(200).send(await getUser(village_id, id))
 };
 
+
 export const postUser = async(req,res) => {
     const {village_id} = res.locals.jwtPayload;
     const {user} = req.body.user;
@@ -103,16 +104,16 @@ export const deleteUser = async(req,res) => {
     res.status(500).send({error:"Could not delete user from database"})
 };
 
-const patchUser = async(req,res) => {
+export const patchUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const {user_id, vetting_info} = req.body;
     if (user_id === null) {
-        res.status(400).send({error:'Missing from body: user'});
+        res.status(400).send({error: 'Missing from body: user'});
         return
     }
     const oldUserArray = await getUser(village_id, user_id);
     if (oldUserArray.length === 0) {
-        res.status(404).send({error:'User not found'});
+        res.status(404).send({error: 'User not found'});
         return
     }
     const oldUser = oldUserArray[0];
