@@ -13,7 +13,8 @@ export const checkJWT = (req, res, next) => {
             const bearer = bearerHeader.split(' ');
             bearerToken = bearer[1];
         } else {
-            res.sendStatus(403)
+            res.status(403).send({error: "Invalid Token"});
+            return
         }
         let jwtPayload;
 
@@ -26,12 +27,31 @@ export const checkJWT = (req, res, next) => {
             return;
         }
 
-        //The token is valid for 1 hour
-        //We want to send a new token on every request
-        const newToken = jwt.sign(jwtPayload, JWT_SECRET, {
-            expiresIn: "1h",
-            audience: 'website',
-        });
-        res.setHeader("token", newToken);
-        next()
+    //The token is valid for 1 hour
+    //We want to send a new token on every request
+    const newToken = jwt.sign(jwtPayload, JWT_SECRET, {
+        expiresIn: "1h",
+        audience: 'website',
+    });
+    res.setHeader("token", newToken);
+    next()
+};
+
+export const checkParameterJWT = (req, res, next) => {
+    //Get the jwt token from the head
+    const token = req.query.token;
+    if (!token) {
+        res.status(403).send({error: "Invalid Token"});
+        return
+    }
+    let jwtPayload;
+    //Try to validate the token and get data
+    try {
+        jwtPayload = jwt.verify(token, JWT_SECRET, {audience: 'user'});
+        res.locals.jwtPayload = jwtPayload;
+    } catch (error) {
+        res.status(401).send(error);
+        return;
+    }
+    next()
 };
