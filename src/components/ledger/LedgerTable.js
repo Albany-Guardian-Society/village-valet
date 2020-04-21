@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -20,9 +21,14 @@ class LedgerTable extends Component {
                     <td>{rides[keys[i]].id}</td>
                     <td>{rides[keys[i]].driver.first_name} {rides[keys[i]].driver.last_name}</td>
                     <td>{rides[keys[i]].rider.first_name} {rides[keys[i]].rider.last_name}</td>
-                    <td>n/a</td>
-                    <td>n/a</td>
-
+                    <td>{rides[keys[i]].locations.pickup.address}</td>
+                    <td>{rides[keys[i]].locations.dropoff.address}</td>
+                    <td>{rides[keys[i]].ride_data.date}</td>
+                    <td>
+                        <Button id={rides[keys[i]].id} variant="danger">
+                            Cancel Ride
+                        </Button>
+                    </td>
                 </tr>
             )
 
@@ -38,7 +44,7 @@ class LedgerTable extends Component {
     }
 
     renderTableHeader() {
-        let header = ['Ride', 'Driver', 'Rider', 'Mileage', 'Volunteer Hours'];
+        let header = ['Ride', 'Driver', 'Rider', 'Origin', 'Destination', 'Date', 'Action'];
         return header.map((item) => {
             return <th key={item}>{item}</th>
         })
