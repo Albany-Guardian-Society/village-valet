@@ -17,7 +17,6 @@ class CommonAddresses extends Component {
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
-        this.count = 0;
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
@@ -76,9 +75,11 @@ class CommonAddresses extends Component {
                         <Col><Form.Control id={"addr_" + index + "|name"} placeholder="--Address Name--"
                                            onChange={this.handleChange} value={this.props.addresses[index].name}/></Col>
                         <Col sm={3} lg={2}>
+                            {this.props.mode === "rider" ?
                             <Button id={index} variant="danger" onClick={(e) => this.props.removeAddress(e.target.id)}>
                                 Remove Address
                             </Button>
+                            : null }
                         </Col>
                     </Row>
 
@@ -111,7 +112,9 @@ class CommonAddresses extends Component {
                         <Col><Form.Control id={"addr_" + index + "|city"} placeholder="--City--"
                                            onChange={this.handleChange} value={this.props.addresses[index].city}/></Col>
                         <Form.Label column sm={2} lg={2}>State:</Form.Label>
-                        <Col><Form.Control id={"addr_"+index+"|state"} placeholder="--State--" onChange={this.handleChange} value={this.props.addresses[index].state}/></Col>
+                        <Col><Form.Control id={"addr_" + index + "|state"} placeholder="--State--"
+                                           onChange={this.handleChange}
+                                           value={this.props.addresses[index].state}/></Col>
                         <Form.Label column sm={2} lg={2}>Zip:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|zip"} placeholder="--ZIP--"
                                            onChange={this.handleChange} value={this.props.addresses[index].zip}/></Col>
@@ -135,16 +138,22 @@ class CommonAddresses extends Component {
 
     render() {
         return (
-                <Card>
-                    <Card.Header>
+            <Card>
+                <Card.Header>
+                    {this.props.mode === "rider" ?
                         <h5 style={{float: "left"}}>Common Addresses</h5>
-                        <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
-                            Add Address
-                        </Button>
-                    </Card.Header>
-                    {this.generateAddressForms()}
-                    <h6>{" "}</h6>
-                </Card>
+                    :
+                        <h5 style={{float: "left"}}>Address</h5>
+                    }
+                    {this.props.mode === "rider" ?
+                    <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
+                        Add Address
+                    </Button>
+                    : null}
+                </Card.Header>
+                {this.generateAddressForms()}
+                <h6>{" "}</h6>
+            </Card>
         );
     }
 }

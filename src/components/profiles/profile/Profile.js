@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 
-import {LoadScript} from "@react-google-maps/api";
-
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -45,13 +43,16 @@ class Profile extends Component {
                                 <th>First Name</th><td>{this.props.user.personal_info.first_name}</td>
                             </tr>
                             <tr>
-                                <th>Last Name</th><td>{this.props.user.personal_info.last_name}</td>
+                                <th>Last Name</th>
+                                <td>{this.props.user.personal_info.last_name}</td>
                             </tr>
                             <tr>
-                                <th>Email</th><td>{this.props.user.personal_info.email}</td>
+                                <th>Email</th>
+                                <td>{this.props.user.personal_info.email}</td>
                             </tr>
                             <tr>
-                                <th>Home Phone</th><td>{this.props.user.personal_info.phone_home}</td>
+                                <th>Home Phone</th>
+                                <td>{this.props.user.personal_info.phone_home}</td>
                             </tr>
                             <tr>
                                 <th>Mobile Phone</th>
@@ -82,34 +83,34 @@ class Profile extends Component {
                 if (this.state.mode === "view") {
                     return (
                         <Table striped bordered>
-                        {this.props.user.caregiver ?
-                            <tbody>
-                            <tr>
-                                <th>First Name</th>
-                                <td>{this.props.user.caregiver.first_name}</td>
-                            </tr>
-                            <tr>
-                                <th>Last Name</th>
-                                <td>{this.props.user.caregiver.last_name}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>{this.props.user.caregiver.email}</td>
-                            </tr>
-                            <tr>
-                                <th>Home Phone</th>
-                                <td>{this.props.user.caregiver.phone_home}</td>
-                            </tr>
-                            <tr>
-                                <th>Mobile Phone</th>
-                                <td>{this.props.user.caregiver.phone_mobile}</td>
-                            </tr>
-                            <tr>
-                                <th>Preferred Communication</th>
-                                <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
-                            </tr>
-                            </tbody>
-                            : null}
+                            {this.props.user.caregiver ?
+                                <tbody>
+                                <tr>
+                                    <th>First Name</th>
+                                    <td>{this.props.user.caregiver.first_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Name</th>
+                                    <td>{this.props.user.caregiver.last_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{this.props.user.caregiver.email}</td>
+                                </tr>
+                                <tr>
+                                    <th>Home Phone</th>
+                                    <td>{this.props.user.caregiver.phone_home}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mobile Phone</th>
+                                    <td>{this.props.user.caregiver.phone_mobile}</td>
+                                </tr>
+                                <tr>
+                                    <th>Preferred Communication</th>
+                                    <td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}</td>
+                                </tr>
+                                </tbody>
+                                : null}
                         </Table>
                     );
                 } else if (this.state.mode === "edit") {
@@ -297,15 +298,7 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                   return (
-                        <LoadScript
-                        id="script-loader"
-                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                        libraries={["places"]}
-                        >
-                            <CA/>
-                        </LoadScript>
-                   );
+                    return (<CA/>);
                 }
                 break;
             case "special":
@@ -412,20 +405,19 @@ class Profile extends Component {
                             <ListGroup.Item active={this.state.sub_page === "emergency"} onClick={() => this.changePage("emergency")}>Emergency Contact</ListGroup.Item>
                             {this.props.user.user_type === "driver" ?
                                 <>
-                                <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Address</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
                                 </>
                             :
                                 <>
                                     <ListGroup.Item active={this.state.sub_page === "caregiver"}
-                                                    onClick={() => this.changePage("caregiver")}>Caregiver
-                                        Information</ListGroup.Item>
+                                                    onClick={() => this.changePage("caregiver")}>Caregiver Information</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "addresses"}
                                                     onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "special"}
-                                                    onClick={() => this.changePage("special")}>Special
-                                        Accommodations</ListGroup.Item>
+                                                    onClick={() => this.changePage("special")}>Special Accommodations</ListGroup.Item>
                                 </>
                             }
                         </ListGroup>

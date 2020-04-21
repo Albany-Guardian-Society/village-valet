@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@buttercup/google-oauth2-client": "^0.2.1",
     "@react-google-maps/api": "^1.8.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "latest",
     "bootstrap": "^4.4.1",
@@ -29,10 +31,11 @@
     "redux": "^4.0.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"react-scripts start\"  \"node -r dotenv-flow/config server/server.js --node-env=development\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": " node -r dotenv-flow/config server/server.js --node-env=development"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,5 +51,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
