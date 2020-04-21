@@ -2,7 +2,7 @@ import firestore from "../server";
 
 
 export const getUsers = async(village_id) => {
-    let querySnapshot = null;
+    let querySnapshot;
     if (village_id === 'admin') {
          querySnapshot = await firestore.collection('users').get()
     }
@@ -22,16 +22,25 @@ export const getUser = async(village_id, user_id) => {
     });
     if (village_id === 'admin') return data;
     if (data) {
-        if (data[user_id]['villages'].indexOf(village_id)  !== -1) {
+        if (data[user_id]['villages'].indexOf(village_id) !== -1) {
             return data
         }
     }
     return []
 };
 
-export const addUser = async(user) => {
+export const getDrivers = async () => {
+    const querySnapshot = await firestore.collection('users').where("user_type", "==", "driver").get();
+    return querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    })
+}
+
+export const addUser = async (user) => {
     firestore.collection('users').add(user)
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false
