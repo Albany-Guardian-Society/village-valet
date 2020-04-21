@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import LedgerTable from "./LedgerTable";
 
 class Ledger extends Component {
