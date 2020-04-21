@@ -37,9 +37,10 @@ class GeneralInformation extends Component {
 
     villageOptions() {
         let options = [];
-        options = this.props.villages.map((v) => {
+        let villages = Object.keys(this.props.villages);
+        options = villages.map((v) => {
             return(
-                <option key={v.village_id} value={v.village_id} label={v.village_name}/>
+                <option key={this.props.villages[v].id} value={this.props.villages[v].id} label={this.props.villages[v].village_name}/>
             )
         })
         return options;

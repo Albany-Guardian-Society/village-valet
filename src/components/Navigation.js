@@ -43,7 +43,11 @@ class Navigation extends Component {
                 <Col>
                     <Link to="/Metrics" style={{ textDecoration: 'none' }}>Metrics</Link>
                 </Col>
-                <Col><Button variant="dark" onClick={this.props.debug}> DEBUG </Button></Col>
+                <Col>
+                    {this.props.village_id === "admin" ?
+                        <Link to="/Admin" style={{ textDecoration: 'none' }}>Admin</Link>
+                    : null}
+                </Col>
                 <Col style={{textAlign:"right"}}>
                     <span>Operator:&nbsp;{this.props.operator}</span>
                 </Col>
@@ -59,15 +63,12 @@ class Navigation extends Component {
 
 const mapStateToProps = state => ({
     operator: state.operator.first_name,
+    village_id: state.operator.village_id
 });
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch({
         type: "logout",
-        payload: null
-    }),
-    debug: () => dispatch({
-        type: "dump_store",
         payload: null
     })
 });

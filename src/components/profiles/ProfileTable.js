@@ -22,11 +22,10 @@ class ProfileTable extends Component {
 
         //Update the active_profile
         //First convert id into index
-        let index = 0;
-        for (let u in this.props.users) {
-            if (this.props.users[u].id === event.target.id) index = u;
-        }
-        this.props.setActiveUser(this.props.users[index]);
+
+
+
+        this.props.setActiveUser(this.props.users[event.target.id]);
 
         //Handle this being selected
         //In the case of "all" we want to open the profile
@@ -36,9 +35,9 @@ class ProfileTable extends Component {
             this.props.history.push('/Profiles/User/'+event.target.id);
         } else {
             if (this.props.mode === "rider") {
-                this.props.setRideParticipant("rider", this.props.users[index]);
+                this.props.setRideParticipant("rider", this.props.users[event.target.id]);
             } else if (this.props.mode === "driver") {
-                this.props.setRideParticipant("driver_1", this.props.users[index])
+                this.props.setRideParticipant("driver", this.props.users[event.target.id])
             }
         }
     }
@@ -72,7 +71,7 @@ class ProfileTable extends Component {
         let filtered_users;
         if (this.props.search_term) {
             let index = -1;
-            filtered_users = fuzzysort.go(this.props.search_term, this.props.users.map((p) => {
+            filtered_users = fuzzysort.go(this.props.search_term, Object.values(this.props.users).map((p) => {
                 index++;
                 return p.personal_info.first_name + p.personal_info.last_name + "|" + index;
             })).filter((p) => {
@@ -81,11 +80,11 @@ class ProfileTable extends Component {
                 return p.score > -2000;
             }).map((p) => {
                 //Convert back to the user objects
-                return this.props.users[p.target.split("|")[p.target.split("|").length-1]]
+                return Object.values(this.props.users)[p.target.split("|")[p.target.split("|").length-1]]
             })
         } else {
             //If no search term, return all
-            filtered_users = this.props.users;
+            filtered_users = Object.values(this.props.users);
         }
 
         //Could optimize by skipping in "all" case
@@ -128,7 +127,12 @@ class ProfileTable extends Component {
         for (let index in filtered_users) {
             let user = filtered_users[index];
             profile_table.push(
-                <tr key={user.id} style={this.state.selected_row === user.id ? {background: "#cce4ff", display: "table", width: '100%', tableLayout: 'fixed'} : {display: "table", width: '100%', tableLayout: 'fixed'}}>
+                <tr key={user.id} style={this.state.selected_row === user.id ? {
+                    background: "#cce4ff",
+                    display: "table",
+                    width: '100%',
+                    tableLayout: 'fixed'
+                } : {display: "table", width: '100%', tableLayout: 'fixed'}}>
                     {this.props.mode === "all" ?
                         <td id={user.id}
                             onClick={(e) => this.handleSelect(e)}>{user.user_type.replace(/^\w/, c => c.toUpperCase())}</td>

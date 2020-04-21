@@ -72,7 +72,3 @@ routerDatabase.delete('/operators/operator', checkJWT, deleteOperator);
 //Administration Endpoints
 routerAdminstration.get('/confirm_ride', checkParameterJWT, confirmRide)
 routerAdminstration.get('/login', login)
-
-
-
-
