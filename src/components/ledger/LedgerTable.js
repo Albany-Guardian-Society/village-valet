@@ -12,6 +12,22 @@ class LedgerTable extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    handleSelect(event) {
+        //Highlight the row
+        this.setState({selected_row: event.target.id});
+
+        //Update the active_profile
+        //First convert id into index
+
+
+        this.props.setActiveRide(this.props.ride[event.target.id]);
+
+        this.props.history.push('/Scheduler/SelectRider/'+event.target.id);
+
+    }
+
+
+
     renderTableData() {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
@@ -77,6 +93,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    setActiveRide: (ride) => dispatch({
+        type: "set_active_ride",
+        payload: ride
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LedgerTable);
