@@ -22,31 +22,22 @@ class LedgerTable extends Component {
     renderTableData() {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
-        for ( let i = 0, len = keys.length; i < len; i++) {
-            return (
-                <tr>
-                    <td>{rides[keys[i]].id}</td>
-                    <td>{rides[keys[i]].driver.first_name} {rides[keys[i]].driver.last_name}</td>
-                    <td>{rides[keys[i]].rider.first_name} {rides[keys[i]].rider.last_name}</td>
-                    <td>{rides[keys[i]].locations.pickup.address}</td>
-                    <td>{rides[keys[i]].locations.dropoff.address}</td>
-                    <td>{rides[keys[i]].ride_data.date}</td>
+        return keys.map((key) => {
+            return (<tr>
+                    <td>{rides[key].id}</td>
+                    <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
+                    <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
+                    <td>{rides[key].locations.pickup.address}</td>
+                    <td>{rides[key].locations.dropoff.address}</td>
+                    <td>{rides[key].ride_data.date}</td>
                     <td>
-                        <Button id={rides[keys[i]].id} variant="danger" onClick={() => this.handleCancel(rides[keys[i]].id)}>
+                        <Button id={rides[key].id} variant="danger"
+                                onClick={() => this.handleCancel(rides[key].id)}>
                             Cancel Ride
                         </Button>
                     </td>
                 </tr>
             )
-
-        }
-        return rides.map((ride) => {
-            return(
-                <tr key={ride.id}>
-                    <td>{ride.id}</td>
-                </tr>
-            )
-
         })
     }
 
