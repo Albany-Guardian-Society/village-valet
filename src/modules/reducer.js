@@ -150,6 +150,7 @@ const initialState = {
     villages: {},
     users: {},
     rides: {},
+    operators: {},
     // This is
     active_profile: _.cloneDeep(BLANK_PROFILE),
     active_ride: _.cloneDeep(BLANK_RIDE),
@@ -198,9 +199,12 @@ const VillageReducer = (state = initialState, action) => {
                 case "users":
                     newState.users = action.payload.data;
                     break;
-            case "rides":
-                newState.rides = action.payload.data;
-                break;
+                case "rides":
+                    newState.rides = action.payload.data;
+                    break;
+                case "operators":
+                    newState.operators = action.payload.data;
+                    break;
             default:
         }
         return newState;
