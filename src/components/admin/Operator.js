@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
@@ -25,7 +24,6 @@ class Operator extends Component {
         }
     }
 
-
 	handleChange(event) {
         let field = event.target.id.split("|")[1];
         if (field === "password") {
@@ -39,17 +37,18 @@ class Operator extends Component {
 	}
 
     villageOptions() {
-        let options = [<option key={""} value={""} label={""}/>];
+        let options = [];
         let villages = Object.keys(this.props.villages);
         options = villages.map((v) => {
             return(
                 <option key={this.props.villages[v].id} value={this.props.villages[v].id} label={this.props.villages[v].village_name}/>
             )
         })
-        return options;
+        return [<option key={""} value={""} label={""}/>, ...options];
     }
 
     saveOperator() {
+        //VALIDATE HERE!
         if (this.state.mode === "new") {
             this.props.changeOperator("add")
         } else {
@@ -173,4 +172,4 @@ const mapDispatchToProps = dispatch => ({
     })
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Operator));
+export default connect(mapStateToProps, mapDispatchToProps)(Operator);

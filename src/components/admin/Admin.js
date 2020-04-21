@@ -109,8 +109,8 @@ class Admin extends Component {
                     </Card>
                 </Col>
                 <Col xs={6} style={{height: "100%"}}>
-                    <Row style={{height: "30%"}}>
-                        <Col style={{height: "100%"}}><Card>
+                    <Row>
+                        <Col><Card>
                             <Village show_village={this.state.show_village}/>
                         </Card></Col>
                     </Row>

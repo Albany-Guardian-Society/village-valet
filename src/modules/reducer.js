@@ -250,6 +250,8 @@ const VillageReducer = (state = initialState, action) => {
                 case "add": {
                     firestore.collection("operators").add(newState.active_operator).then((ref) => {
                         newState.active_operator.id = ref.id;
+                        //If its the first operator you need to add the village id
+                        if (!newState.operators[newState.active_operator.village_id]) newState.operators[newState.active_operator.village_id] = {};
                         newState.operators[newState.active_operator.village_id][ref.id] = newState.active_operator;
                     });
                     break;
@@ -286,7 +288,36 @@ const VillageReducer = (state = initialState, action) => {
                 }
             }
         } else if (action.payload.type === "village") {
-
+            switch (action.payload.mode) {
+                case "add": {
+                    firestore.collection("villages").add(newState.active_village).then((ref) => {
+                        newState.active_village.id = ref.id;
+                        newState.villages[ref.id] = newState.active_village;
+                    });
+                    break;
+                }
+                case "edit": {
+                    newState.active_village[action.payload.field] = action.payload.value;
+                    break;
+                }
+                case "save": {
+                    firestore.collection("villages").doc(newState.active_village.id).update(newState.active_village);
+                    break;
+                }
+                case "delete": {
+                    console.log(Object.keys(newState.operators).includes(newState.active_village.id));
+                    if (newState.operators && !(Object.keys(newState.operators).includes(newState.active_village.id))) {
+                        firestore.collection("villages").doc(newState.active_village.id).delete();
+                        delete newState.village[newState.active_village.id];
+                        newState.active_village = _.cloneDeep(BLANK_VILLAGE);
+                        newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+                    } else {
+                        //Add the check for riders and Drivers
+                        //FUTURE TEAM ADD THIS LITTLE FEATURE!
+                        window.alert("You CANNOT delete a village that still has active riders, drivers, or operators!");
+                    }
+                }
+            }
         }
         return newState;
     }
