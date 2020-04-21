@@ -5,6 +5,10 @@ import {getOperators} from "../firebase/operators";
 import {getVillages} from "../firebase/villages";
 import {generateRideConfirmationToken} from "./token";
 
+import * as dotenv from "dotenv";
+
+dotenv.config()
+
 
 export const sendExpirationNotifications = async () => {
     const drivers = await getDrivers();
