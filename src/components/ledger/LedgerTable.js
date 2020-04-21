@@ -13,9 +13,9 @@ class LedgerTable extends Component {
     }
 
     handleCancel(rideID) {
-        if (window.confirm("Are you sure you want to CANCEL this ride?")) {
+        if (window.confirm("Are you sure you want to DELETE this ride?")) {
             this.props.cancelRide(rideID);
-            window.alert("DEACTIVATED: " + rideID);
+            window.alert("CANCELLED: " + rideID);
         }
     }
 
