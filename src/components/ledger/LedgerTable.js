@@ -23,7 +23,8 @@ class LedgerTable extends Component {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
         return keys.map((key) => {
-            return (<tr>
+            return (
+                <tr>
                     <td>{rides[key].id}</td>
                     <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
                     <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
