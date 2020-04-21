@@ -1,5 +1,6 @@
 import _ from "lodash";
 import firestore from "./firestore.js";
+import bcrypt from "bcryptjs";
 
 // The reducer is an internal middle man that handles passing information from each
 // of the various components to something called the store.  The store is basically a
@@ -238,6 +239,54 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
         } else {
             newState.active_operator = state.operators[action.payload.village][action.payload.id];
+        }
+        return newState;
+    }
+
+    case "change_admin": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.type === "operator") {
+            switch (action.payload.mode) {
+                case "add": {
+                    firestore.collection("operators").add(newState.active_operator).then((ref) => {
+                        newState.active_operator.id = ref.id;
+                        newState.operators[newState.active_operator.village_id][ref.id] = newState.active_operator;
+                    });
+                    break;
+                }
+                case "edit": {
+                    if (action.payload.field === "password") {
+                        newState.active_operator["password"] = bcrypt.hashSync(action.payload.value, 10);
+                    } else {
+                        newState.active_operator[action.payload.field] = action.payload.value;
+                    }
+                    break;
+                }
+                case "save": {
+                    let newUser = _.cloneDeep(newState.active_operator)
+                    //THIS WILL BE hANDLED BETTER BY AN ENDPOINT DESIGNED FOR SAVING USERS WHEN THE PASSWORD IS UNCHANGED.
+                    //If the password was unchaged, dont edit it
+                    if (newUser.password === "") {
+                        delete newUser.password;
+                    }
+                    firestore.collection("operators").doc(newState.active_operator.id).update(newUser);
+                    newState.operators[newState.active_operator.village_id][newState.active_operator.id] = {...newState.active_operator, ...newUser};
+                    //if moving the village
+                    for (let v in newState.operators) {
+                        if (v === newState.active_operator.village_id) continue;
+                        delete newState.operators[v][newState.active_operator.id]
+                    }
+                    break;
+                }
+                case "delete": {
+                    firestore.collection("operators").doc(newState.active_operator.id).delete();
+                    delete newState.operators[newState.active_operator.village_id][newState.active_operator.id];
+                    newState.active_village = _.cloneDeep(BLANK_VILLAGE);
+                    newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+                }
+            }
+        } else if (action.payload.type === "village") {
+
         }
         return newState;
     }

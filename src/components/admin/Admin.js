@@ -83,37 +83,38 @@ class Admin extends Component {
 
     render() {
         return (
-            <Row style={{padding:"15px", height: "100vh"}}>
+            <Row style={{paddingLeft:"15px", paddingRight:"15px", height: "85vh"}}>
                 <Col xs={3} style={{height: "100%"}}>
                     <Card style={{height: "100%"}}>
                         <Card.Header>
                             <h5 style={{float:"left"}}>Villages</h5>
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body style={{overflow: "scroll"}}>
                             <ListGroup>
                                 {this.genVillageRows()}
                             </ListGroup>
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col xs={3}>
-                    <Card>
+                <Col xs={3} style={{height: "100%"}}>
+                    <Card style={{height: "100%"}}>
                         <Card.Header>
                             <h5 style={{float:"left"}}>Operators</h5>
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body style={{overflow: "scroll"}}>
                             <ListGroup>
                                 {this.genOperatorRows()}
                             </ListGroup>
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col xs={6}>
-                    <Row>
-                        <Col><Card>
+                <Col xs={6} style={{height: "100%"}}>
+                    <Row style={{height: "30%"}}>
+                        <Col style={{height: "100%"}}><Card>
                             <Village show_village={this.state.show_village}/>
                         </Card></Col>
                     </Row>
+                    <br/>
                     <Row>
                         <Col><Card>
                             <Operator show_village={this.state.show_village} show_operator={this.state.show_operator}/>
