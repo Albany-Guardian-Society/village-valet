@@ -33,13 +33,13 @@ class VolunteerSchedule extends Component {
                 <Row className="reg_row" key={index}>
                     <Col><Form.Control as="select" id={"vol_" + index + "|day"} onChange={this.handleChange}
                                        value={this.props.volunteer_hours[index].day}>
-                        <option label="Sunday" value="sunday"/>
-                        <option label="Monday" value="monday"/>
-                        <option label="Tuesday" value="tuesday"/>
-                        <option label="Wednesday" value="wednesday"/>
-                        <option label="Thursday" value="thursday"/>
-                        <option label="Friday" value="friday"/>
-                        <option label="Saturday" value="saturday"/>
+                        <option label="Sunday" value={0}/>
+                        <option label="Monday" value={1}/>
+                        <option label="Tuesday" value={2}/>
+                        <option label="Wednesday" value={3}/>
+                        <option label="Thursday" value={4}/>
+                        <option label="Friday" value={5}/>
+                        <option label="Saturday" value={6}/>
                     </Form.Control></Col>
                     <Form.Label column sm={2} lg={2}>Starting Time:</Form.Label>
                     <Col><Form.Control type="time" id={"vol_" + index + "|start"} onChange={this.handleChange}

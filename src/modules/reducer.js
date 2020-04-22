@@ -82,7 +82,7 @@ const BLANK_PROFILE = {
         special: ""
     },
     vehicles: [VEHICLE_TEMPLATE,],
-    volunteer_hours: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map(day => VOL_HOURS_TEMPLATE(day)),
+    volunteer_hours: [0, 1, 2, 3, 4, 5, 6].map(day => VOL_HOURS_TEMPLATE(day)),
     driver_specific: {
         vetting: "",
     },

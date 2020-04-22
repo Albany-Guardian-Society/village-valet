@@ -12,6 +12,11 @@ class Error extends Component {
 	handleChange(event) {
 	}
 
+    /**
+     * Renders a a new page with an error message
+     *
+     */
+
     render() {
         return (
             <div>

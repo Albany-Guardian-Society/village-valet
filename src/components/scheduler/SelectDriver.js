@@ -46,7 +46,7 @@ class SelectDriver extends Component {
                     </Form.Group>
                 </Form>
                 <hr/>
-                <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
+                <ProfileTable search_term={this.state.search_term} mode={"driver"}/>
                 <Row>
                     <Col>
                         <MapContainer>Trip Summary</MapContainer>
