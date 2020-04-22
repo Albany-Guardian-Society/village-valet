@@ -162,6 +162,7 @@ class ProfileTable extends Component {
         }
         return profile_table;
     }
+    
     render(){
         return(
             <div>

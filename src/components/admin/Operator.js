@@ -81,7 +81,7 @@ class Operator extends Component {
                     }</>
                 :
                     <>
-                        <Button variant="success" style={{float: "right"}} onClick={() => this.saveOperator()}>
+                        <Button variant="success" style={{float: "right", marginLeft: "10px"}} onClick={() => this.saveOperator()}>
                             Save
                         </Button>
                         <Button variant="danger" style={{float: "right"}} onClick={() => this.deleteOperator()}>

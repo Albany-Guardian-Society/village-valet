@@ -61,7 +61,7 @@ class Village extends Component {
                     }</>
                 :
                     <>
-                        <Button variant="success" style={{float: "right"}} onClick={() => this.saveVillage()}>
+                        <Button variant="success" style={{float: "right", marginLeft: "10px"}} onClick={() => this.saveVillage()}>
                             Save
                         </Button>
                         <Button variant="danger" style={{float: "right"}} onClick={() => this.deleteVillage()}>
