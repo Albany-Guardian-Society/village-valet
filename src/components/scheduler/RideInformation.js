@@ -84,8 +84,7 @@ class RideInformation extends Component {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng()));
-
+            this.props.updateScheduler(variable, "geolocation", {lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
