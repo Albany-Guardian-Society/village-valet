@@ -13,14 +13,14 @@ class ActiveRides extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-
     handleChange(event) {
     }
 
     filterRides() {
         if (this.props.rides) {
             return Object.values(this.props.rides).filter(ride => ride.ride_data.date ===
-                moment().format('YYYY-MM-DD') && moment(ride.locations.pickup.time, 'HH:mm').isSameOrBefore({
+                moment().format('YYYY-MM-DD')
+                && moment(ride.locations.pickup.time, 'HH:mm').isSameOrBefore({
                     h: moment().hours(),
                     m: moment().minutes()
                 }) &&

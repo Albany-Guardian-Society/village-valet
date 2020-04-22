@@ -21,21 +21,21 @@ class Home extends Component {
 	}
 
     render() {
+        // Three columns: upcoming rides, active rides, ride summary
         return (
-            <Container style={{minWidth: "100%"}}> <Row>
-                <Col>
-                    <UpcomingRides/>
-                </Col>
-                <Col>
-                    <ActiveRides/>
-                </Col>
-                <Col>
-                <Row> <Col>
-                    <RideBreakdown/>
-                </Col> </Row> <br/> <Row> <Col>
-
-                </Col> </Row> </Col>
-            </Row> </Container>
+            <Container style={{minWidth: "100%"}}>
+                <Row>
+                    <Col>
+                        <UpcomingRides/>
+                    </Col>
+                    <Col>
+                        <ActiveRides/>
+                    </Col>
+                    <Col>
+                        <RideBreakdown/>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
