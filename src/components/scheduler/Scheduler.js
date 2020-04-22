@@ -66,9 +66,7 @@ class Scheduler extends Component {
             case 0: //Rider
                 return (<SelectRider/>);
             case 1: //Info
-                return (
-                        <RideInformation/>
-                );
+                return (<RideInformation/>);
             case 2: //Driver
                 return (<SelectDriver/>);
             case 3: //Confirm
