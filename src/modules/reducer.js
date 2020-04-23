@@ -89,6 +89,7 @@ const BLANK_PROFILE = {
 
 const BLANK_RIDE = {
     ride_id: "",
+    status: "",
     rider: {
         first_name: "",
         last_name: "",
@@ -126,7 +127,6 @@ const BLANK_RIDE = {
         },
         traffic: "",
         date: "",
-        status: "",
         associated_ride: {
             ride_id: "",
             driver_id: ""
