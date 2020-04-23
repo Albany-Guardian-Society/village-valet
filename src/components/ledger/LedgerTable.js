@@ -46,7 +46,7 @@ class LedgerTable extends Component {
                         <td>{rides[key].locations.pickup.address}</td>
                         <td>{rides[key].locations.dropoff.address}</td>
                         <td>{rides[key].ride_data.date}</td>
-                        <td>{rides[key].status}</td>
+                        <td>Active</td>
                         <td>
                             <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-2"
                                     onClick={() => this.handleDeactivateRide(rides[key].id)}>
@@ -68,7 +68,7 @@ class LedgerTable extends Component {
                         <td>{rides[key].locations.pickup.address}</td>
                         <td>{rides[key].locations.dropoff.address}</td>
                         <td>{rides[key].ride_data.date}</td>
-                        <td>{rides[key].status}</td>
+                        <td>Inactive</td>
                         <td>
                             <Button id={rides[key].id + "reactivate"} variant="success" className="mr-2"
                                     onClick={() => this.handleReactivateRide(rides[key].id)}>
