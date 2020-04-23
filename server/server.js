@@ -1,71 +1,96 @@
-const nodemailer = require("nodemailer");
-const {google} = require("googleapis");
-const bodyParser = require('body-parser');
-const express = require('express');
-const cors = require('cors');
+import {checkJWT, checkParameterJWT} from "./middleware/JWToken";
+import {deleteUser, getAllUsers, getOneUser, patchUser, postUser, putUser} from "./controllers/usersController";
+import {deleteRide, getAllRides, getOneRide, postRide, putRide} from "./controllers/ridesController";
+import {deleteVillage, getAllVillages, getOneVillage, postVillage, putVillage} from "./controllers/villagesController";
+import {
+    deleteOperator,
+    getAllOperators,
+    getOneOperator,
+    login,
+    postOperator,
+    putOperator
+} from "./controllers/operatorController";
+import {confirmRide} from "./controllers/administrationController";
+import * as dotenv from "dotenv";
+
+const path = require('path');
+
+
+const express = require('express')
 const app = express();
-const OAuth2 = google.auth.OAuth2;
+const helmet = require("helmet");
+const cors = require('cors');
+const {urlencoded, json} = require('body-parser');
 
-const oauth2Client = new OAuth2(
-    process.env.GMAIL_CLIENT_ID, // ClientID
-    process.env.GMAIL_CLIENT_SECRET, // Client Secret
-    "https://developers.google.com/oauthplayground" // Redirect URL
-);
-oauth2Client.setCredentials({
-    refresh_token: process.env.GMAIL_REFRESH_TOKEN
+const admin = require("firebase-admin");
+const serviceAccount = require("path/to/serviceAccountKey.json");
+
+dotenv.config();
+
+
+const PORT = process.env.PORT || 3000;
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://village-valet.firebaseio.com"
 });
-let transporter;
-oauth2Client.getAccessToken().then(accessToken => {
-    transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            type: 'OAuth2',
-            user: process.env.GMAIL_EMAIL,
-            clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.GMAIL_CLIENT_SECRET,
-            refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-            accessToken: accessToken.token,
-        }
-    })
-});
+
+
+const firestore = admin.firestore();
+firestore.collection()
+export default firestore
+
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(helmet());
+app.use(urlencoded({extended: true}));
+app.use(json());
 
-const whitelist = ['http://localhost:3000', 'http://localhost:80'];
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    }
-};
+const routerDatabase = app.router();
+app.use('/api/database', routerDatabase);
 
-// Then pass them to cors:
-app.use(cors(corsOptions));
-app.post('/send', async (req, res) => {
-    let info = await transporter.sendMail({
-        from: `"Village Valet" <${process.env.GMAIL_EMAIL}>`, // sender address
-        ...req.body
-    }, (err, data) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                msg: 'fail'
-            })
-        } else {
-            res.json({
-                msg: 'success'
-            })
-        }
-    });
-    
-});
+const routerAdminstration = app.router()
+app.use('/admin/', routerAdminstration);
 
-app.listen(4000, () => {
-    console.log('Email server is up')
-});
+
+//User Endpoints
+routerDatabase.get('/users/all', checkJWT, getAllUsers);
+routerDatabase.get('/users/user', checkJWT, getOneUser);
+routerDatabase.post('/users/user', checkJWT, postUser);
+routerDatabase.patch('/users/user', checkJWT, patchUser);
+routerDatabase.put('/users/user', checkJWT, putUser);
+routerDatabase.delete('/users/user', checkJWT, deleteUser);
+
+//Ride Endpoints
+routerDatabase.get('/rides/all', checkJWT, getAllRides);
+routerDatabase.get('/rides/ride', checkJWT, getOneRide);
+routerDatabase.post('/rides/ride', checkJWT, postRide);
+routerDatabase.put('/rides/ride', checkJWT, putRide);
+routerDatabase.delete('/rides/ride', checkJWT, deleteRide);
+
+//Village Endpoints
+routerDatabase.get('/villages/all', checkJWT, getAllVillages);
+routerDatabase.get('/villages/village', checkJWT, getOneVillage);
+routerDatabase.post('/villages/village', checkJWT, postVillage);
+routerDatabase.put('/villages/village', checkJWT, putVillage);
+routerDatabase.delete('/villages/village', checkJWT, deleteVillage);
+
+//Operator Endpoints
+routerDatabase.get('/operators/all', checkJWT, getAllOperators);
+routerDatabase.get('/operators/operator', checkJWT, getOneOperator);
+routerDatabase.post('/operators/operator', checkJWT, postOperator);
+routerDatabase.put('/operators/operator', checkJWT, putOperator);
+routerDatabase.delete('/operators/operator', checkJWT, deleteOperator);
+
+//Administration Endpoints
+routerAdminstration.get('/confirm_ride', checkParameterJWT, confirmRide)
+routerAdminstration.get('/login', login)
+
+// UI Routes
+app.use(express.static(path.resolve('./build/')));
+app.get('/*', (req, res) => res.sendFile(path.resolve('./build/index.html')));
+
+
+app.listen(PORT, () => console.log('Server running on ' + PORT));
+
+
+
