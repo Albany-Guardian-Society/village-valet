@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -48,11 +50,11 @@ class LedgerTable extends Component {
                         <td>{rides[key].ride_data.date}</td>
                         <td>{rides[key].ride_data.status}</td>
                         <td>
-                            <Button id={rides[key].id + "deactivate"} variant="warning"
+                            <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-2"
                                     onClick={() => this.handleDeactivateRide(rides[key].id)}>
                                 Deactivate
                             </Button>
-                            <Button id={rides[key].id + "cancel"} variant="danger"
+                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-2"
                                     onClick={() => this.handleCancel(rides[key].id)}>
                                 Cancel
                             </Button>
@@ -70,11 +72,11 @@ class LedgerTable extends Component {
                         <td>{rides[key].ride_data.date}</td>
                         <td>{rides[key].ride_data.status}</td>
                         <td>
-                            <Button id={rides[key].id + "reactivate"} variant="success"
+                            <Button id={rides[key].id + "reactivate"} variant="success" className="mr-2"
                                     onClick={() => this.handleReactivateRide(rides[key].id)}>
                                 Reactivate
                             </Button>
-                            <Button id={rides[key].id} variant="danger"
+                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-2"
                                     onClick={() => this.handleCancel(rides[key].id)}>
                                 Cancel
                             </Button>
