@@ -126,6 +126,7 @@ const BLANK_RIDE = {
         },
         traffic: "",
         date: "",
+        status: "",
         associated_ride: {
             ride_id: "",
             driver_id: ""

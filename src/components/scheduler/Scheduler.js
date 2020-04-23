@@ -29,6 +29,7 @@ class Scheduler extends Component {
 
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+            this.props.active_ride.status = "active";
             firestore.collection("rides").add(this.props.active_ride)
                 .then((docRef) => {
                     this.props.addRide(this.props.active_ride, docRef.id);
