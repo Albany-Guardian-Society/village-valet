@@ -414,6 +414,32 @@ const VillageReducer = (state = initialState, action) => {
             return newState;
         }
 
+        case "ride_deactivate": {
+            let newState = _.cloneDeep(state);
+            let rideID = action.payload;
+            newState.rides[rideID].status = "inactive";
+
+            //Update Firestore
+            firestore.collection("rides").doc(rideID).update({
+                status: "inactive"
+            });
+
+            return newState;
+        }
+
+        case "ride_reactivate": {
+            let newState = _.cloneDeep(state);
+            let rideID = action.payload;
+            newState.rides[rideID].status = "active";
+
+            //Update Firestore
+            firestore.collection("rides").doc(rideID).update({
+                status: "active"
+            });
+
+            return newState;
+        }
+
         case "add_ride": {
             let newState = _.cloneDeep(state);
             newState.rides[action.payload.id] = (action.payload);

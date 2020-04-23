@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -124,7 +122,17 @@ const mapDispatchToProps = dispatch => ({
     cancelRide: (rideID) => dispatch({
         type: "ride_cancel",
         payload: rideID
-    })
+    }),
+
+    deactivateRide: (rideID) => dispatch({
+        type: "ride_deactivate",
+        payload: rideID
+    }),
+
+    reactivateRide: (rideID) => dispatch({
+        type: "ride_reactivate",
+        payload: rideID
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LedgerTable);
