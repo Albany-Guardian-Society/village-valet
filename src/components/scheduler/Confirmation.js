@@ -9,7 +9,22 @@ import Table from "react-bootstrap/Table"
 import MapContainer from "../google-maps/MapContainer.js";
 import axios from 'axios';
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+/**
+ * Confirmation
+ * @typedef {Object} Confirmation
+ *
+ */
 class Confirmation extends Component {
+    /**
+     * Confirmation Constructor
+     * @params {Object} props - Dictionary of all local variables
+     */
     constructor(props) {
         super(props);
         this.state = {};
@@ -21,6 +36,11 @@ class Confirmation extends Component {
 
     };
 
+    /**
+     * message
+     * @type {object} message
+     * This object is used as the contents for an email message
+     */
     message = {
         // Comma separated list of recipients
         to: '"' + this.props.users[this.props.active_ride.rider.id].personal_info.first_name + " " +this.props.users[this.props.active_ride.rider.id].personal_info.last_name + '" <' + this.props.users[this.props.active_ride.rider.id].personal_info.email + ">",
@@ -60,11 +80,31 @@ class Confirmation extends Component {
 
     };
 
-
+    /**
+     * Console logs message object and uses email server
+     * function to send message in an email
+     *
+     * @example
+     *     onClick={this.messageTest}
+     */
     messageTest() {
         console.log(this.message);
+        /**
+         * Axios is a promise based HTTP client for the browser and Node. js.
+         * The line is a post request using the service.
+         *
+         * @params {Object} message
+         *
+         *
+         */
         axios.post('http://localhost:4000/send', {...this.message}).then()
     }
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
 
     render() {
         return (
@@ -111,6 +151,11 @@ class Confirmation extends Component {
         );
     }
 }
+
+/**
+ * Pulls active_ride and users from state *
+ *
+ */
 
 const mapStateToProps = state => ({
     active_ride: state.active_ride,

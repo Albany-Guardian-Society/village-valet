@@ -82,12 +82,12 @@ class Login extends Component {
     // It just does some firebase calls checking against the operators table.
     // The two important React things are the "this.props.updateAuth" and "this.setState"
     // The first as discussed above saves things only to this component. (Updating the state
-    // triggers a "re-render", so by chaning the text of errorMessage I can make it appear
-    // on the page without any code besids assigning a variable.)
+    // triggers a "re-render", so by changing the text of errorMessage I can make it appear
+    // on the page without any code besides assigning a variable.)
     // The this.props.updateAuth is a dispatch function (defined at the bottom of the file)
     // It passes a message to the reducer stack to be "reduced" into the store.
     handleLogin() {
-        //Verify that the username and password match operator credetials
+        //Verify that the username and password match operator credentials
         firestore.collection("operators").where("username", "==", this.state.username.toLowerCase()).get()
         .then(querySnapshot => {
             const data = querySnapshot.docs.map(doc => doc.data());

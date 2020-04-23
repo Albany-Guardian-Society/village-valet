@@ -9,6 +9,11 @@ import Form from "react-bootstrap/Form";
 
 import ProfileTable from "./ProfileTable";
 
+/**
+ * Profiles
+ * @typedef {Object} Profiles
+ * @property {string} search_term - word used for profile table fuzzysort
+ */
 class Profiles extends Component {
     constructor(props) {
         super(props);
@@ -18,10 +23,20 @@ class Profiles extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when search_term is changed
+     *
+     * @param {Object} event - what search_term is set to
+     */
 	handleChange(event) {
         this.setState({search_term: event.target.value})
 	}
 
+    /**
+     * Displays the profiles based on the search term
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
@@ -50,6 +65,9 @@ class Profiles extends Component {
 const mapStateToProps = state => ({
 });
 
+/**
+ * Sets up function to clear current registration information in reducer
+ */
 const mapDispatchToProps = dispatch => ({
     clearRegistration: () => dispatch({
         type: "clear_active_profile",

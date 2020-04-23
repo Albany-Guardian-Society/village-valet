@@ -33,7 +33,7 @@ class RideInformation extends Component {
         let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date") {
             //updating the date
-            this.props.updateScheduler(label_flag[1], null, event.target.value)
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
         } else if (label_flag[1] === "meta") {
             console.log(label_flag[2]);
             if (label_flag[2] === "samereturn") {
@@ -143,7 +143,7 @@ class RideInformation extends Component {
                                             Mobility Aid:
                                         </td>
                                         <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].mobility_aid}`}
+                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}
                                         </td>
                                     </tr>
                                     <tr>
@@ -151,7 +151,7 @@ class RideInformation extends Component {
                                             Special Accommodations:
                                         </td>
                                         <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].special}`}
+                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}
                                         </td>
                                     </tr>
                                     </tbody>
