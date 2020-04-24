@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RideEditor from "./RideEditor";
+import RideEditor from "./EditRide";
 import { withRouter } from 'react-router-dom';
 
 class LedgerTable extends Component {
@@ -19,12 +19,13 @@ class LedgerTable extends Component {
     handleSelect(event) {
         // event.target.id is the id of the ride
         // Highlight the row
-        this.setState({selected_row: event});
+        this.setState({selected_row: event.target.id.replace('edit','')});
         // This is the ride being selected
-        this.props.setActiveRide(this.props.rides[event]);
+        this.props.setActiveRide(this.props.rides[event.target.id.replace('edit','')]);
         // When clicked go to schedule ride to edit ride
         console.log(event)
-        this.props.history.push('/RideEditor');
+
+        this.props.history.push('/Ledger/EditRide/');
     }
 
     handleCancel(rideID) {
@@ -65,7 +66,7 @@ class LedgerTable extends Component {
                         <td>Active</td>
                         <td>
                             <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
-                                    onClick={(e) => this.handleSelect(rides[key])}>
+                                    onClick={(e) => this.handleSelect(e)}>
                                 Edit
                             </Button>
                             <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-1" size="sm"
@@ -144,7 +145,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setActiveRide: (ride) => dispatch({
-        type: "set_active_ride",
+        type: "active_ride",
         payload: ride
     }),
 

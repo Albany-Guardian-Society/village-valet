@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import LedgerTable from "./LedgerTable";
+import EditRide from "./EditRide";
 
 class Ledger extends Component {
     constructor(props) {

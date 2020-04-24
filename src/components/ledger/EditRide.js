@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
+import { withRouter } from 'react-router-dom';
 
 //import './pic_placeholder.png';
 
@@ -27,6 +28,8 @@ class EditRide extends Component {
 
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
+        console.log('HERE')
+        console.log(this.props.active_ride);
     }
 
     handleChange(event) {
@@ -94,7 +97,8 @@ class EditRide extends Component {
     getCommonAddresses(mode) {
         let options = [];
         if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);
-        if (!this.props.active_ride.rider.id) return options;
+        console.log(Object.keys(this.props.users))
+        if (!this.props.active_ride.rider.id || !Object.keys(this.props.users).includes(this.props.active_ride.rider.id) ) return options;
         options.push(...this.props.users[this.props.active_ride.rider.id].addresses.map((loc)=>{
             return <option value={"addr_"+loc.line_1} label={loc.name} key={loc.name}/>
         }));
@@ -114,8 +118,8 @@ class EditRide extends Component {
 
     render() {
         return (
-            <Container className="RideInformation" style={{minWidth: "100%"}}>
-                <h1>Ride Information</h1>
+            <Container className="Edit Ride" style={{minWidth: "100%"}}>
+                <h1>Edit Ride</h1>
                 <Row>
                     <Col>
                         <Card>
@@ -138,22 +142,22 @@ class EditRide extends Component {
                                                           value={this.props.active_ride.ride_data.date}/>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            Mobility Aid:
-                                        </td>
-                                        <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Special Accommodations:
-                                        </td>
-                                        <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}
-                                        </td>
-                                    </tr>
+                                    {/*<tr>*/}
+                                    {/*    <td>*/}
+                                    {/*        Mobility Aid:*/}
+                                    {/*    </td>*/}
+                                    {/*    <td>*/}
+                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}*/}
+                                    {/*    </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr>*/}
+                                    {/*    <td>*/}
+                                    {/*        Special Accommodations:*/}
+                                    {/*    </td>*/}
+                                    {/*    <td>*/}
+                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}*/}
+                                    {/*    </td>*/}
+                                    {/*</tr>*/}
                                     </tbody>
                                 </Table>
                             </Card.Body>
@@ -186,13 +190,11 @@ class EditRide extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
-                                        <td>
-                                            <Form.Control as="select"
-                                                          id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}
-                                                          value={!this.props.active_ride.locations.pickup.address ? "" : (!this.props.active_ride.ride_data.meta.pickup_CA ? "other" : "addr_"+this.props.active_ride.locations.pickup.address)}>
-                                                {this.getCommonAddresses("pickup")}
-                                            </Form.Control>
-                                        </td>
+                                        {/*<td>*/}
+                                        {/*    <Form.Control*/}
+                                        {/*                  id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}*/}
+                                        {/*                  value={!this.props.active_ride.locations.pickup.address ? "" : this.props.active_ride.locations.pickup.address}/>*/}
+                                        {/*</td>*/}
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -245,13 +247,13 @@ class EditRide extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
-                                        <td>
-                                            <Form.Control as="select"
-                                                          id='sched_dropoff_address' onChange={(e) => this.handleCommonAddress(e, "dropoff")}
-                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_"+this.props.active_ride.locations.dropoff.address)}>
-                                                {this.getCommonAddresses("dropoff")}
-                                            </Form.Control>
-                                        </td>
+                                        {/*<td>*/}
+                                        {/*    <Form.Control as="select"*/}
+                                        {/*                  id='sched_dropoff_address' onChange={(e) => this.handleCommonAddress(e, "dropoff")}*/}
+                                        {/*                  value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_"+this.props.active_ride.locations.dropoff.address)}>*/}
+                                        {/*        {this.getCommonAddresses("dropoff")}*/}
+                                        {/*    </Form.Control>*/}
+                                        {/*</td>*/}
                                     </tr>
                                     <tr>
                                         <td></td>
@@ -315,4 +317,4 @@ const mapDispatchToProps = dispatch => ({
     }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditRide);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditRide));
