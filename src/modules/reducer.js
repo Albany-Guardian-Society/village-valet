@@ -131,6 +131,7 @@ const BLANK_RIDE = {
         },
         traffic: "",
         date: "",
+        purpose: "",
         associated_ride: {
             ride_id: "",
             driver_id: ""
@@ -402,6 +403,8 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         if (action.payload.type === "date") {
             newState.active_ride.ride_data.date = action.payload.value;
+        } else if (action.payload.type === "purpose") {
+            newState.active_ride.ride_data.purpose = action.payload.value;
         } else if (action.payload.type === "samereturn") {
             newState.active_ride.ride_data.meta.samereturn = action.payload.value;
         } else if (action.payload.type === "givendropoff") {
