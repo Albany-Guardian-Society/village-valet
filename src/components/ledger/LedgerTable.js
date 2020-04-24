@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RideInformation from "../scheduler/RideInformation";
-import {withRouter} from 'react-router-dom';
+import RideEditor from "./RideEditor";
+import { withRouter } from 'react-router-dom';
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -17,12 +17,14 @@ class LedgerTable extends Component {
     }
 
     handleSelect(event) {
-        //Highlight the row
-        this.setState({selected_row: event.target.id});
-
-        this.props.setActiveRide(this.props.rides[event.target.id]);
+        // event.target.id is the id of the ride
+        // Highlight the row
+        this.setState({selected_row: event});
+        // This is the ride being selected
+        this.props.setActiveRide(this.props.rides[event]);
         // When clicked go to schedule ride to edit ride
-        this.props.history.push('/scheduler/RideInformation/'+event.target.id);
+        console.log(event)
+        this.props.history.push('/RideEditor');
     }
 
     handleCancel(rideID) {
@@ -63,7 +65,7 @@ class LedgerTable extends Component {
                         <td>Active</td>
                         <td>
                             <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
-                                    onClick={(e) => this.handleSelect(e)}>
+                                    onClick={(e) => this.handleSelect(rides[key])}>
                                 Edit
                             </Button>
                             <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-1" size="sm"
@@ -141,9 +143,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setActiveRide: (rideID) => dispatch({
+    setActiveRide: (ride) => dispatch({
         type: "set_active_ride",
-        payload: rideID
+        payload: ride
     }),
 
     cancelRide: (rideID) => dispatch({
@@ -164,4 +166,3 @@ const mapDispatchToProps = dispatch => ({
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LedgerTable));
 
-// <td id={rides[key].id} onClick={(e) => this.handleSelect(e)}>{rides[key].id}</td>
