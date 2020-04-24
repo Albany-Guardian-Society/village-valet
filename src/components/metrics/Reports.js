@@ -8,8 +8,6 @@ import ProfileTable from "../profiles/ProfileTable";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-
-
 class Reports extends Component {
     constructor(props) {
         super(props);
@@ -21,6 +19,10 @@ class Reports extends Component {
     handleChange(event){
     };
 
+    /**
+     * Displays the Reports page and options
+     * @returns {*}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
