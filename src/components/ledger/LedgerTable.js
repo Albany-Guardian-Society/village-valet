@@ -62,15 +62,15 @@ class LedgerTable extends Component {
                         <td>{rides[key].ride_data.date}</td>
                         <td>Active</td>
                         <td>
-                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-2"
+                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
                                     onClick={(e) => this.handleSelect(e)}>
                                 Edit
                             </Button>
-                            <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-2"
+                            <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-1" size="sm"
                                     onClick={() => this.handleDeactivateRide(rides[key].id)}>
                                 Deactivate
                             </Button>
-                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-2"
+                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-1" size="sm"
                                     onClick={() => this.handleCancel(rides[key].id)}>
                                 Cancel
                             </Button>
@@ -88,15 +88,15 @@ class LedgerTable extends Component {
                         <td>{rides[key].ride_data.date}</td>
                         <td>Inactive</td>
                         <td>
-                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-2"
+                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
                                     onClick={(e) => this.handleSelect(e)}>
                                 Edit
                             </Button>
-                            <Button id={rides[key].id + "reactivate"} variant="success" className="mr-2"
+                            <Button id={rides[key].id + "reactivate"} variant="success" className="mr-1" size="sm"
                                     onClick={() => this.handleReactivateRide(rides[key].id)}>
                                 Reactivate
                             </Button>
-                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-2"
+                            <Button id={rides[key].id + "cancel"} variant="danger" size="sm"
                                     onClick={() => this.handleCancel(rides[key].id)}>
                                 Cancel
                             </Button>
