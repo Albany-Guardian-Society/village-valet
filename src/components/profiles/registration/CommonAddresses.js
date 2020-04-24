@@ -29,6 +29,7 @@ class CommonAddresses extends Component {
                 this.forceUpdate();
                 break;
             default:
+                console.log("addresses", id + "|" + field, event.target.value)
                 this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
                 break;
         }
@@ -36,6 +37,7 @@ class CommonAddresses extends Component {
 
     onLoad(autocomplete, index) {
         this.autocomplete[index] = autocomplete;
+        console.log(autocomplete);
     }
 
     onPlaceChanged(index) {
@@ -44,20 +46,32 @@ class CommonAddresses extends Component {
             index = index - 1;
             const place = this.autocomplete[index + 1].getPlace();
             this.full_address = place.formatted_address;
+            console.log(place);
             for (const component of place.address_components) {
                 if (component.types.includes('street_number')) {
                     street_number = component.long_name
+                    this.props.updateRegistration("addresses", index + "|street_number", component.long_name);
                 } else if (component.types.includes('route')) {
-                    this.props.addresses[index].line_1 = `${street_number} ${component.short_name}`
+                    //this.props.addresses[index].line_1 = `${street_number} ${component.short_name}`
+                    this.props.updateRegistration("addresses", index + "|line_1", `${street_number} ${component.short_name}`);
                 } else if (component.types.includes('locality')) {
-                    this.props.addresses[index].city = component.short_name
+                    //this.props.addresses[index].city = component.short_name
+                    this.props.updateRegistration("addresses", index + "|city", component.short_name);
                 } else if (component.types.includes('administrative_area_level_1')) {
-                    this.props.addresses[index].state = component.short_name
+                    //this.props.addresses[index].state = component.short_name
+                    this.props.updateRegistration("addresses", index + "|state", component.short_name);
                 } else if (component.types.includes('postal_code')) {
-                    this.props.addresses[index].zip = component.short_name
+                    //this.props.addresses[index].zip = component.short_name
+                    this.props.updateRegistration("addresses", index + "|zip", component.short_name);
                 }
             }
-            this.props.triggerUpdate();
+            if (place.geometry.location) {
+                this.props.updateRegistration("addresses", index + "|lat", place.geometry.location.lat());
+                this.props.updateRegistration("addresses", index + "|lng", place.geometry.location.lng());
+            }
+
+            //Nolonger needed now that things are going through the reducer
+            //this.props.triggerUpdate();
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -84,7 +98,7 @@ class CommonAddresses extends Component {
                     </Row>
 
                     <Row className="reg_row">
-                        <Form.Label column sm={2} lg={2}>Address Search:</Form.Label>
+                        <Form.Label column sm={2} lg={2}><strong>Address Search:</strong></Form.Label>
                         <Col>
                             <Autocomplete
                                 onLoad={(autocomplete) => {
@@ -100,6 +114,7 @@ class CommonAddresses extends Component {
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>Address Line 1:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|line_1"}
+                                           readOnly
                                            placeholder="--Primary Address Information--" onChange={this.handleChange}
                                            value={this.props.addresses[index].line_1}/></Col>
                         <Form.Label column sm={2} lg={2}>Address Line 2:</Form.Label>
@@ -110,13 +125,16 @@ class CommonAddresses extends Component {
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>City:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|city"} placeholder="--City--"
+                                           readOnly
                                            onChange={this.handleChange} value={this.props.addresses[index].city}/></Col>
                         <Form.Label column sm={2} lg={2}>State:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|state"} placeholder="--State--"
+                                           readOnly
                                            onChange={this.handleChange}
                                            value={this.props.addresses[index].state}/></Col>
                         <Form.Label column sm={2} lg={2}>Zip:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|zip"} placeholder="--ZIP--"
+                                           readOnly
                                            onChange={this.handleChange} value={this.props.addresses[index].zip}/></Col>
                     </Row>
                     <Row className="reg_row">

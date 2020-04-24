@@ -121,10 +121,8 @@ class ProfileTable extends Component {
         // Estimate that sort takes 1 second per 100,000 items based on one google
         if (this.props.mode === "driver" && this.props.active_ride.locations.pickup.time && this.props.active_ride.locations.dropoff.time) {
             // Get rid of all the drivers who are not active or not driving when needed
-            console.log("starting");
             filtered_users = filtered_users.filter((a) => {
                 if (a.status !== "active") {
-                    console.log("inactive")
                     return false;
                 }
                 // make sure that they're volunteering during pickup/dropoff window
@@ -141,11 +139,8 @@ class ProfileTable extends Component {
                 return false;
             });
             filtered_users.sort((a, b) => {
-                console.log(a.addresses[0].geolocation.lat);
-                console.log(this.props.active_ride.locations.pickup.geolocation.lat);
-                let dist_a = Math.pow(Math.pow((a.addresses[0].geolocation.lat - this.props.active_ride.locations.pickup.geolocation.lat), 2) + Math.pow((a.addresses[0].geolocation.long - this.props.active_ride.locations.pickup.geolocation.long), 2), .5);
-                let dist_b = Math.pow(Math.pow((b.addresses[0].geolocation.lat - this.props.active_ride.locations.dropoff.geolocation.lat), 2) + Math.pow((b.addresses[0].geolocation.long - this.props.active_ride.locations.dropoff.geolocation.long), 2), .5);
-                console.log(dist_a, dist_b);
+                let dist_a = Math.pow(Math.pow((a.addresses[0].geolocation.lat - this.props.active_ride.locations.pickup.geolocation.lat), 2) + Math.pow((a.addresses[0].geolocation.lng - this.props.active_ride.locations.pickup.geolocation.lng), 2), .5);
+                let dist_b = Math.pow(Math.pow((b.addresses[0].geolocation.lat - this.props.active_ride.locations.dropoff.geolocation.lat), 2) + Math.pow((b.addresses[0].geolocation.lng - this.props.active_ride.locations.dropoff.geolocation.lng), 2), .5);
                 if (dist_a < dist_b) {
                     return -1;
                 } else if (dist_a === dist_b) {
