@@ -21,10 +21,6 @@ import axios from 'axios';
  *
  */
 class Confirmation extends Component {
-    /**
-     * Confirmation Constructor
-     * @params {Object} props - Dictionary of all local variables
-     */
     constructor(props) {
         super(props);
         this.state = {};

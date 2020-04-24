@@ -11,8 +11,17 @@ import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
 
-//import './pic_placeholder.png';
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
 
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML
+
+/**
+ * RideInformation
+ * @typedef {Object} RideInformation
+ *
+ */
 class RideInformation extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +38,14 @@ class RideInformation extends Component {
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
 
+
+    /**
+     * Updates and saves selected date and time on the page
+     * in the form
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
     handleChange(event) {
         let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date") {
@@ -46,6 +63,16 @@ class RideInformation extends Component {
         }
     };
 
+
+    /**
+     * When the operator selects "other" the autocomplete form will
+     * become editable
+     * If they do not select other then it will the form will filled and will not
+     * be able to be changed.
+     *
+     * @example
+     *     onChange={this.handleCommonAddress}
+     */
     handleCommonAddress(event, type) {
         if (event.target.value === "other") {
             //Update store
@@ -75,11 +102,24 @@ class RideInformation extends Component {
         //here you will see the current selected value of the select input
     }
 
+    /**
+     * Creates more autocompletes and keeps track of them at different indices
+     *
+     * @example
+     *     onChange={this.handleChanget}
+     */
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
         this.count += 1
     }
 
+    /**
+     * Uses autocomplete to list relevant addresses for pick up and drop off
+     * based on what is typed in.
+     *
+     * @example
+     *     onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+     */
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
@@ -90,6 +130,14 @@ class RideInformation extends Component {
         }
     }
 
+    /**
+     * Grabs all common addresses for person of interest
+     * and loads them into the available options
+     *
+     * @example
+     *      {this.getCommonAddresses("pickup")}
+     *
+     */
     getCommonAddresses(mode) {
         let options = [];
         if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);
@@ -111,6 +159,12 @@ class RideInformation extends Component {
         return options;
     };
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container className="RideInformation" style={{minWidth: "100%"}}>
@@ -198,7 +252,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
-                                                onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                                onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
                                             >
                                                 <Form.Control type="text" placeholder="Pickup Location"
                                                               disabled = {this.props.active_ride.ride_data.meta.pickup_CA}
@@ -297,12 +351,18 @@ class RideInformation extends Component {
         );
     }
 }
-
+/**
+ * Pulls active_ride and users from state
+ *
+ */
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
     users: state.users
 });
-
+/**
+ * Sets up functions to send scheduler information to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     updateScheduler: (type, field, value) => dispatch({
         type: "scheduler",
