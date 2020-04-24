@@ -16,6 +16,9 @@ class LedgerTable extends Component {
 
     }
 
+    /**
+     * Switches to the Edit ride functionality
+     */
     handleSelect(event) {
         // event.target.id is the id of the ride
         // Highlight the row
@@ -28,6 +31,9 @@ class LedgerTable extends Component {
         this.props.history.push('/Ledger/EditRide/');
     }
 
+    /**
+     * Permanently deletes ride
+     */
     handleCancel(rideID) {
         if (window.confirm("Are you sure you want to DELETE this ride?")) {
             this.props.cancelRide(rideID);
@@ -35,6 +41,9 @@ class LedgerTable extends Component {
         }
     }
 
+    /**
+     * Deactivates ride when deactivate is clicked
+     */
     handleDeactivateRide(rideID) {
         if (window.confirm("Are you sure you want to DEACTIVATE this ride?")) {
             this.props.deactivateRide(rideID);
@@ -42,6 +51,9 @@ class LedgerTable extends Component {
         }
     }
 
+    /**
+     * Reactivates an inactive ride when reactivated is clicked
+     */
     handleReactivateRide(rideID) {
         if (window.confirm("Are you sure you want to REACTIVATE this ride?")) {
             this.props.reactivateRide(rideID);
@@ -49,7 +61,10 @@ class LedgerTable extends Component {
         }
     }
 
-
+    /**
+     *
+     * Displays Ledger table information with appropriate status tags and buttons
+     */
     renderTableData() {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
@@ -110,6 +125,10 @@ class LedgerTable extends Component {
         })
     }
 
+    /**
+     *
+     * Displays Ledger table Headers/Column Titles with
+     */
     renderTableHeader() {
         let header = ['Ride', 'Driver', 'Rider', 'Origin', 'Destination', 'Date','Status', 'Action'];
         return header.map((item) => {
@@ -117,9 +136,10 @@ class LedgerTable extends Component {
         })
     }
 
-    handleChange(event){
-    };
-
+    /**
+     *
+     * @returns The full table with headers and information
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
@@ -138,11 +158,21 @@ class LedgerTable extends Component {
     }
 }
 
+/**
+ * Pulls users and rides from state
+ * @param state
+ * @returns {{rides: {}, users: {}}}
+ */
 const mapStateToProps = state => ({
     rides: state.rides,
     users: state.users
 });
 
+/**
+ * Handles the backend calls for ride changes (reducer)
+ * @param dispatch
+ * @returns {{reactivateRide: (function(*=): *), deactivateRide: (function(*=): *), cancelRide: (function(*=): *), setActiveRide: (function(*=): *)}}
+ */
 const mapDispatchToProps = dispatch => ({
     setActiveRide: (ride) => dispatch({
         type: "active_ride",

@@ -10,6 +10,10 @@ class Drivers extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Populates Drivers table with information from database
+     * @returns {*[]}
+     */
     renderTableData() {
         let drivers = Object.values(this.props.users).filter((user) => {
             return(user.user_type === 'driver')
@@ -40,6 +44,10 @@ class Drivers extends Component {
         })
     }
 
+    /**
+     * Displays the Table Headers/Column Titles
+     * @returns {*[]}
+     */
     renderTableHeader() {
         let header = ['Driver Id', 'Driver', 'Rides', 'Mileage', 'Volunteer Hours'];
         return header.map((item) => {
@@ -50,6 +58,10 @@ class Drivers extends Component {
     handleChange(event){
     };
 
+    /**
+     * Renders the entire Drivers' metrics table
+     * @returns {*}
+     */
     render() {
         return (
             <div>
@@ -68,6 +80,11 @@ class Drivers extends Component {
     }
 }
 
+/**
+ * Gets rides and users from state
+ * @param state
+ * @returns {{rides: {}, users: {}}}
+ */
 const mapStateToProps = state => ({
     rides: state.rides,
     users: state.users

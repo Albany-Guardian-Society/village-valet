@@ -10,6 +10,10 @@ class Riders extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Populates Table with Riders' information
+     * @returns {*[]}
+     */
     renderTableData() {
         let riders = Object.values(this.props.users).filter((user) => {
             return(user.user_type === 'rider')
@@ -28,6 +32,10 @@ class Riders extends Component {
         })
     }
 
+    /**
+     * Renders the Riders table's headers
+     * @returns {*[]}
+     */
     renderTableHeader() {
         let header = ['Rider Id', 'Rider', 'Rides', 'Mileage', 'Village'];
         return header.map((item) => {
@@ -38,6 +46,10 @@ class Riders extends Component {
     handleChange(event){
     };
 
+    /**
+     * Renders everything formatted
+     * @returns {*}
+     */
     render() {
         return (
             <div>
@@ -56,6 +68,11 @@ class Riders extends Component {
     }
 }
 
+/**
+ * Gets rides and users from state
+ * @param state
+ * @returns {{rides: {}, users: {}}}
+ */
 const mapStateToProps = state => ({
     rides: state.rides,
     users: state.users

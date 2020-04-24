@@ -21,11 +21,19 @@ class Metrics extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * handles the metrics tab button presses
+     * @param value: the metric/report selected
+     */
 	handleChange(value) {
         this.setState({metric_options:value})
 
     }
 
+    /**
+     * changes the displayed table
+     * @returns {*}: Components to the corresponding metric/report
+     */
 	changeTable() {
         switch (this.state.metric_options) {
             case "riders":
@@ -39,6 +47,10 @@ class Metrics extends Component {
         }
     }
 
+    /**
+     * Displays the metrics toolbar, download button, and selected metric/report
+     * @returns {*}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>

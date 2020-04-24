@@ -16,11 +16,13 @@ class Ledger extends Component {
     handleChange(event){
     };
 
+    /**
+     * Displays the Container for Ledger Table
+     * @returns {*}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
-
-
                 <Row>
                 <LedgerTable/>
                 </Row>
