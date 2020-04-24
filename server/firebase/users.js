@@ -1,13 +1,12 @@
-import firestore from "../server";
+const {firestore} = require("../../server");
 
 
-export const getUsers = async(village_id) => {
+exports.getUsers = async (village_id) => {
     let querySnapshot;
     if (village_id === 'admin') {
-         querySnapshot = await firestore.collection('users').get()
-    }
-    else {
-         querySnapshot = await firestore.collection('users').where('villages', 'array-contains', village_id).get();
+        querySnapshot = await firestore.collection('users').get()
+    } else {
+        querySnapshot = await firestore.collection('users').where('villages', 'array-contains', village_id).get();
     }
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
@@ -15,7 +14,7 @@ export const getUsers = async(village_id) => {
 };
 
 
-export const getUser = async(village_id, user_id) => {
+exports.getUser = async (village_id, user_id) => {
     const querySnapshot = await firestore.collection('users').doc(user_id).get();
     const data = querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
@@ -29,14 +28,14 @@ export const getUser = async(village_id, user_id) => {
     return []
 };
 
-export const getDrivers = async () => {
+exports.getDrivers = async () => {
     const querySnapshot = await firestore.collection('users').where("user_type", "==", "driver").get();
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
     })
 }
 
-export const addUser = async (user) => {
+exports.addUser = async (user) => {
     firestore.collection('users').add(user)
         .then(() => {
             return true
@@ -47,18 +46,22 @@ export const addUser = async (user) => {
         })
 };
 
-export const removeUser = async(user_id) => {
+exports.removeUser = async (user_id) => {
     firestore.collection('users').doc(user_id).delete()
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false
         })
 };
 
-export const updateUser = async(user) => {
+exports.updateUser = async (user) => {
     firestore.collection('users').doc(user.id).update(user)
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false

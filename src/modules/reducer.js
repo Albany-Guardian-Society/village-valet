@@ -443,6 +443,7 @@ const VillageReducer = (state = initialState, action) => {
         } else if (action.payload.type === "driver") {
             newState.active_ride.driver.first_name = action.payload.user.personal_info.first_name;
             newState.active_ride.driver.last_name = action.payload.user.personal_info.last_name;
+            newState.active_ride.driver.geolocation = action.payload.user.addresses[0].geolocation;
             newState.active_ride.driver.id = action.payload.user.id;
         }
         return newState;
@@ -522,7 +523,6 @@ const VillageReducer = (state = initialState, action) => {
         case "update_active_ride": {
             let newState = _.cloneDeep(state);
             newState.active_ride = _.cloneDeep(action.payload);
-            firestore.collection("rides").doc(newState.active_ride.id).update(action.payload);
             return newState;
         }
 

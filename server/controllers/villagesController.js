@@ -1,33 +1,33 @@
-import {addVillage, getVillage, removeVillage, updateVillage} from "../firebase/villages";
+const {addVillage, getVillage, getVillages, removeVillage, updateVillage} = require("../firebase/villages");
 
-export const getAllVillages = async(req,res) => {
+exports.getAllVillages = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     if (village_id !== 'admin') {
-        res.status(403).send({error:'Access forbidden'});
+        res.status(403).send({error: 'Access forbidden'});
         return
     }
-    res.status(200).send(await getAllVillages())
+    res.status(200).send(await getVillages(village_id))
 };
 
-export const getOneVillage = async(req,res) => {
+exports.getOneVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const query_village_id = req.query.id;
     if (village_id !== query_village_id && village_id !== 'admin') {
-        res.status(403).send({error:'Access forbidden'});
+        res.status(403).send({error: 'Access forbidden'});
         return
     }
     res.status(200).send(await getVillage(query_village_id))
 };
 
-export const postVillage = async(req,res) => {
+exports.postVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const village = req.body.village;
     if (village_id !== 'admin') {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (village == null) {
-        res.status(400).send({error:'Missing from body: village'});
+        res.status(400).send({error: 'Missing from body: village'});
         return
     }
     if (!village.village_id) {
@@ -41,15 +41,15 @@ export const postVillage = async(req,res) => {
     res.status(500).send({error:"Could not add village to database"})
 };
 
-export const putVillage = async(req,res) => {
+exports.putVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const village = req.body.village;
     if (village_id !== 'admin') {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (village == null) {
-        res.status(400).send({error:'Missing from body: village'});
+        res.status(400).send({error: 'Missing from body: village'});
         return
     }
     if (!village.id) {
@@ -69,15 +69,15 @@ export const putVillage = async(req,res) => {
 };
 
 
-export const deleteVillage = async(req,res) => {
+exports.deleteVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const body_village_id = req.body['village_id'];
     if (village_id !== 'admin') {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (body_village_id == null) {
-        res.status(400).send({error:'Missing from body: village_id'});
+        res.status(400).send({error: 'Missing from body: village_id'});
         return
     }
 

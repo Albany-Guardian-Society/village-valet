@@ -1,16 +1,15 @@
-import {getDrivers, getUser} from "../firebase/users";
-import moment from "moment"
-import {sendEmail} from "./email";
-import {getOperators} from "../firebase/operators";
-import {getVillages} from "../firebase/villages";
-import {generateRideConfirmationToken} from "./token";
-
-import * as dotenv from "dotenv";
-
-dotenv.config()
+const {getDrivers, getUser} = require("../firebase/users");
+const moment = require("moment")
+const {sendEmail} = require("./email");
+const {getOperators} = require("../firebase/operators");
+const {getVillages} = require("../firebase/villages");
+const {generateRideConfirmationToken} = require("./token");
 
 
-export const sendExpirationNotifications = async () => {
+require("dotenv").config()
+
+
+module.exports = async function sendExpirationNotifications() {
     const drivers = await getDrivers();
     const operators = await getOperators();
     const villages = await getVillages()
@@ -91,7 +90,7 @@ export const sendExpirationNotifications = async () => {
     }
 }
 
-export const sendConfirmationEmail = async (ride) => {
+module.exports = async function sendConfirmationEmail(ride) {
     const driver = (await getUser(ride.village_id, ride.driver.id))[0]
     const rider = (await getUser(ride.village_id, ride.rider.id))[0]
     const village = (await getVillages(ride.village_id))[0]
@@ -166,5 +165,4 @@ export const sendConfirmationEmail = async (ride) => {
         await sendEmail(message)
     }
 }
-
 

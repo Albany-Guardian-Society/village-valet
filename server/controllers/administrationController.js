@@ -1,6 +1,15 @@
-import {getRide, updateRide} from "../firebase/rides";
+const {getRide, updateRide} = require("../firebase/rides");
+require("dotenv").config()
 
-export const confirmRide = async (req, res) => {
+const GoogleMapsToken = process.env.GOOGLE_MAPS_TOKEN
+
+/**
+ * A function which will confirm the driver will be picking up the rider. Sends a 200 if completed
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ */
+exports.confirmRide = async (req, res) => {
     const {scope, id, ride_id, village_id} = res.locals.jwtPayload;
     if (scope !== 'confirm_ride') {
         res.status('401').send({error: 'Invalid Scope'});
@@ -27,5 +36,15 @@ export const confirmRide = async (req, res) => {
     }
     res.status(500).send({error: 'Could not edit ride in database'})
 };
+
+/**
+ * A function which sends the client a Google Maps API Token
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ */
+exports.googleMapsToken = async (req, res) => {
+    res.status(200).send({token: GoogleMapsToken})
+}
 
 

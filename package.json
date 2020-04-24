@@ -16,6 +16,7 @@
     "dotenv": "latest",
     "express": "latest",
     "firebase": "^7.8.1",
+    "firebase-admin": "^8.11.0",
     "fuzzysort": "^1.1.4",
     "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
@@ -24,6 +25,8 @@
     "nodemailer": "^6.4.4",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
+    "react-cookie": "^4.0.3",
+    "react-cookies": "^0.1.1",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
     "react-router-dom": "^5.1.2",
@@ -31,11 +34,11 @@
     "redux": "^4.0.5"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\"  \"node -r dotenv-flow/config server/server.js --node-env=development\"",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": " node -r dotenv-flow/config server/server.js --node-env=development"
+    "server": " node -r dotenv-flow/config server.js --node-env=development"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,5 +55,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:4200"
 }

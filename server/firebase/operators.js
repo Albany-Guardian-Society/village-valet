@@ -1,7 +1,8 @@
-import firestore from "../server";
+const {firestore} = require("../../server");
 
+console.log(firestore)
 
-export const getOperators = async() => {
+exports.getOperators = async () => {
     const querySnapshot = await firestore.collection('operators').get();
     return querySnapshot.docs.map(doc => {
         const data = doc.data();
@@ -11,7 +12,7 @@ export const getOperators = async() => {
 };
 
 
-export const getOperatorById = async(operator_id) => {
+exports.getOperatorById = async (operator_id) => {
     const querySnapshot = await firestore.collection('operators').doc(operator_id).get();
     return querySnapshot.docs.map(doc => {
         const data = doc.data();
@@ -20,7 +21,16 @@ export const getOperatorById = async(operator_id) => {
     })
 };
 
-export const getOperatorByUsername = async(operator_username) => {
+exports.getOperatorByIdFull = async (operator_id) => {
+    const querySnapshot = await firestore.collection('operators').doc(operator_id).get();
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {...data, id: doc.id}
+    })
+};
+
+
+exports.getOperatorByUsername = async (operator_username) => {
     const querySnapshot = await firestore.collection('operators').where('username', '==', operator_username).get();
     return querySnapshot.docs.map(doc => {
         return {...doc.data(), id: doc.id}
@@ -28,28 +38,33 @@ export const getOperatorByUsername = async(operator_username) => {
 };
 
 
-
-export const addOperator = async(operator) => {
+exports.addOperator = async (operator) => {
     firestore.collection('operators').add(operator)
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false
         })
 };
 
-export const removeOperator = async(operator_id) => {
+exports.removeOperator = async (operator_id) => {
     firestore.collection('operators').doc(operator_id).delete()
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false
         })
 };
 
-export const updateOperator = async(operator) => {
+exports.updateOperator = async (operator) => {
     firestore.collection('operators').doc(operator.id).update(operator)
-        .then(() => {return true})
+        .then(() => {
+            return true
+        })
         .catch((e) => {
             console.log(e);
             return false

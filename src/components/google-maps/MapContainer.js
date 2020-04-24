@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DirectionsRenderer, DirectionsService, GoogleMap, LoadScript} from '@react-google-maps/api';
+import {DirectionsRenderer, DirectionsService, GoogleMap} from '@react-google-maps/api';
 import * as moment from 'moment';
 import {connect} from "react-redux";
 
@@ -59,32 +59,29 @@ class MapContainer extends Component {
         }
     }
 
-    convertGeoPointToLatLng(geopoint) {
-        if (geopoint == null) return;
-        return {lat: geopoint.latitude, lng: geopoint.longitude}
-    };
-
     locationOrder() {
         if (this.props.ride.locations.dropoff == null || this.props.ride.locations.pickup == null) return;
         if (this.props.ride.driver.id) {
+            console.log(this.props.ride.driver.geolocation)
+            console.log(this.props.ride.locations.pickup.geolocation)
             if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
-                this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation);
-                this.locations['destination'] = this.convertGeoPointToLatLng(this.props.ride.driver.home_geolocation);
+                this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
+                this.locations['destination'] = this.props.ride.driver.geolocation;
                 this.locations['waypoint'] = [{
-                    location: this.convertGeoPointToLatLng(this.props.ride.locations.dropoff.geolocation),
+                    location: this.props.ride.locations.dropoff.geolocation,
                     stopover: true
                 }];
             } else {
-                this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.driver.home_geolocation);
-                this.locations['destination'] = this.convertGeoPointToLatLng(this.props.ride.locations.dropoff.geolocation);
-                this.locations['waypoint'] =[ {
-                    location: this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation),
+                this.locations['origin'] = this.props.ride.driver.geolocation;
+                this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
+                this.locations['waypoint'] = [{
+                    location: this.props.ride.locations.pickup.geolocation,
                     stopover: true
                 }];
             }
         } else {
-            this.locations['origin'] = this.convertGeoPointToLatLng(this.props.ride.locations.pickup.geolocation);
-            this.locations['destination'] = this.convertGeoPointToLatLng(this.props.ride.locations.dropoff.geolocation);
+            this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
+            this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
         }
     }
 

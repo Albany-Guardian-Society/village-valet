@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import firestore from "../../modules/firestore.js";
 
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
@@ -13,6 +12,8 @@ import SelectRider from "./SelectRider";
 import RideInformation from "./RideInformation";
 import SelectDriver from "./SelectDriver";
 import Confirmation from "./Confirmation";
+import axios from "axios";
+import {API_ROOT} from "../../modules/api";
 
 const PAGE_MAX = 3;
 
@@ -29,19 +30,17 @@ class Scheduler extends Component {
 
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-            firestore.collection("rides").add(this.props.active_ride)
-                .then((docRef) => {
-                    this.props.addRide(this.props.active_ride, docRef.id);
-                    if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-                        this.props.returnRide();
-                        this.setState({scheduler_page : 1});
-                    }
-                    else {
-                        this.props.clearRide();
-                        //This is part of react-router and allows forced page routing
-                        this.props.history.push('/Dashboard');
-                    }
-                });
+            axios.post(API_ROOT + '/rides/ride').then((response) => {
+                this.props.addRide(this.props.active_ride,);
+                if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+                    this.props.returnRide();
+                    this.setState({scheduler_page: 1});
+                } else {
+                    this.props.clearRide();
+                    //This is part of react-router and allows forced page routing
+                    this.props.history.push('/Dashboard');
+                }
+            });
         }
     }
 
