@@ -95,8 +95,10 @@ class Login extends Component {
             password: this.state.password
         }).then((response) => {
                 cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                this.props.history.push('/Dashboard')
-            window.location.reload();
+                const user = {...response.data};
+                this.props.updateAuth(user);
+                this.props.history.push('/Dashboard');
+                window.location.reload();
             }
         ).catch(error => {
             this.setState({errorMessage: "Login Failed: " + error.response.data.error})

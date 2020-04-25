@@ -36,12 +36,9 @@ class RideInformation extends Component {
         } else if (label_flag[1] === "purpose") {
             //updating the date
             this.props.updateScheduler(label_flag[1], null, event.target.value);
-        } else if (label_flag[1] === "meta") {
-            console.log(label_flag[2]);
-            if (label_flag[2] === "samereturn") {
-                //updating the date
-                this.props.updateScheduler(label_flag[2], null, event.target.checked)
-            }
+        } else if (label_flag[1] === "meta" && label_flag[2] === "samereturn") {
+            //updating the date
+            this.props.updateScheduler(label_flag[2], null, event.target.checked)
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
@@ -70,11 +67,6 @@ class RideInformation extends Component {
             items.push(<option key={i} value={i}>{i}</option>);
         }
         return items
-    }
-
-    onSelected(e) {
-        console.log("value", e.target.value);
-        //here you will see the current selected value of the select input
     }
 
     onLoad(autocomplete) {
@@ -111,7 +103,6 @@ class RideInformation extends Component {
         let options = [<option value={""} label={""}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            console.log(car);
             return <option value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;

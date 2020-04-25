@@ -15,13 +15,15 @@ exports.getRides = async (village_id) => {
 
 
 exports.getRide = async (village_id, ride_id) => {
-    const querySnapshot = await firestore.collection('rides').doc(ride_id).get();
-    const data = querySnapshot.docs.map(doc => {
-        return {...doc.data(), id: doc.id}
-    });
+    const doc = await firestore.collection('rides').doc(ride_id).get();
+    if (!doc) {
+        return {}
+    }
+    let data = doc.data();
+    data = {...data, id: doc.id}
     if (village_id === 'admin') return data;
     if (data) {
-        if (data[ride_id]['village_id'].indexOf(village_id) !== -1) {
+        if (data['village_id'].indexOf(village_id) !== -1) {
             return data
         }
     }

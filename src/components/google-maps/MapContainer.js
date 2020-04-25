@@ -47,7 +47,6 @@ class MapContainer extends Component {
     }
 
     directionsCallback(response) {
-        console.log(response);
         if (response !== null) {
             if (response.status === 'OK') {
                 let key;
@@ -68,8 +67,6 @@ class MapContainer extends Component {
     locationOrder() {
         if (this.props.ride.locations.dropoff == null || this.props.ride.locations.pickup == null) return;
         if (this.props.ride.driver.id) {
-            console.log(this.props.ride.driver.geolocation)
-            console.log(this.props.ride.locations.pickup.geolocation)
             if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
                 this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
                 this.locations['destination'] = this.props.ride.driver.geolocation;

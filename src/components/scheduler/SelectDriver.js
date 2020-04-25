@@ -27,7 +27,6 @@ class SelectDriver extends Component {
         let options = [<option value={""} label={""} key={"null"}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            console.log(car);
             return <option key={car.lp} value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;

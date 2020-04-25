@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import {API_ROOT} from "../modules/api";
 import cookie from 'react-cookies'
+import * as jwt from "jsonwebtoken"
 
 
 class LoadData extends Component {
@@ -21,22 +22,16 @@ class LoadData extends Component {
 	componentDidMount() {
         //Load the villages
         const token = cookie.load('token')
-        this.setState({message: "Loading Village"});
-        axios.get(API_ROOT + "/database/villages/all", {
+        this.setState({message: "Loading Operator"})
+        const jwtPayload = jwt.decode(token)
+        axios.get(API_ROOT + "/database/operators/self", {
             headers: {
                 "Authorization": "BEARER " + token
             }
-        }).then(response => {
-            let data = {};
-            for (const item of response.data) {
-                data[item.id] = item;
-            }
-            this.props.load("villages", data);
-        }).then(() => {
-            this.setState({status: 20});
-        }).then(() => {
-            this.setState({message: "Loading Users"});
-            axios.get(API_ROOT + "/database/users/all", {
+        }).then((resp) => {
+            this.props.updateAuth(resp.data)
+            this.setState({message: "Loading Village"});
+            axios.get(API_ROOT + "/database/villages/all", {
                 headers: {
                     "Authorization": "BEARER " + token
                 }
@@ -45,13 +40,12 @@ class LoadData extends Component {
                 for (const item of response.data) {
                     data[item.id] = item;
                 }
-                this.props.load("users", data);
+                this.props.load("villages", data);
             }).then(() => {
-                this.setState({status: 60});
+                this.setState({status: 20});
             }).then(() => {
-                //Load the Rides
-                this.setState({message: "Loading Rides"});
-                axios.get(API_ROOT + "/database/rides/all", {
+                this.setState({message: "Loading Users"});
+                axios.get(API_ROOT + "/database/users/all", {
                     headers: {
                         "Authorization": "BEARER " + token
                     }
@@ -60,23 +54,36 @@ class LoadData extends Component {
                     for (const item of response.data) {
                         data[item.id] = item;
                     }
-                    console.log(response.data)
-                    console.log(data)
-                    this.props.load("rides", data);
+                    this.props.load("users", data);
                 }).then(() => {
-                    this.setState({status: 80});
+                    this.setState({status: 60});
                 }).then(() => {
-                    axios.get(API_ROOT + "/admin/googlemaps", {
+                    //Load the Rides
+                    this.setState({message: "Loading Rides"});
+                    axios.get(API_ROOT + "/database/rides/all", {
                         headers: {
                             "Authorization": "BEARER " + token
                         }
-                    }).then((response) => {
-                        console.log(response.data, "LOAD")
-                        cookie.save('googlemapstoken', response.data.token, {path: '/', maxAge: 3600})
-                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                        this.setState({status: 100});
+                    }).then(response => {
+                        let data = {};
+                        for (const item of response.data) {
+                            data[item.id] = item;
+                        }
+                        this.props.load("rides", data);
                     }).then(() => {
-                        this.props.load("loaded", true);
+                        this.setState({status: 80});
+                    }).then(() => {
+                        axios.get(API_ROOT + "/admin/googlemaps", {
+                            headers: {
+                                "Authorization": "BEARER " + token
+                            }
+                        }).then((response) => {
+                            cookie.save('googlemapstoken', response.data.token, {path: '/', maxAge: 3600})
+                            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                            this.setState({status: 100});
+                        }).then(() => {
+                            this.props.load("loaded", true);
+                        })
                     })
                 })
             })
@@ -104,6 +111,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    updateAuth: (user) => dispatch({
+        type: "authenticate",
+        payload: user
+    }),
     load: (tag, data) => dispatch({
         type: "load",
         payload: {

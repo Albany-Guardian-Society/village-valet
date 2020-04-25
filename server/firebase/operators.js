@@ -1,7 +1,5 @@
 const {firestore} = require("../../server");
 
-console.log(firestore)
-
 exports.getOperators = async () => {
     const querySnapshot = await firestore.collection('operators').get();
     return querySnapshot.docs.map(doc => {
@@ -13,20 +11,22 @@ exports.getOperators = async () => {
 
 
 exports.getOperatorById = async (operator_id) => {
-    const querySnapshot = await firestore.collection('operators').doc(operator_id).get();
-    return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        delete data['password'];
-        return {...data, id: doc.id}
-    })
+    const doc = await firestore.collection('operators').doc(operator_id).get();
+    if (!doc) {
+        return {}
+    }
+    const data = doc.data();
+    delete data['password'];
+    return {...data, id: doc.id}
 };
 
 exports.getOperatorByIdFull = async (operator_id) => {
-    const querySnapshot = await firestore.collection('operators').doc(operator_id).get();
-    return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {...data, id: doc.id}
-    })
+    const doc = await firestore.collection('operators').doc(operator_id).get();
+    if (!doc) {
+        return {}
+    }
+    const data = doc.data();
+    return {...data, id: doc.id}
 };
 
 

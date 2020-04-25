@@ -29,7 +29,6 @@ class CommonAddresses extends Component {
                 this.forceUpdate();
                 break;
             default:
-                console.log("addresses", id + "|" + field, event.target.value)
                 this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
                 break;
         }
@@ -37,7 +36,6 @@ class CommonAddresses extends Component {
 
     onLoad(autocomplete, index) {
         this.autocomplete[index] = autocomplete;
-        console.log(autocomplete);
     }
 
     onPlaceChanged(index) {
@@ -46,7 +44,6 @@ class CommonAddresses extends Component {
             index = index - 1;
             const place = this.autocomplete[index + 1].getPlace();
             this.full_address = place.formatted_address;
-            console.log(place);
             for (const component of place.address_components) {
                 if (component.types.includes('street_number')) {
                     street_number = component.long_name

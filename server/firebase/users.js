@@ -15,8 +15,8 @@ exports.getUsers = async (village_id) => {
 
 
 exports.getUser = async (village_id, user_id) => {
-    const querySnapshot = await firestore.collection('users').doc(user_id).get();
-    const data = {...querySnapshot.data(), id: querySnapshot.id};
+    const doc = await firestore.collection('users').doc(user_id).get();
+    const data = {...doc.data(), id: doc.id};
     if (village_id === 'admin') return data;
     if (data) {
         if (data['villages'].indexOf(village_id) !== -1) {

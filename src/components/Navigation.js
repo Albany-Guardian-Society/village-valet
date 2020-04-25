@@ -13,20 +13,14 @@ class Navigation extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(event) {
-        if (event.target.id === "username") {
-            this.setState({username: event.target.value})
-        } else if (event.target.id === "password") {
-            this.setState({password: event.target.value})
-        }
     }
 
     logout() {
         cookies.remove('token');
         cookies.remove('googlemapstoken');
+        cookies.remove('is_admin');
+        cookies.remove('operator_id');
+        window.location.reload()
     }
 
     render() {
@@ -49,12 +43,12 @@ class Navigation extends Component {
                         <Link to="/Metrics" style={{textDecoration: 'none'}}>Metrics</Link>
                     </Col>
                     <Col>
-                        {this.props.village_id === "admin" ?
+                        {this.props.operator.admin ?
                             <Link to="/Admin" style={{textDecoration: 'none'}}>Admin</Link>
                             : null}
                     </Col>
                     <Col style={{textAlign: "right"}}>
-                        <span>Operator:&nbsp;{this.props.operator}</span>
+                        <span>Operator:&nbsp;{this.props.operator.first_name}</span>
                     </Col>
                     <Col>
                         <Button variant="dark" onClick={this.logout}> Logout </Button>
@@ -67,7 +61,7 @@ class Navigation extends Component {
 }
 
 const mapStateToProps = state => ({
-    operator: state.operator.first_name,
+    operator: state.operator,
     village_id: state.operator.village_id
 });
 

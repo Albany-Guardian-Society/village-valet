@@ -9,13 +9,14 @@ const firestore = admin.firestore();
 module.exports = {firestore};
 
 const {checkJWT, checkParameterJWT} = require("./server/middleware/JWToken");
-const {deleteUser, getAllUsers, getOneUser, patchUser, postUser, putUser} = require("./server/controllers/usersController");
+const {deleteUser, getAllUsers, getOneUser, patchUser_active, patchUser_vetting, postUser, putUser} = require("./server/controllers/usersController");
 const {deleteRide, getAllRides, getOneRide, postRide, putRide} = require("./server/controllers/ridesController");
 const {deleteVillage, getAllVillages, getOneVillage, postVillage, putVillage} = require("./server/controllers/villagesController");
 const {
     deleteOperator,
     getAllOperators,
     getOneOperator,
+    getSelfOperator,
     login,
     postOperator,
     putOperator
@@ -50,7 +51,8 @@ app.use('/api/v1/admin', routerAdminstration);
 routerDatabase.get('/users/all', checkJWT, getAllUsers);
 routerDatabase.get('/users/user', checkJWT, getOneUser);
 routerDatabase.post('/users/user', checkJWT, postUser);
-routerDatabase.patch('/users/user', checkJWT, patchUser);
+routerDatabase.patch('/users/user/vetting', checkJWT, patchUser_vetting);
+routerDatabase.patch('/users/user/status', checkJWT, patchUser_active);
 routerDatabase.put('/users/user', checkJWT, putUser);
 routerDatabase.delete('/users/user', checkJWT, deleteUser);
 
@@ -71,6 +73,7 @@ routerDatabase.delete('/villages/village', checkJWT, deleteVillage);
 //Operator Endpoints
 routerDatabase.get('/operators/all', checkJWT, getAllOperators);
 routerDatabase.get('/operators/operator', checkJWT, getOneOperator);
+routerDatabase.get('/operators/self', checkJWT, getSelfOperator);
 routerDatabase.post('/operators/operator', checkJWT, postOperator);
 routerDatabase.put('/operators/operator', checkJWT, putOperator);
 routerDatabase.delete('/operators/operator', checkJWT, deleteOperator);

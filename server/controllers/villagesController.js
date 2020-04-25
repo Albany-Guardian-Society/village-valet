@@ -30,10 +30,6 @@ exports.postVillage = async (req, res) => {
         res.status(400).send({error: 'Missing from body: village'});
         return
     }
-    if (!village.village_id) {
-        res.status(400).send({error: 'Missing from body: village.village_id'});
-        return
-    }
     const id = await addVillage(village);
     if (id) {
         res.status(201).send({success: true, id: id});
@@ -54,19 +50,19 @@ exports.putVillage = async (req, res) => {
         return
     }
     if (!village.id) {
-        res.status(400).send({error:'Missing from body: village.village_id'});
+        res.status(400).send({error: 'Missing from body: village.village_id'});
         return
     }
-    const oldVillageArray = await getVillage(village.id);
-    if (oldVillageArray.length === 0) {
-        res.status(404).send({error:'Village not found'});
+    const oldVillage = await getVillage(village.id);
+    if (oldVillage.length === 0) {
+        res.status(404).send({error: 'Village not found'});
         return
     }
     if (await updateVillage(village)) {
-        res.status(200).send({success:true});
+        res.status(200).send({success: true});
         return
     }
-    res.status(500).send({error:"Could not update village in database"})
+    res.status(500).send({error: "Could not update village in database"})
 };
 
 

@@ -1,6 +1,9 @@
 import _ from "lodash";
-import firestore from "./firestore.js";
 import bcrypt from "bcryptjs";
+import axios from "axios";
+import {API_ROOT} from "./api";
+import cookies from "react-cookies"
+import cookie from "react-cookies"
 
 // The reducer is an internal middle man that handles passing information from each
 // of the various components to something called the store.  The store is basically a
@@ -197,10 +200,10 @@ const VillageReducer = (state = initialState, action) => {
 
         case "authenticate": {
             let newState = _.cloneDeep(state);
-            newState.authenticated = true;
+            newState.operator.admin = action.payload.village_id === 'admin';
+            newState.operator.id = action.payload.id;
             newState.operator.first_name = action.payload.first_name;
             newState.operator.last_name = action.payload.last_name;
-            newState.operator.village_id = action.payload.village_id;
             return newState;
         }
 
@@ -254,11 +257,16 @@ const VillageReducer = (state = initialState, action) => {
         if (action.payload.type === "operator") {
             switch (action.payload.mode) {
                 case "add": {
-                    firestore.collection("operators").add(newState.active_operator).then((ref) => {
-                        newState.active_operator.id = ref.id;
+                    axios.post(API_ROOT + '/database/operators/operator', {operator: newState.active_operator}, {
+                        headers: {
+                            "Authorization": "BEARER " + cookies.load('token')
+                        }
+                    }).then(response => {
+                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                        newState.active_operator.id = response.data.id;
                         //If its the first operator you need to add the village id
                         if (!newState.operators[newState.active_operator.village_id]) newState.operators[newState.active_operator.village_id] = {};
-                        newState.operators[newState.active_operator.village_id][ref.id] = newState.active_operator;
+                        newState.operators[newState.active_operator.village_id][response.data.id] = newState.active_operator;
                     });
                     break;
                 }
@@ -272,33 +280,49 @@ const VillageReducer = (state = initialState, action) => {
                 }
                 case "save": {
                     let newUser = _.cloneDeep(newState.active_operator)
-                    //THIS WILL BE hANDLED BETTER BY AN ENDPOINT DESIGNED FOR SAVING USERS WHEN THE PASSWORD IS UNCHANGED.
+                    //THIS WILL BE HANDLED BETTER BY AN ENDPOINT DESIGNED FOR SAVING USERS WHEN THE PASSWORD IS UNCHANGED.
                     //If the password was unchaged, dont edit it
-                    if (newUser.password === "") {
-                        delete newUser.password;
-                    }
-                    firestore.collection("operators").doc(newState.active_operator.id).update(newUser);
-                    newState.operators[newState.active_operator.village_id][newState.active_operator.id] = {...newState.active_operator, ...newUser};
-                    //if moving the village
-                    for (let v in newState.operators) {
-                        if (v === newState.active_operator.village_id) continue;
-                        delete newState.operators[v][newState.active_operator.id]
-                    }
+                    axios.put(API_ROOT + '/database/operators/operator', {operator: newUser}, {
+                        headers: {
+                            "Authorization": "BEARER " + cookies.load('token')
+                        }
+                    }).then((response) => {
+                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                        newState.operators[newState.active_operator.village_id][newState.active_operator.id] = {...newState.active_operator, ...newUser};
+                        //if moving the village
+                        for (const operator of newState.operators) {
+                            if (operator.village_id === newState.active_operator.village_id) continue;
+                            delete newState.operators[operator.village_id][newState.active_operator.id]
+                        }
+                    })
                     break;
                 }
                 case "delete": {
-                    firestore.collection("operators").doc(newState.active_operator.id).delete();
-                    delete newState.operators[newState.active_operator.village_id][newState.active_operator.id];
-                    newState.active_village = _.cloneDeep(BLANK_VILLAGE);
-                    newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+                    axios.delete(API_ROOT + '/database/operators/operator', {
+                        data: {operator_id: newState.active_operator.id},
+                        headers: {
+                            "Authorization": "BEARER " + cookies.load('token')
+                        }
+                    }).then((response) => {
+                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                        delete newState.operators[newState.active_operator.village_id][newState.active_operator.id];
+                        newState.active_village = _.cloneDeep(BLANK_VILLAGE);
+                        newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+                    })
                 }
             }
         } else if (action.payload.type === "village") {
             switch (action.payload.mode) {
                 case "add": {
-                    firestore.collection("villages").add(newState.active_village).then((ref) => {
-                        newState.active_village.id = ref.id;
-                        newState.villages[ref.id] = newState.active_village;
+                    axios.post(API_ROOT + '/database/villages/village', {village: newState.active_village}, {
+                        headers: {
+                            "Authorization": "BEARER " + cookies.load('token')
+                        }
+                    }).then(response => {
+                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                        newState.active_village.id = response.data.id;
+                        newState.villages[response.data.id] = newState.active_village;
+                        this.forceUpdate()
                     });
                     break;
                 }
@@ -307,16 +331,30 @@ const VillageReducer = (state = initialState, action) => {
                     break;
                 }
                 case "save": {
-                    firestore.collection("villages").doc(newState.active_village.id).update(newState.active_village);
+                    axios.put(API_ROOT + '/database/villages/village', {village: newState.active_village}, {
+                        headers: {
+                            "Authorization": "BEARER " + cookies.load('token')
+                        }
+                    }).then(response => {
+                        cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+
+                    })
                     break;
                 }
                 case "delete": {
-                    console.log(Object.keys(newState.operators).includes(newState.active_village.id));
                     if (newState.operators && !(Object.keys(newState.operators).includes(newState.active_village.id))) {
-                        firestore.collection("villages").doc(newState.active_village.id).delete();
+                        axios.delete(API_ROOT + '/database/villages/village', {
+                            data: {village_id: newState.active_village.id},
+                            headers: {
+                                "Authorization": "BEARER " + cookies.load('token')
+                            }
+                        }).then(response => {
+                            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                        });
                         delete newState.village[newState.active_village.id];
                         newState.active_village = _.cloneDeep(BLANK_VILLAGE);
                         newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+                        this.forceUpdate()
                     } else {
                         //Add the check for riders and Drivers
                         //FUTURE TEAM ADD THIS LITTLE FEATURE!
@@ -424,12 +462,10 @@ const VillageReducer = (state = initialState, action) => {
                     newState.active_ride.ride_data.meta.dropoff_CA = false;
                 }
             } else {
-                console.log(action.payload.value);
                 let addr_id = action.payload.value.split("|");
                 let address = state.users[addr_id[0]].addresses.filter((a) => {
                     return a.line_1 === addr_id[1];
                 })[0];
-                console.log(address);
                 if (mode[0] === "pickup") {
                     newState.active_ride.locations[action.payload.field].address = address.line_1;
                     //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
@@ -470,7 +506,9 @@ const VillageReducer = (state = initialState, action) => {
         let index = newState.active_profile.id;
         if (index) {
             newState.users[index] = newState.active_profile;
-            firestore.collection("users").doc(newState.active_profile.id).update(newState.active_profile);
+            axios.put(API_ROOT + "/database/users/user", {user: newState.active_profile}, {}).then(response => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+            })
         }
 
         return newState;
@@ -478,54 +516,65 @@ const VillageReducer = (state = initialState, action) => {
 
     case "user_deactivate": {
         let newState = _.cloneDeep(state);
+        axios.patch(API_ROOT + '/database/users/user/status', {
+            user_id: newState.active_profile.id,
+            status: "inactive"
+        }, {
+            headers: {
+                "Authorization": "BEARER " + cookies.load('token')
+            }
+        }).then(response => {
+            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+        })
         newState.active_profile.status = "inactive";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        let index = newState.users.findIndex((i) => {
+            return i.id === newState.active_profile.id
+        });
         if (index >= 0) {
             newState.users[index].status = "inactive";
         }
-
         //Update Firestore
-        firestore.collection("users").doc(newState.active_profile.id).update({
-            status: "inactive"
-        });
-
         return newState;
     }
     case "user_activate": {
         let newState = _.cloneDeep(state);
+        axios.patch(API_ROOT + '/database/users/user/status', {user_id: newState.active_profile.id, status: "active"}, {
+            headers: {
+                "Authorization": "BEARER " + cookies.load('token')
+            }
+        }).then(response => {
+            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+        })
         newState.active_profile.status = "active";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {return i.id === newState.active_profile.id});
+        let index = newState.users.findIndex((i) => {
+            return i.id === newState.active_profile.id
+        });
         if (index >= 0) {
             newState.users[index].status = "active";
         }
-
-        //Update the FS document
-        firestore.collection("users").doc(newState.active_profile.id).update({
-            status: "active"
-        });
-
         return newState;
     }
     case "user_perma_delete": {
         let newState = _.cloneDeep(state);
-        //Now edit the local copy, then update the DB:
-        let id_to_delete = newState.active_profile.id;
+        axios.delete(API_ROOT + '/database/users/user', {
+            data: {user_id: newState.active_profile.id},
+            headers: {
+                "Authorization": "BEARER " + cookies.load('token')
+            }
+        }).then(response => {
+            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+        });
         let index = newState.users.findIndex((i) => {
             return i.id === newState.active_profile.id
         });
         if (index >= 0) {
             delete newState.users[index];
         }
-
         newState.active_profile = _.cloneDeep(BLANK_PROFILE);
-
-        //Delete the record (document) in firestore
-        firestore.collection("users").doc(id_to_delete).delete();
-
         return newState;
     }
 

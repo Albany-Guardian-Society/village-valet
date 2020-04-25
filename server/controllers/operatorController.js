@@ -35,7 +35,10 @@ exports.login = async (req, res) => {
                 audience: 'website',
             });
             res.setHeader("token", newToken);
-            res.status(200).send();
+            res.status(200).send({
+                is_admin: operator[0].village_id === 'admin', operator_id: operator[0].id,
+                first_name: operator[0].first_name, last_name: operator[0].last_name
+            });
             return
         }
         res.status(401).send({error: 'Username/Password Combination Incorrect'});
@@ -98,6 +101,16 @@ exports.getOneOperator = async (req, res) => {
     res.status(200).send(await getOperatorById(operator_id))
 };
 
+exports.getSelfOperator = async (req, res) => {
+    const {id} = res.locals.jwtPayload;
+    const operator = await getOperatorById(id)
+    if (operator) {
+        res.status(200).send(operator)
+        return
+    }
+    res.status(404).send({error: "Operator not found"})
+};
+
 exports.postOperator = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const operator = req.body.operator;
@@ -129,12 +142,11 @@ exports.putOperator = async (req, res) => {
         return
     }
     if (!operator.password) {
-        const oldOperatorArray = await getOperatorByIdFull(operator.id)
-        if (oldOperatorArray.length === 0) {
+        const oldOperator = await getOperatorByIdFull(operator.id)
+        if (oldOperator.length === 0) {
             res.status(404).send({error: "Operator not found"})
             return
         }
-        const oldOperator = oldOperatorArray[0]
         operator.password = oldOperator.password
     }
     if (await updateOperator(operator)) {

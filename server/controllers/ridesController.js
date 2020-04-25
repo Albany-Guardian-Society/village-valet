@@ -50,18 +50,17 @@ exports.putRide = async (req, res) => {
         res.status(400).send({error: 'Missing from body: ride'});
         return
     }
-    const oldRideArray = await getRide(village_id, ride.id);
-    if (oldRideArray.length === 0) {
+    const oldRide = await getRide(village_id, ride.id);
+    if (oldRide.length === 0) {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    const oldRide = oldRideArray[0];
     if (oldRide.village_id !== village_id || village_id !== ride.village_id) {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (await updateRide(ride)) {
-        res.status(200).send({success:true});
+        res.status(200).send({success: true});
         return
     }
     res.status(500).send({error:"Could not  update ride in database"})
