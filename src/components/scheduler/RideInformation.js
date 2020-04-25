@@ -33,6 +33,9 @@ class RideInformation extends Component {
         if (label_flag[1] === "date") {
             //updating the date
             this.props.updateScheduler(label_flag[1], null, event.target.value);
+        } else if (label_flag[1] === "purpose") {
+            //updating the date
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
         } else if (label_flag[1] === "meta") {
             console.log(label_flag[2]);
             if (label_flag[2] === "samereturn") {
@@ -142,10 +145,23 @@ class RideInformation extends Component {
                                     </tr>
                                     <tr>
                                         <td>
+                                            <Form.Label>Trip Purpose:</Form.Label>
+                                        </td>
+                                        <td>
+                                            <Form.Control as="select" placeholder="" id='sched_purpose' onChange={this.handleChange} value={this.props.active_ride.ride_data.purpose}>
+                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Regligous", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
+                                                .map((item) => {
+                                                    return <option label={item} value={item} key={item}/>
+                                                })}
+                                            </Form.Control>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
                                             Mobility Aid:
                                         </td>
                                         <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}
+                                            {this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid ? `${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}` : "N/A"}
                                         </td>
                                     </tr>
                                     <tr>
@@ -153,7 +169,7 @@ class RideInformation extends Component {
                                             Special Accommodations:
                                         </td>
                                         <td>
-                                            {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}
+                                            {this.props.users[this.props.active_ride.rider.id].accommodations.special ? `${this.props.users[this.props.active_ride.rider.id].accommodations.special}` : "N/A"}
                                         </td>
                                     </tr>
                                     </tbody>

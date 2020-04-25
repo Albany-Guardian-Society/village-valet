@@ -20,6 +20,10 @@ const ADDRESS_TEMPLATE = {
     state: "",
     zip: "",
     special_instructions: "",
+    geolocation: {
+        lat: 0,
+        lng: 0
+    }
 };
 
 const VEHICLE_TEMPLATE = {
@@ -127,6 +131,7 @@ const BLANK_RIDE = {
         },
         traffic: "",
         date: "",
+        purpose: "",
         associated_ride: {
             ride_id: "",
             driver_id: ""
@@ -375,7 +380,13 @@ const VillageReducer = (state = initialState, action) => {
                     break;
                 default:
                     if (action.payload.type === "addresses") {
-                        newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                        if (action.payload.id.split("|")[1] === "lng") {
+                            newState.active_profile[action.payload.type][action.payload.id.split("|")[0]].geolocation[action.payload.id.split("|")[1]] = action.payload.value;
+                        } else if (action.payload.id.split("|")[1] === "lat") {
+                            newState.active_profile[action.payload.type][action.payload.id.split("|")[0]].geolocation[action.payload.id.split("|")[1]] = action.payload.value;
+                        } else {
+                            newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
+                        }
                     } else if (action.payload.type === "vehicles") {
                         newState.active_profile[action.payload.type][action.payload.id.split("|")[0]][action.payload.id.split("|")[1]] = action.payload.value;
                     } else if (action.payload.type === "volunteer_hours") {
@@ -392,6 +403,8 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         if (action.payload.type === "date") {
             newState.active_ride.ride_data.date = action.payload.value;
+        } else if (action.payload.type === "purpose") {
+            newState.active_ride.ride_data.purpose = action.payload.value;
         } else if (action.payload.type === "samereturn") {
             newState.active_ride.ride_data.meta.samereturn = action.payload.value;
         } else if (action.payload.type === "givendropoff") {
