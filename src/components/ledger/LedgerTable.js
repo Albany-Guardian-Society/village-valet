@@ -11,7 +11,7 @@ class LedgerTable extends Component {
         super(props);
         this.state = {
         };
-        this.handleChange = this.handleChange.bind(this);
+        // this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
 
     }

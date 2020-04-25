@@ -11,6 +11,8 @@ import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
 import { withRouter } from 'react-router-dom';
+import Button from "react-bootstrap/Button";
+import {ButtonToolbar} from "react-bootstrap";
 
 //import './pic_placeholder.png';
 
@@ -30,6 +32,10 @@ class EditRide extends Component {
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
         console.log('HERE')
         console.log(this.props.active_ride);
+    }
+
+    handleBack(event){
+        this.props.history.push('/Ledger/');
     }
 
     handleChange(event) {
@@ -87,7 +93,10 @@ class EditRide extends Component {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng()));
+            this.props.updateScheduler(variable, "geolocation", {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            });
 
         } else {
             console.log('Autocomplete is not loaded yet!')
@@ -119,8 +128,19 @@ class EditRide extends Component {
     render() {
         return (
             <Container className="Edit Ride" style={{minWidth: "100%"}}>
-                <h1>Edit Ride</h1>
+                {/*h1 {text-align: center;}*/}
                 <Row>
+                      <Col sm={1}>
+                        <Button variant="primary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
+                                onClick={(e) => this.handleBack(e)}>
+                            Back
+                        </Button>
+                      </Col>
+                    <Col>
+                        <h1>Edit Ride</h1>
+                    </Col>
+                </Row>
+                    <Row>
                     <Col>
                         <Card>
                             <Card.Header>
@@ -190,14 +210,7 @@ class EditRide extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
-                                        {/*<td>*/}
-                                        {/*    <Form.Control*/}
-                                        {/*                  id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}*/}
-                                        {/*                  value={!this.props.active_ride.locations.pickup.address ? "" : this.props.active_ride.locations.pickup.address}/>*/}
-                                        {/*</td>*/}
-                                    </tr>
-                                    <tr>
-                                        <td></td>
+
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
@@ -244,19 +257,7 @@ class EditRide extends Component {
                                 <Table borderless>
                                     <tbody>
                                     <tr>
-                                        <td>
-                                            <Form.Label>Address:</Form.Label>
-                                        </td>
-                                        {/*<td>*/}
-                                        {/*    <Form.Control as="select"*/}
-                                        {/*                  id='sched_dropoff_address' onChange={(e) => this.handleCommonAddress(e, "dropoff")}*/}
-                                        {/*                  value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_"+this.props.active_ride.locations.dropoff.address)}>*/}
-                                        {/*        {this.getCommonAddresses("dropoff")}*/}
-                                        {/*    </Form.Control>*/}
-                                        {/*</td>*/}
-                                    </tr>
-                                    <tr>
-                                        <td></td>
+                                        <Form.Label>Address:</Form.Label>
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
