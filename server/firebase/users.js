@@ -16,16 +16,14 @@ exports.getUsers = async (village_id) => {
 
 exports.getUser = async (village_id, user_id) => {
     const querySnapshot = await firestore.collection('users').doc(user_id).get();
-    const data = querySnapshot.docs.map(doc => {
-        return {...doc.data(), id: doc.id}
-    });
+    const data = {...querySnapshot.data(), id: querySnapshot.id};
     if (village_id === 'admin') return data;
     if (data) {
-        if (data[user_id]['villages'].indexOf(village_id) !== -1) {
+        if (data['villages'].indexOf(village_id) !== -1) {
             return data
         }
     }
-    return []
+    return {}
 };
 
 exports.getDrivers = async () => {
@@ -36,9 +34,9 @@ exports.getDrivers = async () => {
 }
 
 exports.addUser = async (user) => {
-    firestore.collection('users').add(user)
-        .then(() => {
-            return true
+    return firestore.collection('users').add(user)
+        .then((doc) => {
+            return doc.id
         })
         .catch((e) => {
             console.log(e);
@@ -47,7 +45,7 @@ exports.addUser = async (user) => {
 };
 
 exports.removeUser = async (user_id) => {
-    firestore.collection('users').doc(user_id).delete()
+    return firestore.collection('users').doc(user_id).delete()
         .then(() => {
             return true
         })
@@ -58,7 +56,7 @@ exports.removeUser = async (user_id) => {
 };
 
 exports.updateUser = async (user) => {
-    firestore.collection('users').doc(user.id).update(user)
+    return firestore.collection('users').doc(user.id).update(user)
         .then(() => {
             return true
         })

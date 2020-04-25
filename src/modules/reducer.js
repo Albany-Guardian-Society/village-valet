@@ -50,7 +50,8 @@ const VOL_HOURS_TEMPLATE = (day = "monday") => {
 
 const BLANK_PROFILE = {
     user_type: "",
-    village_id: "",
+    primary_village_id: "",
+    villages: [],
     status: "active",
     personal_info: {
         first_name: "",
@@ -93,7 +94,7 @@ const BLANK_PROFILE = {
 };
 
 const BLANK_RIDE = {
-    ride_id: "",
+    id: "",
     rider: {
         first_name: "",
         last_name: "",
@@ -453,6 +454,7 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.rider.first_name = action.payload.user.personal_info.first_name;
             newState.active_ride.rider.last_name = action.payload.user.personal_info.last_name;
             newState.active_ride.rider.id = action.payload.user.id;
+            newState.active_ride.ride_data.village_id = action.payload.user.primary_village_id;
         } else if (action.payload.type === "driver") {
             newState.active_ride.driver.first_name = action.payload.user.personal_info.first_name;
             newState.active_ride.driver.last_name = action.payload.user.personal_info.last_name;
@@ -547,6 +549,7 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.locations.dropoff.geolocation = state.active_ride.locations.pickup.geolocation;
             newState.active_ride.locations.pickup.geolocation = state.active_ride.locations.dropoff.geolocation;
             newState.active_ride.ride_data.date = state.active_ride.ride_data.date;
+            newState.active_ride.ride_data.village_id = state.active_ride.ride_data.village_id;
             newState.active_ride.rider = state.active_ride.rider;
             newState.active_ride.ride_data.meta.return = true;
             return newState

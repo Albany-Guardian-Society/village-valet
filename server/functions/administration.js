@@ -9,7 +9,7 @@ const {generateRideConfirmationToken} = require("./token");
 require("dotenv").config()
 
 
-module.exports = async function sendExpirationNotifications() {
+exports.sendExpirationNotifications = async () => {
     const drivers = await getDrivers();
     const operators = await getOperators();
     const villages = await getVillages()
@@ -90,10 +90,10 @@ module.exports = async function sendExpirationNotifications() {
     }
 }
 
-module.exports = async function sendConfirmationEmail(ride) {
-    const driver = (await getUser(ride.village_id, ride.driver.id))[0]
-    const rider = (await getUser(ride.village_id, ride.rider.id))[0]
-    const village = (await getVillages(ride.village_id))[0]
+exports.sendConfirmationEmail = async (ride) => {
+    const driver = (await getUser(ride.ride_data.village_id, ride.driver.id))
+    const rider = (await getUser(ride.ride_data.village_id, ride.rider.id))
+    const village = (await getVillages(ride.ride_data.village_id))[0]
     if (driver.personal_info.email) {
         const message = {
             // Comma separated list of recipients
@@ -114,11 +114,11 @@ module.exports = async function sendConfirmationEmail(ride) {
                 `<p><strong>Drop off Time: ${ride.locations.dropoff.time}</strong></p>\n` +
                 `<p><strong>Total Trip Duration:  ${ride.ride_data.time_total.rider}</strong></p>\n` +
                 `<p><br></p>\n` +
-                `<p>Your rider, ${ride.personal_info.first_name} ${ride.personal_info.last_name},
-             may have special accommodations which can be seen here: ${rider.accommodations.special}. </p>`
+                `<p>Your rider, ${rider.personal_info.first_name} ${rider.personal_info.last_name},
+             may have special accommodations which can be seen here: ${rider.accommodations.special}. </p>\n`
                 + `<p> Please confirm your ride by calling us or clicking the following link https://${process.env.HOST_NAME}/admin/confirm_ride?token=${await generateRideConfirmationToken(ride)} </p>`
                 + `<p>You will be unable to cancel this ride 48 hours prior to the pick up time. If you have any questions or would like to make any changes please feel
-            free to contact us.</p>\n` +
+            free to contact us. </p>\n` +
                 `<p><br></p>\n` +
                 `<p>Sincerely,</p>\n` +
                 `<p>Village Valet</p>\n` +
@@ -139,7 +139,7 @@ module.exports = async function sendConfirmationEmail(ride) {
             // plaintext body
             text: '',
             html: `<p><strong><u>AGS Village Valet Ride Confirmation</u></strong></p>\n` +
-                `<p>Hello ${driver.personal_info.first_name} ${driver.personal_info.last_name},</p>\n` +
+                `<p>Hello ${rider.personal_info.first_name} ${rider.personal_info.last_name},</p>\n` +
                 `<p>The following information is your trip summary for your drive with ${rider.personal_info.first_name} ${rider.personal_info.last_name}</p>\n` +
                 `<p><strong>Date:</strong> ${ride.ride_data.date} </p>\n` +
                 `<p><strong>Pickup Address:</strong> ${ride.locations.pickup.address}</p>\n` +
@@ -148,13 +148,12 @@ module.exports = async function sendConfirmationEmail(ride) {
                 `<p><strong>Drop off Time: ${ride.locations.dropoff.time}</strong></p>\n` +
                 `<p><strong>Total Trip Duration:  ${ride.ride_data.time_total.rider}</strong></p>\n` +
                 `<p><br></p>\n` +
-                `<p>Your driver, ${driver.personal_info.first_name} ${driver.personal_info.last_name}
-            , will be driving a ${ride.driver.vehicle.color} ${rider.driver.vehicle.make_model} with
-             the license plate ${rider.driver.vehicle.lp}.
+                `<p>Your driver, ${driver.personal_info.first_name} ${driver.personal_info.last_name}, will be driving a 
+            ${ride.driver.vehicle.color} ${ride.driver.vehicle.make_model} with the license plate ${ride.driver.vehicle.lp}.
             They are aware of any special accommodations that you may have requested: ${rider.accommodations.special}. You will be unable to cancel this
             ride 48 hours prior to the pick up time. If you have any questions or would like to make any changes please feel
-            free to contact us</p>`
-                    `<p><br></p>\n` +
+            free to contact us</p>` +
+                `<p><br></p>\n` +
                 `<p>Sincerely,</p>\n` +
                 `<p>Village Valet</p>\n` +
                 `<p><br></p>\n` +

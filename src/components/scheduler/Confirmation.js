@@ -29,7 +29,6 @@ class Confirmation extends Component {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
-        this.messageTest = this.messageTest.bind(this);
     }
 
     handleChange(event){

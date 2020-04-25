@@ -96,17 +96,11 @@ class Login extends Component {
         }).then((response) => {
                 cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                 this.props.history.push('/Dashboard')
+            window.location.reload();
             }
         ).catch(error => {
-            console.log(error);
+            this.setState({errorMessage: "Login Failed: " + error.response.data.error})
         })
-        /*   } else {
-               this.setState({errorMessage: "Login Failed: Your username/password do not match."})
-           }
-       } else {
-           this.setState({errorMessage: "Login Failed: Your username cannot be found."});
-       }
-   }) */
     }
 
     // render() is the bread and butter of react.  JSX (a mix of JS and HTML) is used to

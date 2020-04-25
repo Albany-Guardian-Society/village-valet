@@ -20,25 +20,26 @@ exports.getOneUser = async (req, res) => {
 
 exports.postUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user} = req.body.user;
+    const user = req.body.user;
     if (user == null) {
         res.status(400).send({error: 'Missing from body: user'});
         return
     }
-    if (village_id !== user.primary_village && village_id !== 'admin') {
+    if (village_id !== user.primary_village_id && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (await addUser(user)) {
-        res.status(201).send({success:true});
+    const id = await addUser(user);
+    if (id) {
+        res.status(201).send({success: true, id: id});
         return
     }
-    res.status(500).send({error:"Could not add user to database"})
+    res.status(500).send({error: "Could not add user to database"})
 };
 
 exports.putUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user} = req.body.user;
+    const user = req.body.user;
     if (user == null) {
         res.status(400).send({error: 'Missing from body: user'});
         return
@@ -58,7 +59,7 @@ exports.putUser = async (req, res) => {
         return
     }
     if (user.user_type === 'driver') {
-        if (village_id !== 'admin' && village_id !== user.primary_village) {
+        if (village_id !== 'admin' && village_id !== user.primary_village_id) {
             res.status(401).send({error: 'Access forbidden'});
             return
         }
@@ -72,7 +73,7 @@ exports.putUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user_id} = req.body.user_id;
+    const user_id = req.body.user_id;
     if (user_id == null) {
         res.status(400).send({error: 'Missing from body: user_id'});
         return
@@ -84,20 +85,19 @@ exports.deleteUser = async (req, res) => {
     }
     const oldUser = oldUserArray[0];
     if (oldUser.villages.indexOf(village_id) === -1) {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (oldUser.primary_village === village_id) {
+    if (oldUser.primary_village_id === village_id) {
         if (await removeUser(user_id)) {
-            res.status(200).send({success:true});
+            res.status(200).send({success: true});
             return
         }
-    }
-    else if (oldUser.villages.indexOf(village_id) !== -1) {
+    } else if (oldUser.villages.indexOf(village_id) !== -1) {
         oldUser.villages = oldUser.villages.filter(vId => vId !== village_id);
         oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
         if (await updateUser(oldUser)) {
-            res.status(200).send({success:true});
+            res.status(200).send({success: true});
             return
         }
     }

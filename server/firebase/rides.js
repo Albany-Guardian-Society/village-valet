@@ -42,9 +42,9 @@ exports.getRidesByDate = async (village_id, date) => {
 
 
 exports.addRide = async (ride) => {
-    firestore.collection('rides').add(ride)
-        .then(() => {
-            return true
+    return firestore.collection('rides').add(ride)
+        .then(ref => {
+            return ref.id
         })
         .catch((e) => {
             console.log(e);
@@ -53,7 +53,7 @@ exports.addRide = async (ride) => {
 };
 
 exports.removeRide = async (ride_id) => {
-    firestore.collection('rides').doc(ride_id).delete()
+    return firestore.collection('rides').doc(ride_id).delete()
         .then(() => {
             return true
         })
@@ -64,7 +64,7 @@ exports.removeRide = async (ride_id) => {
 };
 
 exports.updateRide = async (ride) => {
-    firestore.collection('rides').doc(ride.id).update(ride)
+    return firestore.collection('rides').doc(ride.id).update(ride)
         .then(() => {
             return true
         })

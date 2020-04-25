@@ -39,9 +39,9 @@ exports.getOperatorByUsername = async (operator_username) => {
 
 
 exports.addOperator = async (operator) => {
-    firestore.collection('operators').add(operator)
-        .then(() => {
-            return true
+    return firestore.collection('operators').add(operator)
+        .then((doc) => {
+            return doc.id
         })
         .catch((e) => {
             console.log(e);
@@ -50,7 +50,7 @@ exports.addOperator = async (operator) => {
 };
 
 exports.removeOperator = async (operator_id) => {
-    firestore.collection('operators').doc(operator_id).delete()
+    return firestore.collection('operators').doc(operator_id).delete()
         .then(() => {
             return true
         })
@@ -61,7 +61,7 @@ exports.removeOperator = async (operator_id) => {
 };
 
 exports.updateOperator = async (operator) => {
-    firestore.collection('operators').doc(operator.id).update(operator)
+    return firestore.collection('operators').doc(operator.id).update(operator)
         .then(() => {
             return true
         })

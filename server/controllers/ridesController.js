@@ -24,7 +24,7 @@ exports.getOneRide = async (req, res) => {
 
 exports.postRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {ride} = req.body.ride;
+    const ride = req.body.ride;
     if (ride == null) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
@@ -33,17 +33,19 @@ exports.postRide = async (req, res) => {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (await addRide(ride)) {
-        res.status(201).send({success: true, ride: ride});
+    const id = await addRide(ride);
+    ride.id = id;
+    if (id) {
+        res.status(201).send({success: true, id: id});
         await sendConfirmationEmail(ride)
         return
     }
-    res.status(500).send({error:"Could not add ride to database"})
+    res.status(500).send({error: "Could not add ride to database"})
 };
 
 exports.putRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {ride} = req.body.ride;
+    const ride = req.body.ride;
     if (ride == null) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
@@ -67,7 +69,7 @@ exports.putRide = async (req, res) => {
 
 exports.deleteRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {ride_id} = req.body.ride_id;
+    const ride_id = req.body.ride_id;
     if (ride_id == null) {
         res.status(400).send({error: 'Missing from body: ride_id'});
         return

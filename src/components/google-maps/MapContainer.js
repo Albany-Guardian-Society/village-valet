@@ -50,7 +50,13 @@ class MapContainer extends Component {
         console.log(response);
         if (response !== null) {
             if (response.status === 'OK') {
-                this.state.directions_cache.set(this.locations['origin'].lat + this.locations['destination'].lat, response);
+                let key;
+                if ('waypoint' in Object.keys(this.locations)) {
+                    key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
+                } else {
+                    key = this.locations['origin'].lat + this.locations['destination'].lat
+                }
+                this.state.directions_cache.set(key, response);
                 this.setState({directions_cache: this.state.directions_cache});
                 this.storeRouteInfo(response)
             } else {
@@ -114,7 +120,13 @@ class MapContainer extends Component {
     }
 
     renderDirections() {
-        const response = this.state.directions_cache.get(this.locations['origin'].lat + this.locations['destination'].lat);
+        let key;
+        if ('waypoint' in Object.keys(this.locations)) {
+            key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
+        } else {
+            key = this.locations['origin'].lat + this.locations['destination'].lat
+        }
+        const response = this.state.directions_cache.get(key);
         if (response == null) return;
         return <DirectionsRenderer
             options={{

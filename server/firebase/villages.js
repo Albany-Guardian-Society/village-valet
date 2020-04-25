@@ -3,6 +3,7 @@ const {firestore} = require("../../server");
 
 exports.getVillages = async (village_id) => {
     let querySnapshot;
+    console.log(village_id)
     if (village_id === 'admin') {
         querySnapshot = await firestore.collection('villages').get()
     } else {
@@ -24,9 +25,9 @@ exports.getVillage = async (village_id) => {
 
 
 exports.addVillage = async (village) => {
-    firestore.collection('villages').add(village)
-        .then(() => {
-            return true
+    return firestore.collection('villages').add(village)
+        .then((doc) => {
+            return doc.id
         })
         .catch((e) => {
             console.log(e);
@@ -35,7 +36,7 @@ exports.addVillage = async (village) => {
 };
 
 exports.removeVillage = async (village_id) => {
-    firestore.collection('villages').doc(village_id).delete()
+    return firestore.collection('villages').doc(village_id).delete()
         .then(() => {
             return true
         })
@@ -46,7 +47,7 @@ exports.removeVillage = async (village_id) => {
 };
 
 exports.updateVillage = async (village) => {
-    firestore.collection('villages').doc(village.id).update(village)
+    return firestore.collection('villages').doc(village.id).update(village)
         .then(() => {
             return true
         })

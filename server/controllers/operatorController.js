@@ -24,7 +24,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 exports.login = async (req, res) => {
     const {username, password} = req.body;
     const operator = await getOperatorByUsername(username);
-    if (operator) {
+    if (!username || !password) {
+        res.status(400).send({error: "Missing username/password"});
+        return;
+    }
+    if (operator.length !== 0) {
         if (bcrypt.compareSync(password, operator[0].password)) {
             const newToken = jwt.sign({id: operator[0].id, village_id: operator[0].village_id}, JWT_SECRET, {
                 expiresIn: "1h",
@@ -61,7 +65,7 @@ exports.changePassword = async (req, res) => {
     }
     const {id} = res.locals.jwtPayload;
     const operator = await getOperatorById(id);
-    if (operator) {
+    if (operator.length !== 0) {
         operator[0]['password'] = await bcrypt.hash(password, 10);
         if (await updateOperator(operator)) {
             res.status(200).send('Password has been changed');
@@ -105,11 +109,12 @@ exports.postOperator = async (req, res) => {
         res.status(400).send({error: 'Missing from body: operator'});
         return
     }
-    if (await addOperator(operator)) {
-        res.status(201).send({success:true});
+    const id = await addOperator(operator);
+    if (id) {
+        res.status(201).send({success: true, id: id});
         return
     }
-    res.status(500).send({error:"Could not add operator to database"})
+    res.status(500).send({error: "Could not add operator to database"})
 };
 
 exports.putOperator = async (req, res) => {

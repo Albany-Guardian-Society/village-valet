@@ -31,14 +31,15 @@ exports.postVillage = async (req, res) => {
         return
     }
     if (!village.village_id) {
-        res.status(400).send({error:'Missing from body: village.village_id'});
+        res.status(400).send({error: 'Missing from body: village.village_id'});
         return
     }
-    if (await addVillage(village)) {
-        res.status(201).send({success:true});
+    const id = await addVillage(village);
+    if (id) {
+        res.status(201).send({success: true, id: id});
         return
     }
-    res.status(500).send({error:"Could not add village to database"})
+    res.status(500).send({error: "Could not add village to database"})
 };
 
 exports.putVillage = async (req, res) => {

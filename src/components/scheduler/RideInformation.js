@@ -149,10 +149,10 @@ class RideInformation extends Component {
                                         </td>
                                         <td>
                                             <Form.Control as="select" placeholder="" id='sched_purpose' onChange={this.handleChange} value={this.props.active_ride.ride_data.purpose}>
-                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Regligous", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
-                                                .map((item) => {
-                                                    return <option label={item} value={item} key={item}/>
-                                                })}
+                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Religious", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
+                                                    .map((item) => {
+                                                        return <option label={item} value={item} key={item}/>
+                                                    })}
                                             </Form.Control>
                                         </td>
                                     </tr>
@@ -265,9 +265,10 @@ class RideInformation extends Component {
                                         </td>
                                         <td>
                                             <Form.Control as="select"
-                                                          id='sched_dropoff_address' onChange={(e) => this.handleCommonAddress(e, "dropoff")}
-                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_"+this.props.active_ride.locations.dropoff.address)}>
-                                                  {this.getCommonAddresses("dropoff")}
+                                                          id='sched_dropoff_address'
+                                                          onChange={(e) => this.handleCommonAddress(e, "dropoff")}
+                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_" + this.props.active_ride.locations.dropoff.address)}>
+                                                {this.getCommonAddresses("dropoff")}
                                             </Form.Control>
                                         </td>
                                     </tr>
