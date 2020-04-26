@@ -1,64 +1,64 @@
-import {addUser, getUser, getUsers, removeUser, updateUser} from "../firebase/users";
+const {addUser, getUser, getUsers, removeUser, updateUser} = require("../firebase/users");
 
 
-export const getAllUsers = async(req,res) => {
+exports.getAllUsers = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     res.status(200).send(await getUsers(village_id));
 
 };
 
-export const getOneUser = async(req,res) => {
+exports.getOneUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const id = req.query.id;
     if (id == null) {
-        res.status(400).send({error:'Missing query parameter: id'});
+        res.status(400).send({error: 'Missing query parameter: id'});
         return
     }
     res.status(200).send(await getUser(village_id, id))
 };
 
 
-export const postUser = async(req,res) => {
+exports.postUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user} = req.body.user;
+    const user = req.body.user;
     if (user == null) {
-        res.status(400).send({error:'Missing from body: user'});
+        res.status(400).send({error: 'Missing from body: user'});
         return
     }
-    if (village_id !== user.primary_village && village_id !== 'admin') {
-        res.status(401).send({error:'Access forbidden'});
+    if (village_id !== user.primary_village_id && village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (await addUser(user)) {
-        res.status(201).send({success:true});
+    const id = await addUser(user);
+    if (id) {
+        res.status(201).send({success: true, id: id});
         return
     }
-    res.status(500).send({error:"Could not add user to database"})
+    res.status(500).send({error: "Could not add user to database"})
 };
 
-export const putUser = async(req,res) => {
+exports.putUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user} = req.body.user;
+    const user = req.body.user;
     if (user == null) {
-        res.status(400).send({error:'Missing from body: user'});
+        res.status(400).send({error: 'Missing from body: user'});
         return
     }
-    const oldUserArray = await getUser(village_id, user.id);
-    if (oldUserArray.length === 0) {
-        res.status(404).send({error:'User not found'});
+    const oldUser = await getUser(village_id, user.id);
+    if (oldUser.length === 0) {
+        res.status(404).send({error: 'User not found'});
         return
     }
-    const oldUser = oldUserArray[0];
-    if (oldUser[0].user_type !== user.user_type) {
-        res.status(400).send({error:'Can not change user type of a user'});
+    if (oldUser.user_type !== user.user_type) {
+        res.status(400).send({error: 'Can not change user type of a user'});
         return
     }
-    if (oldUser[0].user_type === 'rider' && user.villages.length > 1) {
-        res.status(400).send({error:'User cannot have multiple villages if they are a rider'});
+    if (oldUser.user_type === 'rider' && user.villages.length > 1) {
+        res.status(400).send({error: 'User cannot have multiple villages if they are a rider'});
         return
     }
     if (user.user_type === 'driver') {
-        if (village_id !== 'admin' && village_id !== user.primary_village) {
+        if (village_id !== 'admin' && village_id !== user.primary_village_id) {
             res.status(401).send({error: 'Access forbidden'});
             return
         }
@@ -70,59 +70,80 @@ export const putUser = async(req,res) => {
     res.status(500).send({error:"Could not update user in database"})
 };
 
-export const deleteUser = async(req,res) => {
+exports.deleteUser = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    const {user_id} = req.body.user_id;
+    const user_id = req.body.user_id;
     if (user_id == null) {
-        res.status(400).send({error:'Missing from body: user_id'});
+        res.status(400).send({error: 'Missing from body: user_id'});
         return
     }
-    const oldUserArray = await getUser(village_id, user_id);
-    if (oldUserArray.length === 0) {
-        res.status(404).send({error:'User not found'});
+    const oldUser = await getUser(village_id, user_id);
+    if (oldUser.length === 0) {
+        res.status(404).send({error: 'User not found'});
         return
     }
-    const oldUser = oldUserArray[0];
     if (oldUser.villages.indexOf(village_id) === -1) {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (oldUser.primary_village === village_id) {
+    if (oldUser.primary_village_id === village_id) {
         if (await removeUser(user_id)) {
-            res.status(200).send({success:true});
+            res.status(200).send({success: true});
             return
         }
-    }
-    else if (oldUser.villages.indexOf(village_id) !== -1) {
+    } else if (oldUser.villages.indexOf(village_id) !== -1) {
         oldUser.villages = oldUser.villages.filter(vId => vId !== village_id);
         oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
         if (await updateUser(oldUser)) {
-            res.status(200).send({success:true});
+            res.status(200).send({success: true});
             return
         }
     }
-    res.status(500).send({error:"Could not delete user from database"})
+    res.status(500).send({error: "Could not delete user from database"})
 };
 
-export const patchUser = async (req, res) => {
+exports.patchUser_active = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const {user_id, status} = req.body;
+    if (!user_id || !status) {
+        res.status(400).send({error: 'Missing either user_id or status'});
+        return
+    }
+    const oldUser = await getUser(village_id, user_id);
+    if (oldUser.length === 0) {
+        res.status(404).send({error: 'User not found'});
+        return
+    }
+    if (oldUser.villages.indexOf(village_id) === -1) {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    oldUser.status = status
+    if (await updateUser(oldUser)) {
+        res.status(200).send({success: true});
+        return
+    }
+    res.status(500).send({error: "Could not update user in database"})
+}
+
+exports.patchUser_vetting = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const {user_id, vetting_info} = req.body;
     if (user_id === null) {
         res.status(400).send({error: 'Missing from body: user'});
         return
     }
-    const oldUserArray = await getUser(village_id, user_id);
-    if (oldUserArray.length === 0) {
+    const oldUser = await getUser(village_id, user_id);
+    if (oldUser.length === 0) {
         res.status(404).send({error: 'User not found'});
         return
     }
-    const oldUser = oldUserArray[0];
-    if (oldUser[0].user_type !== 'driver') {
-        res.status(400).send({error:'Can not change vetting info for non driver'});
+    if (oldUser.user_type !== 'driver') {
+        res.status(400).send({error: 'Can not change vetting info for non driver'});
         return
     }
     if (oldUser.villages.indexOf(village_id) === -1 || (vetting_info.village_id !== village_id && village_id !== 'admin')) {
-        res.status(401).send({error:'Access forbidden'});
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);

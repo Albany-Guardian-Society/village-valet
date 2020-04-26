@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import {withRouter} from "react-router";
 
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -29,12 +30,14 @@ class Village extends Component {
 	}
 
     saveVillage() {
-        if (this.state.mode === "new") {
-            this.props.changeVillage("add")
-        } else {
-            this.props.changeVillage("save")
+        if (this.validate()) {
+            if (this.state.mode === "new") {
+                this.props.changeVillage("add");
+            } else {
+                this.props.changeVillage("save");
+            }
+            this.setState({edit: false, password: "", mode: ""});
         }
-        this.setState({edit: false, password: "", mode: ""});
     }
 
     deleteVillage() {
@@ -44,13 +47,30 @@ class Village extends Component {
         }
     }
 
+    validate() {
+        if (this.props.active_village.village_name === "") {
+            window.alert("INVALID NAME: Please provide a village name.");
+            return false;
+        } else if (this.props.active_village.email === "") {
+            window.alert("INVALID EMAIL: Please provide an email.");
+            return false;
+        } else if (this.props.active_village.phone === "") {
+            window.alert("INVALID PHONE NUMBER: Please provide a phone number.");
+            return false;
+        } else if (this.props.active_village.vetting === "") {
+            window.alert("INVALID VETTING: Please list out vetting criteria.");
+            return false;
+        }
+        return true;
+    }
+
     render() {
         return (
         <>
             <Card.Header>
-                <h5 style={{float:"left"}}>{this.props.active_village.village_name ? this.props.active_village.village_name : "Select a Village"}</h5>
+                <h5 style={{float:"left"}}>{(this.props.active_village && this.props.active_village.village_name) ? this.props.active_village.village_name : "Select a Village"}</h5>
                 {!this.state.edit ?
-                    <>{this.props.show_village ?
+                    <>{(this.props.show_village && this.props.active_village && this.props.active_village.id) ?
                         <Button variant="dark" style={{float: "right"}} onClick={() => this.setState({edit: true, mode: "edit"})}>
                             Edit Village
                         </Button>
@@ -64,9 +84,11 @@ class Village extends Component {
                         <Button variant="success" style={{float: "right", marginLeft: "10px"}} onClick={() => this.saveVillage()}>
                             Save
                         </Button>
+                        {this.state.mode !== "new" ?
                         <Button variant="danger" style={{float: "right"}} onClick={() => this.deleteVillage()}>
                             Delete
                         </Button>
+                        : null }
                     </>
                 }
             </Card.Header>
@@ -74,8 +96,16 @@ class Village extends Component {
                 {!this.state.edit ?
                     <Table><tbody>
                         <tr>
+                            <td>Email: </td>
+                            <td>{(this.props.show_village && this.props.villages[this.props.show_village]) ? this.props.villages[this.props.show_village].email : null}</td>
+                        </tr>
+                        <tr>
+                            <td>Phone Number: </td>
+                            <td>{(this.props.show_village && this.props.villages[this.props.show_village]) ? this.props.villages[this.props.show_village].phone : null}</td>
+                        </tr>
+                        <tr>
                             <td>Vetting Criteria: </td>
-                            <td>{this.props.show_village ? this.props.villages[this.props.show_village].vetting : null}</td>
+                            <td>{(this.props.show_village && this.props.villages[this.props.show_village]) ? this.props.villages[this.props.show_village].vetting : null}</td>
                         </tr>
                     </tbody></Table>
                 :
@@ -84,6 +114,18 @@ class Village extends Component {
                             <td>Village Name: </td>
                             <td>
                                 <Form.Control id="admin|village_name" onChange={this.handleChange} value={this.props.active_village.village_name}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email: </td>
+                            <td>
+                                <Form.Control id="admin|email" onChange={this.handleChange} value={this.props.active_village.email}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Phone: </td>
+                            <td>
+                                <Form.Control id="admin|phone" onChange={this.handleChange} value={this.props.active_village.phone}/>
                             </td>
                         </tr>
                         <tr>
@@ -114,7 +156,7 @@ const mapDispatchToProps = dispatch => ({
             field: field,
             value: value
         }
-    })
+    }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Village);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Village));

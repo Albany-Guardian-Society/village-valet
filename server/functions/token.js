@@ -1,10 +1,10 @@
-import * as jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
+const jwt = require("jsonwebtoken");
 
-dotenv.config()
+require("dotenv").config();
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const generateRideConfirmationToken = (ride) => {
+exports.generateRideConfirmationToken = (ride) => {
     return jwt.sign({
         scope: 'confirm_ride',
         id: ride.driver.id,
@@ -15,3 +15,16 @@ export const generateRideConfirmationToken = (ride) => {
         audience: 'user',
     })
 }
+
+exports.generateAdminConfirmationToken = (admin) => {
+    return jwt.sign({
+        scope: 'confirm_admin',
+        id: admin.id,
+        village_id: admin.village_id
+    }, JWT_SECRET, {
+        expiresIn: "1h",
+        audience: 'user',
+    })
+}
+
+
