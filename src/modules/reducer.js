@@ -335,7 +335,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                         newState.active_village.id = response.data.id;
                         newState.villages[response.data.id] = newState.active_village;
-                        newState.admin.show_village = ref.id;
+                        newState.admin.show_village = response.data.id
                         this.forceUpdate()
                     });
                     break;
