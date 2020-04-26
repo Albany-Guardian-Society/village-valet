@@ -50,8 +50,8 @@ class App extends Component {
                                         <Route path="/Profiles/Register" component={Register}/>
                                         <Route path="/Profiles/User/*" component={Profile}/>
                                         <Route path="/Profiles" component={Profiles}/>
-                                        <Route path="/Ledger" component={Ledger}/>
                                         <Route path="/Ledger/EditRide" component={EditRide}/>
+                                        <Route path="/Ledger" component={Ledger}/>
                                         <Route path="/Metrics" component={Metrics}/>
                                         <Route path="/Admin" component={Admin}/>
                                         <Route path="/" component={Error}/>

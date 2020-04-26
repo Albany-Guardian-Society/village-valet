@@ -26,8 +26,8 @@ class LedgerTable extends Component {
         // This is the ride being selected
         this.props.setActiveRide(this.props.rides[event.target.id.replace('edit','')]);
         // When clicked go to schedule ride to edit ride
-        console.log(event)
-
+        // console.log(event)
+        console.log('HERE123')
         this.props.history.push('/Ledger/EditRide/');
     }
 
@@ -80,6 +80,7 @@ class LedgerTable extends Component {
                         <td>{rides[key].ride_data.date}</td>
                         <td>Active</td>
                         <td>
+
                             <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
                                     onClick={(e) => this.handleSelect(e)}>
                                 Edit
