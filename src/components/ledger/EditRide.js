@@ -38,6 +38,10 @@ class EditRide extends Component {
         this.props.history.push('/Ledger/');
     }
 
+    handleSave(event){
+        window.alert('Saved!')
+    }
+
     handleChange(event) {
         let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date") {
@@ -130,13 +134,21 @@ class EditRide extends Component {
             <Container className="Edit Ride" style={{minWidth: "100%"}}>
                 {/*h1 {text-align: center;}*/}
                 <Row>
-                      <Col sm={1}>
-                        <Button variant="primary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
+                    <Col sm={2}>
+                    <td>
+
+                        <Button variant="secondary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
                                 onClick={(e) => this.handleBack(e)}>
                             Back
                         </Button>
-                      </Col>
-                    <Col>
+
+                    <Button variant="primary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
+                            onClick={(e) => this.handleSave(e)}>
+                        Save
+                    </Button>
+                        </td>
+                    </Col>
+                    <Col sm={8}>
                         <h1>Edit Ride</h1>
                     </Col>
                 </Row>
