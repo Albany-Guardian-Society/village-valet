@@ -150,15 +150,20 @@ const BLANK_RIDE = {
 };
 
 const BLANK_VILLAGE = {
+    id: "",
     village_name: "",
-    vetting: [],
+    email: "",
+    phone: "",
+    vetting: "",
     defaults: {}
 }
 
 const BLANK_OPERATOR = {
-    email: "",
+    id: "",
     first_name: "",
     last_name: "",
+    email: "",
+    phone: "",
     password: "",
     username: "",
     village_id: ""
@@ -181,6 +186,10 @@ const initialState = {
     active_ride: _.cloneDeep(BLANK_RIDE),
     active_village: _.cloneDeep(BLANK_VILLAGE),
     active_operator:_.cloneDeep(BLANK_OPERATOR),
+    admin: {
+        show_village: "",
+        show_operator: "",
+    }
 };
 
 //The authentication should be cached for a period of time
@@ -241,13 +250,17 @@ const VillageReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         if (action.payload.village === "") {
             newState.active_village = _.cloneDeep(BLANK_VILLAGE);
+            newState.admin.show_village = "";
         } else {
             newState.active_village = state.villages[action.payload.village];
+            newState.admin.show_village = action.payload.village;
         }
         if (action.payload.id === "") {
             newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+            newState.admin.show_operator = "";
         } else {
             newState.active_operator = state.operators[action.payload.village][action.payload.id];
+            newState.admin.show_operator = action.payload.id;
         }
         return newState;
     }
@@ -322,6 +335,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                         newState.active_village.id = response.data.id;
                         newState.villages[response.data.id] = newState.active_village;
+                        newState.admin.show_village = ref.id;
                         this.forceUpdate()
                     });
                     break;
@@ -339,6 +353,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
 
                     })
+            newState.villages[newState.active_village.id] = _.cloneDeep(newState.active_village);
                     break;
                 }
                 case "delete": {

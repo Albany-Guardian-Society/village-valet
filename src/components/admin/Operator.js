@@ -48,13 +48,14 @@ class Operator extends Component {
     }
 
     saveOperator() {
-        //VALIDATE HERE!
-        if (this.state.mode === "new") {
-            this.props.changeOperator("add")
-        } else {
-            this.props.changeOperator("save")
+        if (this.validate()) {
+            if (this.state.mode === "new") {
+                this.props.changeOperator("add")
+            } else {
+                this.props.changeOperator("save")
+            }
+            this.setState({edit: false, password: "", mode: ""});
         }
-        this.setState({edit: false, password: "", mode: ""});
     }
 
     deleteOperator() {
@@ -62,6 +63,32 @@ class Operator extends Component {
             this.props.changeOperator("delete");
             this.setState({edit: false, password: "", mode: ""});
         }
+    }
+
+    validate() {
+        if (this.props.active_operator.first_name === "") {
+            window.alert("INVALID NAME: Please provide a first name.");
+            return false;
+        } else if (this.props.active_operator.last_name === "") {
+            window.alert("INVALID NAME: Please provide a last name.");
+            return false;
+        } else if (this.props.active_operator.email === "") {
+            window.alert("INVALID EMAIL: Please provide an email.");
+            return false;
+        } else if (this.props.active_operator.phone === "") {
+            window.alert("INVALID PHONE NUMBER: Please provide a phone number.");
+            return false;
+        } else if (this.props.active_operator.username === "") {
+            window.alert("INVALID USERNAME: Please provide a username.");
+            return false;
+        } else if (this.state.mode === "new" && this.props.active_operator.password === "") {
+            window.alert("INVALID PASSWORD: Please provide a password.");
+            return false;
+        } else if (this.props.active_operator.village_id === "") {
+            window.alert("INVALID VILLAGE: Please select a Village for the Operator.");
+            return false;
+        }
+        return true;
     }
 
     render() {
@@ -84,9 +111,11 @@ class Operator extends Component {
                         <Button variant="success" style={{float: "right", marginLeft: "10px"}} onClick={() => this.saveOperator()}>
                             Save
                         </Button>
+                        {this.state.mode !== "new" ?
                         <Button variant="danger" style={{float: "right"}} onClick={() => this.deleteOperator()}>
                             Delete
                         </Button>
+                        : null }
                     </>
                 }
             </Card.Header>
@@ -102,8 +131,12 @@ class Operator extends Component {
                             <td>{this.props.active_operator.email}</td>
                         </tr>
                         <tr>
+                            <td>Phone Number: </td>
+                            <td>{this.props.active_operator.phone}</td>
+                        </tr>
+                        <tr>
                             <td>Village: </td>
-                            <td>{this.props.active_village.village_name}</td>
+                            <td>{this.props.active_village ? this.props.active_village.village_name : ""}</td>
                         </tr>
                     </tbody></Table>
                 :
@@ -127,6 +160,12 @@ class Operator extends Component {
                             </td>
                         </tr>
                         <tr>
+                            <td>Phone Number: </td>
+                            <td>
+                                <Form.Control id="admin|phone" onChange={this.handleChange} value={this.props.active_operator.phone}/>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Username: </td>
                             <td>
                                 <Form.Control id="admin|username" onChange={this.handleChange} value={this.props.active_operator.username}/>
@@ -135,7 +174,7 @@ class Operator extends Component {
                         <tr>
                             <td>Password: </td>
                             <td>
-                                <Form.Control placeholder="Leave blank to keep existing password." id="admin|password" onChange={this.handleChange} value={this.state.password}/>
+                                <Form.Control placeholder={this.state.mode === "new" ? "" : "Leave blank to keep existing password."} id="admin|password" onChange={this.handleChange} value={this.state.password}/>
                             </td>
                         </tr>
                         <tr>
@@ -169,7 +208,7 @@ const mapDispatchToProps = dispatch => ({
             field: field,
             value: value
         }
-    })
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Operator);

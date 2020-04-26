@@ -14,26 +14,18 @@ class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show_village: "",
-            show_operator: "",
         };
-		this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
         this.props.debug();
     }
 
-	handleChange(event) {
-	}
-
     showVillage(village) {
-        this.setState({show_village: village, show_operator: ""});
         this.props.show("", village);
     }
 
     showOperator(id, village) {
-        this.setState({show_operator: id, show_village: village});
         this.props.show(id, village);
     }
 
@@ -50,7 +42,7 @@ class Admin extends Component {
         for (let i in this.props.villages) {
             let v = this.props.villages[i];
             rows.push(<ListGroup.Item
-                          active={this.state.show_village === v.id}
+                          active={this.props.show_village === v.id}
                           onClick={() => this.showVillage(v.id)}
                           key={v.id}
                       >
@@ -63,14 +55,14 @@ class Admin extends Component {
     genOperatorRows() {
         let rows = [];
         let villages = Object.keys(this.props.operators);
-        if (this.state.show_village !== "") {
-            villages = [this.state.show_village];
+        if (this.props.show_village !== "") {
+            villages = [this.props.show_village];
         }
         for (let v in villages) {
             for (let i in this.props.operators[villages[v]]) {
                 let o = this.props.operators[villages[v]][i];
                 rows.push(<ListGroup.Item
-                              active={this.state.show_operator === o.id}
+                              active={this.props.show_operator === o.id}
                               onClick={() => this.showOperator(o.id, villages[v])}
                               key={o.id}
                           >
@@ -111,13 +103,13 @@ class Admin extends Component {
                 <Col xs={6} style={{height: "100%"}}>
                     <Row>
                         <Col><Card>
-                            <Village show_village={this.state.show_village}/>
+                            <Village show_village={this.props.show_village}/>
                         </Card></Col>
                     </Row>
                     <br/>
                     <Row>
                         <Col><Card>
-                            <Operator show_village={this.state.show_village} show_operator={this.state.show_operator}/>
+                            <Operator show_village={this.props.show_village} show_operator={this.props.show_operator}/>
                         </Card></Col>
                     </Row>
                 </Col>
@@ -129,6 +121,8 @@ class Admin extends Component {
 const mapStateToProps = state => ({
     villages: state.villages,
     operators: state.operators,
+    show_village: state.admin.show_village,
+    show_operator: state.admin.show_operator,
 });
 
 const mapDispatchToProps = dispatch => ({
