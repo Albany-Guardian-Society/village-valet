@@ -10,13 +10,23 @@ class MapContainer extends Component {
         this.state = {
             directions_cache: new Map()
         };
-        this.handleChange = this.handleChange.bind(this);
         this.locations = {};
         this.timePast = false;
         this.timeNow = null;
+        this.directionsCallback = this.directionsCallback.bind(this)
+
     }
 
-    handleChange(event) {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (((nextProps.ride.locations['pickup'].geolocation !== "" && nextProps.ride.locations['dropoff'].geolocation !== "") &&
+            (this.props.ride.locations['pickup'].geolocation.lat !== nextProps.ride.locations['pickup'].geolocation.lat ||
+                this.props.ride.locations['dropoff'].geolocation.lat !== nextProps.ride.locations['dropoff'].geolocation.lat)) ||
+            (nextState.response != null && this.state.response !== nextState.response)
+        ) {
+            return true
+        }
+        return this.props.ride.driver.id !== nextProps.ride.driver.id;
+
     }
 
     convertMetersToMiles(meters) {
@@ -39,7 +49,7 @@ class MapContainer extends Component {
 
     checkTimeInPast() {
         this.timeNow = moment();
-        if (this.props.ride.ride_data.date === '' || this.props.ride.locations.pickup.time === '')  {
+        if (this.props.ride.ride_data.date === '' || this.props.ride.locations.pickup.time === '') {
             this.timePast = true;
             return
         }
@@ -56,8 +66,8 @@ class MapContainer extends Component {
                     key = this.locations['origin'].lat + this.locations['destination'].lat
                 }
                 this.state.directions_cache.set(key, response);
-                this.setState({directions_cache: this.state.directions_cache});
                 this.storeRouteInfo(response)
+                this.setState({directions_cache: this.state.directions_cache, response: response});
             } else {
                 console.log('response: ', response)
             }
@@ -87,9 +97,21 @@ class MapContainer extends Component {
             this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
         }
     }
-
     makeDirections() {
-        if ( this.locations['origin'].lat == null || this.locations['destination'].lat == null || this.state.directions_cache.has(this.locations['origin'].lat + this.locations['destination'].lat)) {
+        if (!this.locations['origin'].lat || !this.locations['destination'].lat) {
+            return;
+        }
+        let key;
+        if ('waypoint' in Object.keys(this.locations)) {
+            key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
+        } else {
+            key = this.locations['origin'].lat + this.locations['destination'].lat
+        }
+        if (this.state.directions_cache.has(key)) {
+            this.setState({
+                directions_cache: this.state.directions_cache,
+                response: this.state.directions_cache.get(key)
+            });
             return;
         }
         return <DirectionsService
@@ -117,17 +139,10 @@ class MapContainer extends Component {
     }
 
     renderDirections() {
-        let key;
-        if ('waypoint' in Object.keys(this.locations)) {
-            key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
-        } else {
-            key = this.locations['origin'].lat + this.locations['destination'].lat
-        }
-        const response = this.state.directions_cache.get(key);
-        if (response == null) return;
+        if (!this.state.response) return;
         return <DirectionsRenderer
             options={{
-                directions: response
+                directions: this.state.response
             }}
             onLoad={directionsRenderer => {
                 console.log('DirectionsRenderer onLoad directionsRenderer: ', directionsRenderer)
@@ -138,26 +153,26 @@ class MapContainer extends Component {
         />
     }
 
-
     render() {
-        return  (
-                <GoogleMap
-                    id='map'
-                    zoom={8}
-                    mapContainerStyle={{width: "100%", height: "100%"}}
-                    center={{lat: 42.6526, lng: -73.7562}}
-                >
-                    {this.locationOrder() }
-                    {this.checkTimeInPast()}
-                    {this.locations && this.makeDirections()}
-                    {this.locations && this.renderDirections()}
-                </GoogleMap>
+        return (
+            <GoogleMap
+                id='map'
+                zoom={8}
+                mapContainerStyle={{width: "100%", height: "100%"}}
+                center={{lat: 42.6526, lng: -73.7562}}
+            >
+                {this.locationOrder()}
+                {this.checkTimeInPast()}
+                {this.locations && this.makeDirections()}
+                {this.renderDirections()}
+            </GoogleMap>
         )
     }
 }
 
+
 const mapStateToProps = state => ({
-    ride: state.active_ride
+    ride: state.active_ride,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -165,6 +180,7 @@ const mapDispatchToProps = dispatch => ({
         type: "update_active_ride",
         payload: ride,
     }),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapContainer);
