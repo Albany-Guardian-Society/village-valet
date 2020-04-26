@@ -1,12 +1,17 @@
 const {getDrivers, getUser} = require("../firebase/users");
 const moment = require("moment")
 const {sendEmail} = require("./email");
-const {getOperators} = require("../firebase/operators");
-const {getVillages} = require("../firebase/villages");
-const {generateRideConfirmationToken} = require("./token");
+const {getOperators, getOperatorByUsername, addOperator, removeOperator} = require("../firebase/operators");
+const {getVillage, getVillages} = require("../firebase/villages");
+const {generateRideConfirmationToken, generateAdminConfirmationToken} = require("./token");
+const generator = require('generate-password');
+const bcrypt = require("bcryptjs");
 
 
 require("dotenv").config()
+
+const EMAIL = process.env.SMTP_EMAIL;
+const HOST_NAME = process.env.HOST_NAME;
 
 
 exports.sendExpirationNotifications = async () => {
@@ -25,6 +30,9 @@ exports.sendExpirationNotifications = async () => {
                         const message = {
                             // Comma separated list of recipients
                             to: '"' + driver.personal_info.first_name + " " + driver.personal_info.last_name + '" <' + driver.personal_info.email + ">",
+
+                            replyTo: village.email,
+
 
                             // Subject of the message
                             subject: driver.personal_info.first_name + " " + driver.personal_info.last_name + ' Vetting Qualification is Almost Expired: ' + specific_vetting.expiration_date,
@@ -57,6 +65,9 @@ exports.sendExpirationNotifications = async () => {
                             const message = {
                                 // Comma separated list of recipients
                                 to: '"' + operator.first_name + " " + operator.last_name + '" <' + operator.email + ">",
+
+                                replyTo: village.email,
+
 
                                 // Subject of the message
                                 subject: 'Your Vetting Qualification is Almost Expired: ' + specific_vetting.expiration_date,
@@ -91,13 +102,15 @@ exports.sendExpirationNotifications = async () => {
 }
 
 exports.sendConfirmationEmail = async (ride) => {
-    const driver = (await getUser(ride.ride_data.village_id, ride.driver.id))
-    const rider = (await getUser(ride.ride_data.village_id, ride.rider.id))
-    const village = (await getVillages(ride.ride_data.village_id))[0]
+    const driver = await getUser(ride.ride_data.village_id, ride.driver.id)
+    const rider = await getUser(ride.ride_data.village_id, ride.rider.id)
+    const village = await getVillage(ride.ride_data.village_id)
     if (driver.personal_info.email) {
         const message = {
             // Comma separated list of recipients
             to: '"' + driver.personal_info.first_name + " " + driver.personal_info.last_name + '" <' + driver.personal_info.email + ">",
+
+            replyTo: village.email,
 
             // Subject of the message
             subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
@@ -116,7 +129,7 @@ exports.sendConfirmationEmail = async (ride) => {
                 `<p><br></p>\n` +
                 `<p>Your rider, ${rider.personal_info.first_name} ${rider.personal_info.last_name},
              may have special accommodations which can be seen here: ${rider.accommodations.special}. </p>\n`
-                + `<p> Please confirm your ride by calling us or clicking the following link https://${process.env.HOST_NAME}/admin/confirm_ride?token=${await generateRideConfirmationToken(ride)} </p>`
+                + `<p> Please confirm your ride by calling us or clicking the following link https://${HOST_NAME}/api/v1/admin/confirm_ride?token=${await generateRideConfirmationToken(ride)} </p>`
                 + `<p>You will be unable to cancel this ride 48 hours prior to the pick up time. If you have any questions or would like to make any changes please feel
             free to contact us. </p>\n` +
                 `<p><br></p>\n` +
@@ -132,6 +145,8 @@ exports.sendConfirmationEmail = async (ride) => {
         const message = {
             // Comma separated list of recipients
             to: '"' + rider.personal_info.first_name + " " + rider.personal_info.last_name + '" <' + rider.personal_info.email + ">",
+
+            replyTo: village.email,
 
             // Subject of the message
             subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
@@ -163,5 +178,115 @@ exports.sendConfirmationEmail = async (ride) => {
         };
         await sendEmail(message)
     }
+}
+
+exports.sendCancellationEmail = async (ride) => {
+    const driver = await getUser(ride.ride_data.village_id, ride.driver.id)
+    const rider = await getUser(ride.ride_data.village_id, ride.rider.id)
+    const village = await getVillage(ride.ride_data.village_id)
+    if (driver.personal_info.email) {
+        const message = {
+            // Comma separated list of recipients
+            to: '"' + driver.personal_info.first_name + " " + driver.personal_info.last_name + '" <' + driver.personal_info.email + ">",
+
+            replyTo: village.email,
+
+            // Subject of the message
+            subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
+
+            // plaintext body
+            text: '',
+            html: `<p><strong><u>AGS Village Valet Ride Cancellation</u></strong></p>\n` +
+                `<p>Hello ${driver.personal_info.first_name} ${driver.personal_info.last_name},</p>\n` +
+                `<p>We are contacting to information you that the ride scheduled for ${rider.personal_info.first_name} ${rider.personal_info.last_name} on ${ride.ride_data.date} at  ${ride.locations.pickup.time} has been cancelled. </p>\n` +
+                +`<p> If you have any questions feel free to contact us. </p>\n` +
+                `<p><br></p>\n` +
+                `<p>Sincerely,</p>\n` +
+                `<p>Village Valet</p>\n` +
+                `<p><br></p>\n` +
+                `<p>${village.phone_number}</p>\n` +
+                `<p>${village.email}</p>\n`
+        };
+        await sendEmail(message)
+    }
+    if (rider.personal_info.email) {
+        const message = {
+            // Comma separated list of recipients
+            to: '"' + rider.personal_info.first_name + " " + rider.personal_info.last_name + '" <' + rider.personal_info.email + ">",
+
+            replyTo: village.email,
+
+            // Subject of the message
+            subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
+
+            // plaintext body
+            text: '',
+            html: `<p><strong><u>AGS Village Valet Ride Cancellation</u></strong></p>\n` +
+                `<p>Hello ${rider.personal_info.first_name} ${rider.personal_info.last_name},</p>\n` +
+                `<p>We are contacting to information you that the ride scheduled for  ${ride.ride_data.date} at  ${ride.locations.pickup.time} has been cancelled. </p>\n` +
+                +`<p> If you have any questions feel free to contact us. </p>\n` +
+                `<p><br></p>\n` +
+                `<p>Sincerely,</p>\n` +
+                `<p>Village Valet</p>\n` +
+                `<p><br></p>\n` +
+                `<p>${village.phone_number}</p>\n` +
+                `<p>${village.email}</p>\n`
+        };
+        await sendEmail(message)
+    }
+}
+
+exports.adminStartUp = async () => {
+    const admins = getOperatorByUsername('admin');
+    for (const admin of admins) {
+        if (!admin.confirmed) {
+            await removeOperator(admin.id)
+        }
+
+    }
+    for (const admin of admins) {
+        if (admin.confirmed) {
+            return;
+        }
+    }
+    const password = generator.generate({
+        length: 16,
+        numbers: true,
+        symbols: true,
+        strict: true
+    });
+    const hash = await bcrypt.hash(password, 10);
+    const admin = {
+        first_name: 'Admin',
+        last_name: 'Admin',
+        email: EMAIL,
+        username: 'admin',
+        password: hash,
+        confirmed: false
+    }
+    await addOperator(admin)
+    await sendStartUpEmail(admin, password)
+}
+
+const sendStartUpEmail = async (admin, password) => {
+    const message = {
+        // Comma separated list of recipients
+        to: EMAIL,
+
+        // Subject of the message
+        subject: 'Startup Email For Village Valet',
+
+        // plaintext body
+        text: '',
+        html: `<p>Hello Administrator,</p>\n` +
+            `<p>Here is the username and password for the current account:</p>\n` +
+            `<p>Username: <strong>admin</strong></p>\n` +
+            `<p>Password: <strong>${password}</strong></p>\n` +
+            `<p>Please click the following link to confirm the account activation: https://${HOST_NAME}/api/v1/admin/confirm_admin?token=${await generateAdminConfirmationToken(admin)}</p>\n` +
+            `<p><br></p>\n` +
+            `<p>Sincerely,</p>\n` +
+            `<p>Village Valet System</p>\n`
+    };
+    await sendEmail(message)
 }
 

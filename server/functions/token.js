@@ -15,3 +15,16 @@ exports.generateRideConfirmationToken = (ride) => {
         audience: 'user',
     })
 }
+
+exports.generateAdminConfirmationToken = (admin) => {
+    return jwt.sign({
+        scope: 'confirm_admin',
+        id: admin.id,
+        village_id: admin.village_id
+    }, JWT_SECRET, {
+        expiresIn: "1h",
+        audience: 'user',
+    })
+}
+
+

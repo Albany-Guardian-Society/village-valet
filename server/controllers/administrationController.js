@@ -1,4 +1,5 @@
 const {getRide, updateRide} = require("../firebase/rides");
+const {getOperatorById, updateOperator} = require("../firebase/operators")
 require("dotenv").config()
 
 const GoogleMapsToken = process.env.GOOGLE_MAPS_TOKEN
@@ -16,15 +17,14 @@ exports.confirmRide = async (req, res) => {
         return
     }
     if (!scope || !id || !ride_id) {
-        res.status('401').send({error: 'Invalid Token Body'});
+        res.status('400').send({error: 'Invalid Token Body'});
         return
     }
-    const oldRideArray = await getRide(village_id, ride_id);
-    if (oldRideArray.length === 0) {
+    const oldRide = await getRide(village_id, ride_id);
+    if (oldRide.length === 0) {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    const oldRide = oldRideArray[0];
     if (oldRide.driver.id !== id) {
         res.status(409).send({error: 'Driver is longer associated with this ride'});
         return
@@ -36,6 +36,34 @@ exports.confirmRide = async (req, res) => {
     }
     res.status(500).send({error: 'Could not edit ride in database'})
 };
+
+exports.confirmAdmin = async (req, res) => {
+    const {scope, id, village_id} = res.locals.jwtPayload;
+    if (scope !== 'confirm_admin') {
+        res.status('401').send({error: 'Invalid Scope'});
+        return
+    }
+    if (!scope || !id || !village_id) {
+        res.status('400').send({error: 'Invalid Token Body'});
+        return
+    }
+    if (village_id !== 'admin') {
+        res.status('400').send({error: 'Not an admin token'});
+        return
+    }
+    const admin = await getOperatorById(id);
+    if (admin.length === 0) {
+        res.status(404).send({error: 'Operator not found'});
+        return
+    }
+    admin.confirmed = true
+    if (await updateOperator(admin)) {
+        res.status(200).send(`https://${req.headers.host}/login`);
+        return
+    }
+    res.status(500).send({error: 'Could not edit operator in database'})
+};
+
 
 /**
  * A function which sends the client a Google Maps API Token

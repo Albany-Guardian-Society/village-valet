@@ -1,5 +1,5 @@
 const {addRide, getRide, getRides, getRidesByDate, removeRide, updateRide} = require("../firebase/rides");
-const {sendConfirmationEmail} = require("../functions/administration");
+const {sendConfirmationEmail, sendCancellationEmail} = require("../functions/administration");
 
 
 exports.getAllRides = async (req, res) => {
@@ -82,7 +82,8 @@ exports.deleteRide = async (req, res) => {
         return
     }
     if (await removeRide(ride_id)) {
-        res.status(200).send({success:true});
+        res.status(200).send({success: true});
+        await sendCancellationEmail(ride);
         return
     }
     res.status(500).send({error:"Could not delete ride from database"})

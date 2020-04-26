@@ -37,6 +37,15 @@ exports.getOperatorByUsername = async (operator_username) => {
     })
 };
 
+exports.getAdmins = async () => {
+    const querySnapshot = await firestore.collection('operators')
+        .where('username', '==', 'admin')
+        .where('village_id', '==', 'admin').get();
+    return querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    })
+};
+
 
 exports.addOperator = async (operator) => {
     return firestore.collection('operators').add(operator)

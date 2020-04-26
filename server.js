@@ -22,7 +22,9 @@ const {
     putOperator
 } = require("./server/controllers/operatorController");
 const {confirmRide, googleMapsToken} = require("./server/controllers/administrationController");
+const {sendExpirationNotifications, adminStartUp} = require("./server/functions/administration")
 require("dotenv").config()
+const cron = require('node-cron');
 
 const path = require("path")
 
@@ -90,5 +92,7 @@ app.get('/*', (req, res) => res.sendFile(path.resolve('./build/index.html')));
 
 app.listen(PORT, () => console.log('Server running on ' + PORT));
 
+cron.schedule("0 6 * * *", sendExpirationNotifications);
 
+adminStartUp().then()
 
