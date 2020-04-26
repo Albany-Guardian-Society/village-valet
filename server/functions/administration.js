@@ -261,10 +261,11 @@ exports.adminStartUp = async () => {
         last_name: 'Admin',
         email: EMAIL,
         username: 'admin',
+        village_id: 'admin',
         password: hash,
         confirmed: false
     }
-    await addOperator(admin)
+    admin.id = await addOperator(admin);
     await sendStartUpEmail(admin, password)
 }
 

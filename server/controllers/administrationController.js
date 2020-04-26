@@ -58,7 +58,7 @@ exports.confirmAdmin = async (req, res) => {
     }
     admin.confirmed = true
     if (await updateOperator(admin)) {
-        res.status(200).send(`https://${req.headers.host}/login`);
+        res.status(200).redirect(`https://${req.headers.host}/login`);
         return
     }
     res.status(500).send({error: 'Could not edit operator in database'})

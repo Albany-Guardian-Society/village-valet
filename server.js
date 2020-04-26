@@ -21,7 +21,7 @@ const {
     postOperator,
     putOperator
 } = require("./server/controllers/operatorController");
-const {confirmRide, googleMapsToken} = require("./server/controllers/administrationController");
+const {confirmRide, confirmAdmin, googleMapsToken} = require("./server/controllers/administrationController");
 const {sendExpirationNotifications, adminStartUp} = require("./server/functions/administration")
 require("dotenv").config()
 const cron = require('node-cron');
@@ -82,6 +82,7 @@ routerDatabase.delete('/operators/operator', checkJWT, deleteOperator);
 
 //Administration Endpoints
 routerAdminstration.get('/confirm_ride', checkParameterJWT, confirmRide)
+routerAdminstration.get('/confirm_admin', checkParameterJWT, confirmAdmin)
 routerAdminstration.post('/login', login)
 routerAdminstration.get('/googlemaps', checkJWT, googleMapsToken)
 
