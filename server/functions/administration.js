@@ -237,7 +237,7 @@ exports.sendCancellationEmail = async (ride) => {
 }
 
 exports.adminStartUp = async () => {
-    const admins = getOperatorByUsername('admin');
+    const admins = await getOperatorByUsername('admin');
     for (const admin of admins) {
         if (!admin.confirmed) {
             await removeOperator(admin.id)
