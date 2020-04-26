@@ -1,7 +1,7 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer")
 
 
-require('dotenv').config();
+require("dotenv").config();
 
 const SMTP_SERVER = process.env.SMTP_SERVER;
 const SMTP_PORT = process.env.SMTP_PORT;
@@ -22,7 +22,7 @@ transporter = nodemailer.createTransport({
 });
 
 
-export const sendEmail = async (message) => {
+exports.sendEmail = async (message) => {
     return await transporter.sendMail({
         from: `"Village Valet" <${EMAIL}>`, // sender address
         ...message

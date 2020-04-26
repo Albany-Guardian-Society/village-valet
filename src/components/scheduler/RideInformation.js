@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import firebase from 'firebase/app';
 
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -37,12 +36,9 @@ class RideInformation extends Component {
         } else if (label_flag[1] === "purpose") {
             //updating the date
             this.props.updateScheduler(label_flag[1], null, event.target.value);
-        } else if (label_flag[1] === "meta") {
-            console.log(label_flag[2]);
-            if (label_flag[2] === "samereturn") {
-                //updating the date
-                this.props.updateScheduler(label_flag[2], null, event.target.checked)
-            }
+        } else if (label_flag[1] === "meta" && label_flag[2] === "samereturn") {
+            //updating the date
+            this.props.updateScheduler(label_flag[2], null, event.target.checked)
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
@@ -73,11 +69,6 @@ class RideInformation extends Component {
         return items
     }
 
-    onSelected(e) {
-        console.log("value", e.target.value);
-        //here you will see the current selected value of the select input
-    }
-
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
         this.count += 1
@@ -87,7 +78,10 @@ class RideInformation extends Component {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", new firebase.firestore.GeoPoint(place.geometry.location.lat(), place.geometry.location.lng()));
+            this.props.updateScheduler(variable, "geolocation", {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            });
 
         } else {
             console.log('Autocomplete is not loaded yet!')
@@ -109,7 +103,6 @@ class RideInformation extends Component {
         let options = [<option value={""} label={""}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            console.log(car);
             return <option value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;
@@ -147,10 +140,10 @@ class RideInformation extends Component {
                                         </td>
                                         <td>
                                             <Form.Control as="select" placeholder="" id='sched_purpose' onChange={this.handleChange} value={this.props.active_ride.ride_data.purpose}>
-                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Regligous", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
-                                                .map((item) => {
-                                                    return <option label={item} value={item} key={item}/>
-                                                })}
+                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Religious", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
+                                                    .map((item) => {
+                                                        return <option label={item} value={item} key={item}/>
+                                                    })}
                                             </Form.Control>
                                         </td>
                                     </tr>
@@ -263,9 +256,10 @@ class RideInformation extends Component {
                                         </td>
                                         <td>
                                             <Form.Control as="select"
-                                                          id='sched_dropoff_address' onChange={(e) => this.handleCommonAddress(e, "dropoff")}
-                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_"+this.props.active_ride.locations.dropoff.address)}>
-                                                  {this.getCommonAddresses("dropoff")}
+                                                          id='sched_dropoff_address'
+                                                          onChange={(e) => this.handleCommonAddress(e, "dropoff")}
+                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_" + this.props.active_ride.locations.dropoff.address)}>
+                                                {this.getCommonAddresses("dropoff")}
                                             </Form.Control>
                                         </td>
                                     </tr>

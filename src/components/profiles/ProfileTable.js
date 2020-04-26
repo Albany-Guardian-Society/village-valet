@@ -199,7 +199,7 @@ class ProfileTable extends Component {
                             <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.personal_info.last_name}</td>
                         </>
                     }
-                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.village_id}</td>
+                    <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.primary_village_id}</td>
                     {this.props.mode === "all" ?
                         <td id={user.id} onClick={(e) => this.handleSelect(e)}>{user.status.replace(/^\w/, c => c.toUpperCase())}</td>
                     :

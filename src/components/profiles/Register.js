@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import firestore from "../../modules/firestore.js";
 
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
@@ -17,6 +16,9 @@ import VehicleInformation from "./registration/VehicleInformation.js";
 import VolunteerSchedule from "./registration/VolunteerSchedule.js";
 import CaregiverInformation from "./registration/CaregiveInformation";
 import moment from "moment";
+import axios from "axios";
+import {API_ROOT} from "../../modules/api";
+import cookies from "react-cookies";
 
 // This page will build a user in its state then export that to the firebase.
 // It should hopefully not "hit" the reducer to minimize clutter.
@@ -302,13 +304,16 @@ class Register extends Component {
 
     handleSubmit() {
         if (this.validateRegistration() && window.confirm("Are you sure you want to register this account for " + this.props.registration.personal_info.first_name + " " + this.props.registration.personal_info.last_name + "?")) {
-            firestore.collection("users").add(this.props.registration)
-                .then((docRef) => {
-                    this.props.addUser(this.props.registration, docRef.id);
-                    this.props.clearRegistration();
-                    //This is part of react-router and allows forced page routing
-                    this.props.history.push('/Profiles');
-                });
+            axios.post(API_ROOT + "/database/users/user", {user: this.props.registration}, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
+                this.props.addUser(this.props.registration, response.data.id);
+                this.props.clearRegistration();
+                //This is part of react-router and allows forced page routing
+                this.props.history.push('/Profiles');
+            });
         }
     }
 

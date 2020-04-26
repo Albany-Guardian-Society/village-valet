@@ -8,7 +8,6 @@ import Col from "react-bootstrap/Col";
 
 import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
-import Table from "react-bootstrap/Table";
 
 class SelectDriver extends Component {
     constructor(props) {
@@ -28,7 +27,6 @@ class SelectDriver extends Component {
         let options = [<option value={""} label={""} key={"null"}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            console.log(car);
             return <option key={car.lp} value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;
