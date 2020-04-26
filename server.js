@@ -10,7 +10,7 @@ module.exports = {firestore};
 
 const {checkJWT, checkParameterJWT} = require("./server/middleware/JWToken");
 const {deleteUser, getAllUsers, getOneUser, patchUser_active, patchUser_vetting, postUser, putUser} = require("./server/controllers/usersController");
-const {deleteRide, getAllRides, getOneRide, postRide, putRide} = require("./server/controllers/ridesController");
+const {deleteRide, getAllRides, getOneRide, postRide, putRide, patchRideStatus} = require("./server/controllers/ridesController");
 const {deleteVillage, getAllVillages, getOneVillage, postVillage, putVillage} = require("./server/controllers/villagesController");
 const {
     deleteOperator,
@@ -64,6 +64,8 @@ routerDatabase.get('/rides/ride', checkJWT, getOneRide);
 routerDatabase.post('/rides/ride', checkJWT, postRide);
 routerDatabase.put('/rides/ride', checkJWT, putRide);
 routerDatabase.delete('/rides/ride', checkJWT, deleteRide);
+routerDatabase.patch('/rides/ride/status', checkJWT, patchRideStatus);
+
 
 //Village Endpoints
 routerDatabase.get('/villages/all', checkJWT, getAllVillages);
