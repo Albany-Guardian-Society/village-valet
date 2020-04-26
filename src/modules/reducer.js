@@ -166,12 +166,12 @@ const BLANK_OPERATOR = {
 }
 
 const initialState = {
-    authenticated: true,
+    authenticated: false,
     loaded: false,
     operator: {
-        first_name: "admin",
+        first_name: "",
         last_name: "",
-        village_id: "admin",
+        village_id: "",
     },
     villages: {},
     users: {},
