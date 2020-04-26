@@ -126,6 +126,7 @@ const BLANK_RIDE = {
         },
     },
     ride_data: {
+        village_id: "",
         mileage: {
             driver: "",
             rider: ""
@@ -611,7 +612,7 @@ const VillageReducer = (state = initialState, action) => {
         case "ride_deactivate": {
             let newState = _.cloneDeep(state);
             let rideID = action.payload;
-            axios.patch(API_ROOT + '/database/users/user/status', {
+            axios.patch(API_ROOT + '/database/rides/ride/status', {
                 ride_id: rideID,
                 status: "inactive"
             }, {
@@ -628,7 +629,7 @@ const VillageReducer = (state = initialState, action) => {
         case "ride_reactivate": {
             let newState = _.cloneDeep(state);
             let rideID = action.payload;
-            axios.patch(API_ROOT + '/database/users/user/status', {
+            axios.patch(API_ROOT + '/database/rides/ride/status', {
                 ride_id: rideID,
                 status: "active"
             }, {

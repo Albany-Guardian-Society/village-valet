@@ -55,7 +55,7 @@ exports.putRide = async (req, res) => {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    if (oldRide.village_id !== village_id || village_id !== ride.village_id) {
+    if (oldRide.village_id !== village_id || village_id !== ride.village_id || village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -78,7 +78,7 @@ exports.patchRideStatus = async (req, res) => {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    if (oldRide.village_id !== village_id) {
+    if (oldRide.village_id !== village_id || village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -102,8 +102,8 @@ exports.deleteRide = async (req, res) => {
     if (ride == null) {
         res.status(404).send({error: "Could not find ride in database"})
     }
-    if (village_id !== ride.village_id) {
-        res.status(401).send({error:'Access forbidden'});
+    if (village_id !== ride.village_id || village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (await removeRide(ride_id)) {

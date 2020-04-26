@@ -114,7 +114,7 @@ exports.patchUser_active = async (req, res) => {
         res.status(404).send({error: 'User not found'});
         return
     }
-    if (oldUser.villages.indexOf(village_id) === -1) {
+    if (oldUser.villages.indexOf(village_id) === -1 || village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
