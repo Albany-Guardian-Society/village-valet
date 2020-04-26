@@ -39,6 +39,8 @@ class EditRide extends Component {
     }
 
     handleSave(event){
+        this.props.saveRide(this.props.active_ride)
+        console.log(this.props.active_ride)
         window.alert('Saved!')
     }
 
@@ -320,6 +322,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+
     updateScheduler: (type, field, value) => dispatch({
         type: "scheduler",
         payload: {
@@ -328,6 +331,12 @@ const mapDispatchToProps = dispatch => ({
             value: value
         }
     }),
+
+    saveRide: (ride) => dispatch({
+        type: "save_ride",
+        payload : ride
+    })
+
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditRide));
