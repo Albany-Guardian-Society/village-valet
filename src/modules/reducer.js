@@ -453,7 +453,6 @@ const VillageReducer = (state = initialState, action) => {
 
     case "scheduler": {
         let newState = _.cloneDeep(state);
-        console.log(action.payload)
         if (action.payload.type === "date") {
             newState.active_ride.ride_data.date = action.payload.value;
         } else if (action.payload.type === "purpose") {
