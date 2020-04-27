@@ -29,7 +29,7 @@ exports.confirmRide = async (req, res) => {
         res.status(409).send({error: 'Driver is longer associated with this ride'});
         return
     }
-    oldRide.driver_confirmed = true;
+    oldRide.ride_data.driver_confirmed = true;
     if (await updateRide(oldRide)) {
         res.status(200).send({success: true});
         return

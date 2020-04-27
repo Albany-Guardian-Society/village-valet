@@ -135,6 +135,7 @@ const BLANK_RIDE = {
             driver: "",
             rider: "",
         },
+        driver_confirmed: false,
         traffic: "",
         date: "",
         purpose: "",

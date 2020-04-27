@@ -192,15 +192,14 @@ exports.sendCancellationEmail = async (ride) => {
             replyTo: village.email,
 
             // Subject of the message
-            subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
+            subject: 'AGS Village Valet Ride Cancellation: ' + ride.ride_data.date,
 
             // plaintext body
             text: '',
             html: `<p><strong><u>AGS Village Valet Ride Cancellation</u></strong></p>\n` +
                 `<p>Hello ${driver.personal_info.first_name} ${driver.personal_info.last_name},</p>\n` +
                 `<p>We are contacting to information you that the ride scheduled for ${rider.personal_info.first_name} ${rider.personal_info.last_name} on ${ride.ride_data.date} at  ${ride.locations.pickup.time} has been cancelled. </p>\n` +
-                +`<p> If you have any questions feel free to contact us. </p>\n` +
-                `<p><br></p>\n` +
+                `<p>If you have any questions feel free to contact us. </p>\n` +
                 `<p>Sincerely,</p>\n` +
                 `<p>Village Valet</p>\n` +
                 `<p><br></p>\n` +
@@ -217,15 +216,14 @@ exports.sendCancellationEmail = async (ride) => {
             replyTo: village.email,
 
             // Subject of the message
-            subject: 'AGS Village Valet Ride Confirmation: ' + ride.ride_data.date,
+            subject: 'AGS Village Valet Ride Cancellation: ' + ride.ride_data.date,
 
             // plaintext body
             text: '',
             html: `<p><strong><u>AGS Village Valet Ride Cancellation</u></strong></p>\n` +
                 `<p>Hello ${rider.personal_info.first_name} ${rider.personal_info.last_name},</p>\n` +
                 `<p>We are contacting to information you that the ride scheduled for  ${ride.ride_data.date} at  ${ride.locations.pickup.time} has been cancelled. </p>\n` +
-                +`<p> If you have any questions feel free to contact us. </p>\n` +
-                `<p><br></p>\n` +
+                `<p> If you have any questions feel free to contact us. </p>\n` +
                 `<p>Sincerely,</p>\n` +
                 `<p>Village Valet</p>\n` +
                 `<p><br></p>\n` +
