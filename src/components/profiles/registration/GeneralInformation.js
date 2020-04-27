@@ -136,7 +136,7 @@ class GeneralInformation extends Component {
 const mapStateToProps = state => ({
     personal_info: state.active_profile.personal_info,
     user_type: state.active_profile.user_type,
-    village_id: state.active_profile.village_id,
+    village_id: state.active_profile.primary_village_id,
     user_villages: state.active_profile.villages,
     villages: state.villages,
     operator_village: state.operator.village_id

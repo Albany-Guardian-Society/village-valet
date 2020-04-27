@@ -2,10 +2,6 @@ const {addVillage, getVillage, getVillages, removeVillage, updateVillage} = requ
 
 exports.getAllVillages = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
-    if (village_id !== 'admin') {
-        res.status(403).send({error: 'Access forbidden'});
-        return
-    }
     res.status(200).send(await getVillages(village_id))
 };
 

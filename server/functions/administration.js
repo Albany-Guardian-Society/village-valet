@@ -183,7 +183,7 @@ exports.sendConfirmationEmail = async (ride) => {
 exports.sendCancellationEmail = async (ride) => {
     const driver = await getUser(ride.ride_data.village_id, ride.driver.id)
     const rider = await getUser(ride.ride_data.village_id, ride.rider.id)
-    const village = await getVillage(ride.ride_data.village_id)
+    const village = (await getVillage(ride.ride_data.village_id))[0]
     if (driver.personal_info.email) {
         const message = {
             // Comma separated list of recipients

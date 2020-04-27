@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table"
 
 import MapContainer from "../google-maps/MapContainer.js";
+import moment from "moment";
 
 
 // Above are all the imports for this file.
@@ -60,7 +61,7 @@ class Confirmation extends Component {
                             </tr>
                             <tr>
                                 <td>Pickup Time:</td>
-                                <td>{this.props.active_ride.locations.pickup.time}</td>
+                                <td>{moment(this.props.active_ride.locations.pickup.time, 'HH:mm').format('hh:mm a')}</td>
                             </tr>
                             <tr>
                                 <td>Dropoff Location:</td>
@@ -68,11 +69,13 @@ class Confirmation extends Component {
                             </tr>
                             <tr>
                                 <td>Dropoff Time:</td>
-                                <td>{this.props.active_ride.locations.dropoff.time}</td>
+                                <td>{moment(this.props.active_ride.locations.dropoff.time, 'HH:mm').format('hh:mm a')}</td>
                             </tr>
                             <tr>
-                                <td>Trip Duration:</td>
-                                <td>{this.props.active_ride.ride_data.time_total.rider}</td>
+                                <td>Driver Trip Duration:</td>
+                                <td>{this.props.active_ride.ride_data.time_total.driver ? moment("2015-01-01").startOf('day')
+                                    .seconds(this.props.active_ride.ride_data.time_total.driver)
+                                    .format('H [hours] mm [minutes]') : ""}</td>
                             </tr>
                             <tr>
                                 <td>Driver:</td>

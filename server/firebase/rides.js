@@ -23,11 +23,11 @@ exports.getRide = async (village_id, ride_id) => {
     data = {...data, id: doc.id}
     if (village_id === 'admin') return data;
     if (data) {
-        if (data['village_id'].indexOf(village_id) !== -1) {
+        if (data.ride_data.village_id === village_id) {
             return data
         }
     }
-    return []
+    return {}
 };
 
 exports.getRidesByDate = async (village_id, date) => {

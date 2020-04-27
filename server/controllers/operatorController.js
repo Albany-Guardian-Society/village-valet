@@ -143,7 +143,7 @@ exports.putOperator = async (req, res) => {
     }
     if (!operator.password) {
         const oldOperator = await getOperatorByIdFull(operator.id)
-        if (oldOperator.length === 0) {
+        if (!oldOperator) {
             res.status(404).send({error: "Operator not found"})
             return
         }
