@@ -16,11 +16,7 @@ class Admin extends Component {
         this.state = {
         };
     }
-
-    componentDidMount() {
-        this.props.debug();
-    }
-
+    
     showVillage(village) {
         this.props.show("", village);
     }
