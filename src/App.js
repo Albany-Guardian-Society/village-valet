@@ -18,6 +18,7 @@ import Metrics from './components/metrics/Metrics.js';
 import Admin from "./components/admin/Admin.js"
 import Error from './components/Error.js';
 import {LoadScript} from "@react-google-maps/api";
+import EditRide from "./components/ledger/EditRide";
 import cookie from 'react-cookies'
 
 
@@ -49,6 +50,7 @@ class App extends Component {
                                         <Route path="/Profiles/Register" component={Register}/>
                                         <Route path="/Profiles/User/*" component={Profile}/>
                                         <Route path="/Profiles" component={Profiles}/>
+                                        <Route path="/Ledger/EditRide" component={EditRide}/>
                                         <Route path="/Ledger" component={Ledger}/>
                                         <Route path="/Metrics" component={Metrics}/>
                                         <Route path="/Admin" component={Admin}/>

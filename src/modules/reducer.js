@@ -97,6 +97,7 @@ const BLANK_PROFILE = {
 };
 
 const BLANK_RIDE = {
+    status: "",
     id: "",
     rider: {
         first_name: "",
@@ -125,6 +126,7 @@ const BLANK_RIDE = {
         },
     },
     ride_data: {
+        village_id: "",
         mileage: {
             driver: "",
             rider: ""
@@ -587,6 +589,54 @@ const VillageReducer = (state = initialState, action) => {
         newState.active_profile = _.cloneDeep(BLANK_PROFILE);
         return newState;
     }
+
+        case "ride_cancel": {
+            let newState = _.cloneDeep(state);
+            axios.delete(API_ROOT + '/database/rides/ride', {
+                data: {user_id: action.payload},
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+            });
+            delete newState.rides[action.payload];
+            return newState;
+        }
+
+        case "ride_deactivate": {
+            let newState = _.cloneDeep(state);
+            let rideID = action.payload;
+            axios.patch(API_ROOT + '/database/rides/ride/status', {
+                ride_id: rideID,
+                status: "inactive"
+            }, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+            })
+            newState.rides[rideID].status = "inactive";
+            return newState;
+        }
+
+        case "ride_reactivate": {
+            let newState = _.cloneDeep(state);
+            let rideID = action.payload;
+            axios.patch(API_ROOT + '/database/rides/ride/status', {
+                ride_id: rideID,
+                status: "active"
+            }, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+            })
+            newState.rides[rideID].status = "active";
+            return newState;
+        }
 
         case "add_ride": {
             let newState = _.cloneDeep(state);

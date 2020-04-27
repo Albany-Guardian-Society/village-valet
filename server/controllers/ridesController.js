@@ -55,7 +55,7 @@ exports.putRide = async (req, res) => {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    if (oldRide.village_id !== village_id || village_id !== ride.village_id) {
+    if (oldRide.village_id !== village_id || village_id !== ride.village_id || village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -63,8 +63,33 @@ exports.putRide = async (req, res) => {
         res.status(200).send({success: true});
         return
     }
-    res.status(500).send({error:"Could not  update ride in database"})
+    res.status(500).send({error: "Could not  update ride in database"})
 };
+
+exports.patchRideStatus = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const {ride_id, status} = req.body;
+    if (!ride_id || !status) {
+        res.status(400).send({error: 'Missing user id or status from body'});
+        return
+    }
+    const oldRide = await getRide(village_id, ride_id);
+    if (oldRide.length === 0) {
+        res.status(404).send({error: 'Ride not found'});
+        return
+    }
+    if (oldRide.village_id !== village_id || village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    oldRide.status = status
+    if (await updateRide(oldRide)) {
+        res.status(200).send({success: true});
+        return
+    }
+    res.status(500).send({error: "Could not  update ride in database"})
+};
+
 
 exports.deleteRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
@@ -77,8 +102,8 @@ exports.deleteRide = async (req, res) => {
     if (ride == null) {
         res.status(404).send({error: "Could not find ride in database"})
     }
-    if (village_id !== ride.village_id) {
-        res.status(401).send({error:'Access forbidden'});
+    if (village_id !== ride.village_id || village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
         return
     }
     if (await removeRide(ride_id)) {
