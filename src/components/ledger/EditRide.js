@@ -49,12 +49,12 @@ class EditRide extends Component {
         if (label_flag[1] === "date") {
             //updating the date
             this.props.updateScheduler(label_flag[1], null, event.target.value);
-        } else if (label_flag[1] === "meta") {
-            console.log(label_flag[2]);
-            if (label_flag[2] === "samereturn") {
-                //updating the date
-                this.props.updateScheduler(label_flag[2], null, event.target.checked)
-            }
+        } else if (label_flag[1] === "purpose") {
+            //updating the date
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
+        } else if (label_flag[1] === "meta" && label_flag[2] === "samereturn") {
+            //updating the date
+            this.props.updateScheduler(label_flag[2], null, event.target.checked)
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
@@ -85,11 +85,6 @@ class EditRide extends Component {
         return items
     }
 
-    onSelected(e) {
-        console.log("value", e.target.value);
-        //here you will see the current selected value of the select input
-    }
-
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
         this.count += 1
@@ -112,8 +107,7 @@ class EditRide extends Component {
     getCommonAddresses(mode) {
         let options = [];
         if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);
-        console.log(Object.keys(this.props.users))
-        if (!this.props.active_ride.rider.id || !Object.keys(this.props.users).includes(this.props.active_ride.rider.id) ) return options;
+        if (!this.props.active_ride.rider.id) return options;
         options.push(...this.props.users[this.props.active_ride.rider.id].addresses.map((loc)=>{
             return <option value={"addr_"+loc.line_1} label={loc.name} key={loc.name}/>
         }));
@@ -125,7 +119,6 @@ class EditRide extends Component {
         let options = [<option value={""} label={""}/>];
         if (!this.props.active_ride.driver.id) return options;
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
-            console.log(car);
             return <option value={car.lp} label={car.year + " " + car.make_model}/>
         }));
         return options;
