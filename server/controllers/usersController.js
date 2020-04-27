@@ -82,11 +82,11 @@ exports.deleteUser = async (req, res) => {
         res.status(404).send({error: 'User not found'});
         return
     }
-    if (oldUser.villages.indexOf(village_id) === -1) {
+    if (oldUser.villages.indexOf(village_id) === -1 && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (oldUser.primary_village_id === village_id) {
+    if (oldUser.primary_village_id === village_id || village_id === 'admin') {
         if (await removeUser(user_id)) {
             res.status(200).send({success: true});
             return
