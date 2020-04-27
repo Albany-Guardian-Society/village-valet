@@ -27,6 +27,7 @@ class SelectDriver extends Component {
     vehicleOptions() {
         let options = [<option value={""} label={""} key={"null"}/>];
         if (!this.props.active_ride.driver.id) return options;
+        if (this.props.active_ride.driver.vehicle.lp) options = [];
         options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
             return <option key={car.lp} value={car.lp} label={car.year + " " + car.make_model}/>
         }));
@@ -59,7 +60,7 @@ class SelectDriver extends Component {
                             <Col>Select Vehicle:</Col>
                             <Col>
                                 <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange}
-                                              value={this.props.active_ride.driver.vehicle.lp}>
+                                              value={this.props.active_ride.driver.vehicle.lp ? this.props.active_ride.driver.vehicle.lp : ""}>
                                     {this.vehicleOptions()}
                                 </Form.Control>
                             </Col>
