@@ -32,36 +32,36 @@ class Scheduler extends Component {
 
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-            switch (this.props.users[this.props.active_ride.rider.id].personal_info.preferred_communication) {
+            switch (this.props.users[this.props.active_ride.driver.id].personal_info.preferred_communication) {
                 case "email":
-                    axios.post(API_ROOT + '/database/rides/ride',
-                        {ride: this.props.active_ride},
-                        {
-                            headers: {
-                                'Authorization': 'BEARER ' + cookie.load('token')
-                            }
-                        }
-                    ).then((response) => {
-                        this.props.addRide(this.props.active_ride, response.data.id);
-                        if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-                            this.props.returnRide();
-                            this.setState({scheduler_page: 1});
-                        } else {
-                            this.props.clearRide();
-                            //This is part of react-router and allows forced page routing
-                            this.props.history.push('/Dashboard');
-                        }
-                    });
                     break;
                 case "mobile":
-                    this.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.rider.id].personal_info.phone_mobile + ". Did they confirm?");
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_mobile + ". Did they confirm?");
                     break;
                 case "home":
-                    this.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.rider.id].personal_info.phone_home + ". Did they confirm?");
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_home + ". Did they confirm?");
                     break;
                 default:
-                    return;
+                    break;
             }
+            axios.post(API_ROOT + '/database/rides/ride',
+                {ride: this.props.active_ride},
+                {
+                    headers: {
+                        'Authorization': 'BEARER ' + cookie.load('token')
+                    }
+                }
+            ).then((response) => {
+                this.props.addRide(this.props.active_ride, response.data.id);
+                if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+                    this.props.returnRide();
+                    this.setState({scheduler_page: 1});
+                } else {
+                    this.props.clearRide();
+                    //This is part of react-router and allows forced page routing
+                    this.props.history.push('/Dashboard');
+                }
+            });
         }
     }
 

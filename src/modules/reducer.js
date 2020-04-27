@@ -519,7 +519,11 @@ const VillageReducer = (state = initialState, action) => {
         let index = newState.active_profile.id;
         if (index) {
             newState.users[index] = newState.active_profile;
-            axios.put(API_ROOT + "/database/users/user", {user: newState.active_profile}, {}).then(response => {
+            axios.put(API_ROOT + "/database/users/user", {user: newState.active_profile}, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
                 cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
             })
         }
