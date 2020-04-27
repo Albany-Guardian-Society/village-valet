@@ -116,27 +116,33 @@ class Register extends Component {
                 } else if (!this.props.registration.personal_info.last_name) {
                     this.setState({error_message: "INVALID LAST NAME: Please provide a last name."});
                     return false;
-                } else if (this.props.registration.personal_info.language.length === 0) {
+                }
+                switch (this.props.registration.personal_info.preferred_communication) {
+                    case "email":
+                        if (!this.validateEmail(this.props.registration.personal_info.email)) {
+                            this.setState({error_message: "INVALID EMAIL: Please provide a properly formatted email."});
+                            return false;
+                        }
+                        break;
+                    case "mobile":
+                        if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_mobile)) {
+                            this.setState({error_message: "INVALID MOBILE PHONE: Please provide a properly formatted mobile phone number."});
+                            return false;
+                        }
+                        break;
+                    case "home":
+                        if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_home)) {
+                            this.setState({error_message: "INVALID HOME PHONE: Please provide a properly formatted home phone number."});
+                            return false;
+                        }
+                        break;
+                    default:
+                        this.setState({error_message: "INVALID COMMUNICATION PREFERENCE: Please select a form of communication."})
+                        return false;
+                }
+                if (this.props.registration.personal_info.language.length === 0) {
                     this.setState({error_message: "INVALID LANGUAGE: Please provide a language."});
                     return false;
-                } else if (this.props.registration.personal_info.email) {
-                    if (!this.validateEmail(this.props.registration.personal_info.email)) {
-                        this.setState({error_message: "INVALID EMAIL: Please provide a properly formatted email."});
-                        return false;
-                    }
-                } else if (!this.props.registration.personal_info.phone_home && !this.props.registration.personal_info.phone_mobile) {
-                    this.setState({error_message: "INVALID PHONE NUMBER: Please provide a phone number."});
-                    return false;
-                } else if (this.props.registration.personal_info.phone_home) {
-                    if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_home)) {
-                        this.setState({error_message: "INVALID HOME PHONE: Please provide a properly formatted home phone number."});
-                        return false;
-                    }
-                } else if (this.props.registration.personal_info.phone_mobile) {
-                    if (!this.validatePhoneNumber(this.props.registration.personal_info.phone_mobile)) {
-                        this.setState({error_message: "INVALID MOBILE PHONE: Please provide a properly formatted mobile phone number."});
-                        return false;
-                    }
                 }
                 return true;
             case 1:

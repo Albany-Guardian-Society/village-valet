@@ -93,6 +93,15 @@ class GeneralInformation extends Component {
                             <Col><Form.Control id="reg_last_name" placeholder="--Last Name--" onChange={this.handleChange} value={this.props.personal_info.last_name}/></Col>
                         </Row>
                         <Row className="reg_row">
+                            <Form.Label column sm={4}  lg={2}>Communication Preference:</Form.Label>
+                            <Col><Form.Control as="select" id="reg_preferred_communication" onChange={this.handleChange} value={this.props.personal_info.preferred_communication}>
+                                <option value="" label=""/>
+                                <option value="email" label="Email"/>
+                                <option value="mobile" label="Mobile Phone"/>
+                                <option value="home" label="Home Phone"/>
+                            </Form.Control></Col>
+                        </Row>
+                        <Row className="reg_row">
                             <Form.Label column sm={4}  lg={2}>Email:</Form.Label>
                             <Col><Form.Control id="reg_email" placeholder="--Email Address--" onChange={this.handleChange} value={this.props.personal_info.email}/></Col>
                         </Row>
@@ -103,15 +112,6 @@ class GeneralInformation extends Component {
                         <Row className="reg_row">
                             <Form.Label column sm={4}  lg={2}>Home Phone:</Form.Label>
                             <Col><Form.Control id="reg_phone_home" placeholder="--Home Phone--" onChange={this.handleChange} value={this.props.personal_info.phone_home}/></Col>
-                        </Row>
-                        <Row className="reg_row">
-                            <Form.Label column sm={4}  lg={2}>Communication Preference:</Form.Label>
-                            <Col><Form.Control as="select" id="reg_preferred_communication" onChange={this.handleChange} value={this.props.personal_info.preferred_communication}>
-                                <option value="" label=""/>
-                                <option value="email" label="Email"/>
-                                <option value="mobile" label="Mobile Phone"/>
-                                <option value="home" label="Home Phone"/>
-                            </Form.Control></Col>
                         </Row>
                         <Row className="reg_row">
                             <Form.Label column sm={4}  lg={2}>Preferred Language:</Form.Label>
