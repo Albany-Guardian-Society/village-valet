@@ -593,7 +593,7 @@ const VillageReducer = (state = initialState, action) => {
         case "ride_cancel": {
             let newState = _.cloneDeep(state);
             axios.delete(API_ROOT + '/database/rides/ride', {
-                data: {user_id: action.payload},
+                data: {ride_id: action.payload},
                 headers: {
                     "Authorization": "BEARER " + cookies.load('token')
                 }

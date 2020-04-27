@@ -15,7 +15,7 @@ exports.getAllRides = async (req, res) => {
 exports.getOneRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const id = req.query.id;
-    if (id == null) {
+    if (!id) {
         res.status(400).send({error: 'Missing query parameter: id'});
         return
     }
@@ -25,7 +25,7 @@ exports.getOneRide = async (req, res) => {
 exports.postRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
-    if (ride == null) {
+    if (!ride) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
     }
@@ -46,7 +46,7 @@ exports.postRide = async (req, res) => {
 exports.putRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
-    if (ride == null) {
+    if (!ride) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
     }
@@ -94,7 +94,7 @@ exports.patchRideStatus = async (req, res) => {
 exports.deleteRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride_id = req.body.ride_id;
-    if (ride_id == null) {
+    if (!ride_id) {
         res.status(400).send({error: 'Missing from body: ride_id'});
         return
     }
