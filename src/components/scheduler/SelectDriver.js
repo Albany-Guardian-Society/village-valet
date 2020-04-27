@@ -45,10 +45,15 @@ class SelectDriver extends Component {
                     </Form.Group>
                 </Form>
                 <hr/>
-                <ProfileTable search_term={this.state.search_term} mode={"driver"}/>
+                <Row style={{height: "30%"}}>
+                    <ProfileTable search_term={this.state.search_term} mode={"driver"}/>
+                </Row>
+                <hr/>
                 <Row>
                     <Col>
-                        <MapContainer>Trip Summary</MapContainer>
+                        <div style={{position: 'relative', width: '100%', height: '250px'}}>
+                            <MapContainer/>
+                        </div>
                     </Col>
                     <Col>
                         <Row>
