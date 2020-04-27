@@ -13,7 +13,9 @@ import {Autocomplete} from "@react-google-maps/api";
 class CommonAddresses extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            autocomplete_help: {}
+        };
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
@@ -26,7 +28,7 @@ class CommonAddresses extends Component {
         let field = event.target.id.split("|")[1];
         switch (field) {
             case "autocomplete":
-                this.forceUpdate();
+                this.props.updateRegistration("addresses", id + "|autocomplete", event.target.value);
                 break;
             default:
                 this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
@@ -43,22 +45,18 @@ class CommonAddresses extends Component {
         if (this.autocomplete[index] != null) {
             index = index - 1;
             const place = this.autocomplete[index + 1].getPlace();
-            this.full_address = place.formatted_address;
+            this.props.updateRegistration("addresses", index + "|autocomplete",place.formatted_address);
             for (const component of place.address_components) {
                 if (component.types.includes('street_number')) {
                     street_number = component.long_name
                     this.props.updateRegistration("addresses", index + "|street_number", component.long_name);
                 } else if (component.types.includes('route')) {
-                    //this.props.addresses[index].line_1 = `${street_number} ${component.short_name}`
                     this.props.updateRegistration("addresses", index + "|line_1", `${street_number} ${component.short_name}`);
                 } else if (component.types.includes('locality')) {
-                    //this.props.addresses[index].city = component.short_name
                     this.props.updateRegistration("addresses", index + "|city", component.short_name);
                 } else if (component.types.includes('administrative_area_level_1')) {
-                    //this.props.addresses[index].state = component.short_name
                     this.props.updateRegistration("addresses", index + "|state", component.short_name);
                 } else if (component.types.includes('postal_code')) {
-                    //this.props.addresses[index].zip = component.short_name
                     this.props.updateRegistration("addresses", index + "|zip", component.short_name);
                 }
             }
@@ -104,7 +102,7 @@ class CommonAddresses extends Component {
                                 onPlaceChanged={() => this.onPlaceChanged(index)}
                             >
                                 <Form.Control id={"addr_" + index + "|autocomplete"} placeholder="--Address--"
-                                              onChange={this.handleChange} value={this.full_address}/>
+                                              onChange={this.handleChange} value={this.props.addresses[index].autocomplete}/>
                             </Autocomplete>
                         </Col>
                     </Row>
