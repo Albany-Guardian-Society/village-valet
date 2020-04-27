@@ -146,8 +146,8 @@ const BLANK_RIDE = {
         meta: {
             return: false,
             givendropoff: "true",
-            pickup_CA: true,
-            dropoff_CA: true,
+            pickup_CA: "",
+            dropoff_CA: "",
         }
     }
 };
@@ -453,6 +453,7 @@ const VillageReducer = (state = initialState, action) => {
 
     case "scheduler": {
         let newState = _.cloneDeep(state);
+        console.log(action.payload)
         if (action.payload.type === "date") {
             newState.active_ride.ride_data.date = action.payload.value;
         } else if (action.payload.type === "purpose") {
@@ -470,9 +471,9 @@ const VillageReducer = (state = initialState, action) => {
             let mode = action.payload.field.split("|");
             if (mode[0] === "set") {
                 if (mode[1] === "pickup") {
-                    newState.active_ride.ride_data.meta.pickup_CA = false;
+                    newState.active_ride.ride_data.meta.pickup_CA = action.payload.value;
                 } else if (mode[1] === "dropoff") {
-                    newState.active_ride.ride_data.meta.dropoff_CA = false;
+                    newState.active_ride.ride_data.meta.dropoff_CA = action.payload.value;
                 }
             } else {
                 let addr_id = action.payload.value.split("|");
@@ -481,13 +482,11 @@ const VillageReducer = (state = initialState, action) => {
                 })[0];
                 if (mode[0] === "pickup") {
                     newState.active_ride.locations[action.payload.field].address = address.line_1;
-                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
-                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
+                    newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.pickup_CA = true;
                 } else if (mode[0] === "dropoff") {
                     newState.active_ride.locations[action.payload.field].address = address.line_1;
-                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
-                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
+                    newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.dropoff_CA = true;
                 }
             }
