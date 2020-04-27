@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 
 import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
+import moment from "moment";
 
 class SelectDriver extends Component {
     constructor(props) {
@@ -57,14 +58,17 @@ class SelectDriver extends Component {
                         <Row>
                             <Col>Select Vehicle:</Col>
                             <Col>
-                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange} value={this.props.active_ride.driver.vehicle.lp}>
+                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange}
+                                              value={this.props.active_ride.driver.vehicle.lp}>
                                     {this.vehicleOptions()}
                                 </Form.Control>
                             </Col>
                         </Row>
                         <Row>
                             <Col>Trip Duration:</Col>
-                            <Col>{`${this.props.active_ride.ride_data.time_total}`}</Col>
+                            <Col>{this.props.active_ride.ride_data.time_total.driver ? moment("2015-01-01").startOf('day')
+                                .seconds(this.props.active_ride.ride_data.time_total.driver)
+                                .format('H [hours] mm [minutes]') : ""}</Col>
                         </Row>
                     </Col>
                 </Row>

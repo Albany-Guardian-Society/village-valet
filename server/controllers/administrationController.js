@@ -16,12 +16,12 @@ exports.confirmRide = async (req, res) => {
         res.status('401').send({error: 'Invalid Scope'});
         return
     }
-    if (!scope || !id || !ride_id) {
+    if (!scope || !id || !ride_id || !village_id) {
         res.status('400').send({error: 'Invalid Token Body'});
         return
     }
     const oldRide = await getRide(village_id, ride_id);
-    if (oldRide.length === 0) {
+    if (!oldRide) {
         res.status(404).send({error: 'Ride not found'});
         return
     }
@@ -52,7 +52,7 @@ exports.confirmAdmin = async (req, res) => {
         return
     }
     const admin = await getOperatorById(id);
-    if (admin.length === 0) {
+    if (!admin) {
         res.status(404).send({error: 'Operator not found'});
         return
     }

@@ -116,6 +116,9 @@ class Register extends Component {
                 } else if (!this.props.registration.personal_info.last_name) {
                     this.setState({error_message: "INVALID LAST NAME: Please provide a last name."});
                     return false;
+                } else if (this.props.registration.personal_info.language.length === 0) {
+                    this.setState({error_message: "INVALID LANGUAGE: Please provide a language."});
+                    return false;
                 } else if (this.props.registration.personal_info.email) {
                     if (!this.validateEmail(this.props.registration.personal_info.email)) {
                         this.setState({error_message: "INVALID EMAIL: Please provide a properly formatted email."});
@@ -343,7 +346,7 @@ class Register extends Component {
                         <Button size="lg" id="reg_submit_button"
                                 disabled={(this.props.registration.user_type === "rider" && this.state.page !== RIDER_MAX) || (this.props.registration.user_type === "driver" && this.state.page !== DRIVER_MAX)}
                                 onClick={() => {this.handleSubmit()}}>
-                            Submit Ride
+                            Submit
                         </Button>
                     </Col>
                     <Col>

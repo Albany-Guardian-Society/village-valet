@@ -9,6 +9,7 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
+import moment from "moment";
 
 //import './pic_placeholder.png';
 
@@ -77,11 +78,13 @@ class RideInformation extends Component {
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
-            this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-            });
+            if (place.geometry !== null) {
+                this.props.updateScheduler(variable, "address", place.formatted_address);
+                this.props.updateScheduler(variable, "geolocation", {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                });
+            }
 
         } else {
             console.log('Autocomplete is not loaded yet!')
@@ -174,9 +177,13 @@ class RideInformation extends Component {
                                 Pickup to Dropoff
                             </Card.Header>
                             <Card.Body>
-                                <div style={{ position: 'relative', width: '100%', height: '250px' }}>
+                                <div style={{position: 'relative', width: '100%', height: '250px'}}>
                                     <MapContainer/>
                                 </div>
+                                <Row>Rider Estimate Trip Duration
+                                    : {(this.props.active_ride.ride_data.time_total.rider) ? moment("2015-01-01").startOf('day')
+                                        .seconds(this.props.active_ride.ride_data.time_total.rider)
+                                        .format('H:mm') : ""}</Row>
                             </Card.Body>
                         </Card>
                     </Col>

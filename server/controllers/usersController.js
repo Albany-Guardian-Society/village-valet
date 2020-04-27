@@ -45,7 +45,7 @@ exports.putUser = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user.id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
@@ -78,7 +78,7 @@ exports.deleteUser = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
@@ -110,7 +110,7 @@ exports.patchUser_active = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
@@ -134,7 +134,7 @@ exports.patchUser_vetting = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }

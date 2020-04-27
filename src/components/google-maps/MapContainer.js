@@ -65,8 +65,8 @@ class MapContainer extends Component {
                 } else {
                     key = this.locations['origin'].lat + this.locations['destination'].lat
                 }
-                this.state.directions_cache.set(key, response);
                 this.storeRouteInfo(response)
+                this.state.directions_cache.set(key, response);
                 this.setState({directions_cache: this.state.directions_cache, response: response});
             } else {
                 console.log('response: ', response)

@@ -95,13 +95,14 @@ class Scheduler extends Component {
                 return true;
             case 1:
                 //Need to specify a date
+                const date = moment(this.props.active_ride.ride_data.date, "YYYY-MM-DD")
                 if (this.props.active_ride.ride_data.date === "") {
                     this.setState({error_message: "INVALID DATE: Please provide a date."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) + 1 <= (Date.now() + 6.04e+8)) {
+                } else if (date.isBefore(moment().add('1', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) >= (Date.now() + (6.04e+8 * 4))) {
+                } else if (date.isAfter(moment().add('4', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."});
                     return false;
                 } else if (!this.props.active_ride.locations.pickup.geolocation) {

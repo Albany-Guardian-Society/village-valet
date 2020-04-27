@@ -51,7 +51,7 @@ exports.putRide = async (req, res) => {
         return
     }
     const oldRide = await getRide(village_id, ride.id);
-    if (oldRide.length === 0) {
+    if (!oldRide) {
         res.status(404).send({error: 'Ride not found'});
         return
     }

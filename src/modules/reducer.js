@@ -256,10 +256,10 @@ const VillageReducer = (state = initialState, action) => {
             newState.admin.show_village = action.payload.village;
         }
         if (action.payload.id === "") {
-            newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+            newState.active_operator = _.cloneDeep(BLANK_OPERATOR);
             newState.admin.show_operator = "";
         } else {
-            newState.active_operator = state.operators[action.payload.village][action.payload.id];
+            newState.active_operator = state.operators[action.payload.id];
             newState.admin.show_operator = action.payload.id;
         }
         return newState;
@@ -278,8 +278,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                         newState.active_operator.id = response.data.id;
                         //If its the first operator you need to add the village id
-                        if (!newState.operators[newState.active_operator.village_id]) newState.operators[newState.active_operator.village_id] = {};
-                        newState.operators[newState.active_operator.village_id][response.data.id] = newState.active_operator;
+                        newState.operators[response.data.id] = newState.active_operator;
                     });
                     break;
                 }
@@ -301,12 +300,8 @@ const VillageReducer = (state = initialState, action) => {
                         }
                     }).then((response) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                        newState.operators[newState.active_operator.village_id][newState.active_operator.id] = {...newState.active_operator, ...newUser};
+                        newState.operators[newState.active_operator.id] = {...newState.active_operator, ...newUser};
                         //if moving the village
-                        for (const operator of newState.operators) {
-                            if (operator.village_id === newState.active_operator.village_id) continue;
-                            delete newState.operators[operator.village_id][newState.active_operator.id]
-                        }
                     })
                     break;
                 }
@@ -318,7 +313,7 @@ const VillageReducer = (state = initialState, action) => {
                         }
                     }).then((response) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                        delete newState.operators[newState.active_operator.village_id][newState.active_operator.id];
+                        delete newState.operators[newState.active_operator.id];
                         newState.active_village = _.cloneDeep(BLANK_VILLAGE);
                         newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
                     })

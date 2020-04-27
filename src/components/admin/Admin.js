@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Operator from "./Operator.js";
 import Village from "./Village.js";
@@ -39,35 +39,34 @@ class Admin extends Component {
                       --Clear Selection--
                   </Button>);
         rows.push(<br key={"break"}/>);
-        for (let i in this.props.villages) {
-            let v = this.props.villages[i];
+        for (const village of Object.values(this.props.villages)) {
             rows.push(<ListGroup.Item
-                          active={this.props.show_village === v.id}
-                          onClick={() => this.showVillage(v.id)}
-                          key={v.id}
-                      >
-                          {v.village_name}
-                      </ListGroup.Item>);
+                active={this.props.show_village === village.id}
+                onClick={() => this.showVillage(village.id)}
+                key={village.id}
+            >
+                {village.village_name}
+            </ListGroup.Item>);
         }
         return rows;
     }
 
     genOperatorRows() {
         let rows = [];
-        let villages = Object.keys(this.props.operators);
+        let villages = Object.values(this.props.villages)
         if (this.props.show_village !== "") {
-            villages = [this.props.show_village];
+            villages = [this.props.villages[this.props.show_village]];
         }
-        for (let v in villages) {
-            for (let i in this.props.operators[villages[v]]) {
-                let o = this.props.operators[villages[v]][i];
+        for (const village of villages) {
+            const operators = Object.values(this.props.operators).filter(o => o.village_id === village.id)
+            for (const operator of operators) {
                 rows.push(<ListGroup.Item
-                              active={this.props.show_operator === o.id}
-                              onClick={() => this.showOperator(o.id, villages[v])}
-                              key={o.id}
-                          >
-                              {o.first_name + " " + o.last_name}
-                          </ListGroup.Item>);
+                    active={this.props.show_operator === operator.id}
+                    onClick={() => this.showOperator(operator.id, village.id)}
+                    key={operator.id}
+                >
+                    {operator.first_name + " " + operator.last_name}
+                </ListGroup.Item>);
             }
         }
         return rows;
