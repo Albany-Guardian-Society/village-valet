@@ -9,6 +9,7 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
+import moment from "moment";
 
 //import './pic_placeholder.png';
 
@@ -26,6 +27,12 @@ class RideInformation extends Component {
 
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
+    }
+
+    componentDidMount() {
+        let today = moment()
+        //Set the default day to be one week in advance
+        this.props.updateScheduler("date", null, today.add(8, 'days').format("YYYY-MM-DD"));
     }
 
     handleChange(event) {
@@ -48,9 +55,9 @@ class RideInformation extends Component {
     handleCommonAddress(event, type) {
         if (event.target.value === "other") {
             //Update store
-            this.props.updateScheduler("common_address", "set"+"|"+type, null)
+            this.props.updateScheduler("common_address", "set|"+type, event.target.value);
         } else {
-            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""))
+            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""));
         }
     }
 
@@ -77,11 +84,13 @@ class RideInformation extends Component {
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
-            this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-            });
+            if (place.geometry !== null) {
+                this.props.updateScheduler(variable, "address", place.formatted_address);
+                this.props.updateScheduler(variable, "geolocation", {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                });
+            }
 
         } else {
             console.log('Autocomplete is not loaded yet!')
@@ -174,9 +183,13 @@ class RideInformation extends Component {
                                 Pickup to Dropoff
                             </Card.Header>
                             <Card.Body>
-                                <div style={{ position: 'relative', width: '100%', height: '250px' }}>
+                                <div style={{position: 'relative', width: '100%', height: '250px'}}>
                                     <MapContainer/>
                                 </div>
+                                <Row>Rider Estimate Trip Duration
+                                    : {(this.props.active_ride.ride_data.time_total.rider) ? moment("2015-01-01").startOf('day')
+                                        .seconds(this.props.active_ride.ride_data.time_total.rider)
+                                        .format('H:mm') : ""}</Row>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -198,7 +211,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Control as="select"
                                                           id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}
-                                                          value={!this.props.active_ride.locations.pickup.address ? "" : (!this.props.active_ride.ride_data.meta.pickup_CA ? "other" : "addr_"+this.props.active_ride.locations.pickup.address)}>
+                                                          value={this.props.active_ride.ride_data.meta.pickup_CA}>
                                                   {this.getCommonAddresses("pickup")}
                                             </Form.Control>
                                         </td>
@@ -211,7 +224,7 @@ class RideInformation extends Component {
                                                 onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
                                             >
                                                 <Form.Control type="text" placeholder="Pickup Location"
-                                                              disabled = {this.props.active_ride.ride_data.meta.pickup_CA}
+                                                              disabled = {this.props.active_ride.ride_data.meta.pickup_CA !== "other"}
                                                               id='sched_pickup_address' onChange={this.handleChange}
                                                               value={this.props.active_ride.locations.pickup.address}/>
                                             </Autocomplete>
@@ -258,7 +271,7 @@ class RideInformation extends Component {
                                             <Form.Control as="select"
                                                           id='sched_dropoff_address'
                                                           onChange={(e) => this.handleCommonAddress(e, "dropoff")}
-                                                          value={!this.props.active_ride.locations.dropoff.address ? "" : (!this.props.active_ride.ride_data.meta.dropoff_CA ? "other" : "addr_" + this.props.active_ride.locations.dropoff.address)}>
+                                                          value={this.props.active_ride.ride_data.meta.dropbox_CA}>
                                                 {this.getCommonAddresses("dropoff")}
                                             </Form.Control>
                                         </td>
@@ -272,7 +285,7 @@ class RideInformation extends Component {
                                             >
                                                 <Form.Control type="text" placeholder="Dropoff Location"
                                                               id='sched_dropoff_address' onChange={this.handleChange}
-                                                              disabled = {this.props.active_ride.ride_data.meta.dropoff_CA}
+                                                              disabled = {this.props.active_ride.ride_data.meta.dropoff_CA !== "other"}
                                                               value={this.props.active_ride.locations.dropoff.address}/>
                                             </Autocomplete>
                                         </td>

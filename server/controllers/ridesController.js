@@ -15,7 +15,7 @@ exports.getAllRides = async (req, res) => {
 exports.getOneRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const id = req.query.id;
-    if (id == null) {
+    if (!id) {
         res.status(400).send({error: 'Missing query parameter: id'});
         return
     }
@@ -25,7 +25,7 @@ exports.getOneRide = async (req, res) => {
 exports.postRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
-    if (ride == null) {
+    if (!ride) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
     }
@@ -46,16 +46,16 @@ exports.postRide = async (req, res) => {
 exports.putRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
-    if (ride == null) {
+    if (!ride) {
         res.status(400).send({error: 'Missing from body: ride'});
         return
     }
     const oldRide = await getRide(village_id, ride.id);
-    if (oldRide.length === 0) {
+    if (!oldRide) {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    if (oldRide.village_id !== village_id || village_id !== ride.village_id || village_id !== 'admin') {
+    if (oldRide.ride_data.village_id !== village_id && village_id !== ride.ride_data.village_id && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -78,7 +78,7 @@ exports.patchRideStatus = async (req, res) => {
         res.status(404).send({error: 'Ride not found'});
         return
     }
-    if (oldRide.village_id !== village_id || village_id !== 'admin') {
+    if (oldRide.ride_data.village_id !== village_id && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -94,7 +94,7 @@ exports.patchRideStatus = async (req, res) => {
 exports.deleteRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride_id = req.body.ride_id;
-    if (ride_id == null) {
+    if (!ride_id) {
         res.status(400).send({error: 'Missing from body: ride_id'});
         return
     }
@@ -102,7 +102,7 @@ exports.deleteRide = async (req, res) => {
     if (ride == null) {
         res.status(404).send({error: "Could not find ride in database"})
     }
-    if (village_id !== ride.village_id || village_id !== 'admin') {
+    if (village_id !== ride.ride_data.village_id && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }

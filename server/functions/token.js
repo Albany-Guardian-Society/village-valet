@@ -9,7 +9,7 @@ exports.generateRideConfirmationToken = (ride) => {
         scope: 'confirm_ride',
         id: ride.driver.id,
         ride_id: ride.id,
-        village_id: ride.village_id
+        village_id: ride.ride_data.village_id
     }, JWT_SECRET, {
         expiresIn: "72h",
         audience: 'user',

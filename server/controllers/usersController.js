@@ -45,7 +45,7 @@ exports.putUser = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user.id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
@@ -78,15 +78,15 @@ exports.deleteUser = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
-    if (oldUser.villages.indexOf(village_id) === -1) {
+    if (oldUser.villages.indexOf(village_id) === -1 && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
-    if (oldUser.primary_village_id === village_id) {
+    if (oldUser.primary_village_id === village_id || village_id === 'admin') {
         if (await removeUser(user_id)) {
             res.status(200).send({success: true});
             return
@@ -110,11 +110,11 @@ exports.patchUser_active = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
-    if (oldUser.villages.indexOf(village_id) === -1 || village_id !== 'admin') {
+    if (oldUser.villages.indexOf(village_id) === -1 && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }
@@ -134,7 +134,7 @@ exports.patchUser_vetting = async (req, res) => {
         return
     }
     const oldUser = await getUser(village_id, user_id);
-    if (oldUser.length === 0) {
+    if (!oldUser) {
         res.status(404).send({error: 'User not found'});
         return
     }
@@ -142,7 +142,7 @@ exports.patchUser_vetting = async (req, res) => {
         res.status(400).send({error: 'Can not change vetting info for non driver'});
         return
     }
-    if (oldUser.villages.indexOf(village_id) === -1 || (vetting_info.village_id !== village_id && village_id !== 'admin')) {
+    if ((oldUser.villages.indexOf(village_id) === -1 || vetting_info.village_id !== village_id) && village_id !== 'admin') {
         res.status(401).send({error: 'Access forbidden'});
         return
     }

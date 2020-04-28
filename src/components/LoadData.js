@@ -30,6 +30,19 @@ class LoadData extends Component {
             }
         }).then((resp) => {
             this.props.updateAuth(resp.data)
+            if (jwtPayload.village_id === 'admin') {
+                axios.get(API_ROOT + "/database/operators/all", {
+                    headers: {
+                        "Authorization": "BEARER " + token
+                    }
+                }).then(response => {
+                    let data = {};
+                    for (const item of response.data) {
+                        data[item.id] = item;
+                    }
+                    this.props.load("operators", data);
+                })
+            }
             this.setState({message: "Loading Village"});
             axios.get(API_ROOT + "/database/villages/all", {
                 headers: {

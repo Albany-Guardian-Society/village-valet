@@ -221,12 +221,12 @@ class ProfileTable extends Component {
         return(
             <div>
                 <Table striped bordered hover style={{width: '100%'}}>
-                    <thead style={{display: "table", width: 'calc( 100% - 17px )'}}>
+                    <thead style={{display: "table"}}>
                     <tr style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                         {this.generateTableHeaders()}
                     </tr>
                     </thead>
-                    <tbody style={{display: 'block', height: '400px', width: '100%', overflow: 'auto'}}>
+                    <tbody style={{display: 'block', height: '100%', width: '100%', overflow: 'auto'}}>
                     {this.generateTableData()}
                     </tbody>
                 </Table>

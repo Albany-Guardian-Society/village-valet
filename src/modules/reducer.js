@@ -135,6 +135,7 @@ const BLANK_RIDE = {
             driver: "",
             rider: "",
         },
+        driver_confirmed: false,
         traffic: "",
         date: "",
         purpose: "",
@@ -145,8 +146,8 @@ const BLANK_RIDE = {
         meta: {
             return: false,
             givendropoff: "true",
-            pickup_CA: true,
-            dropoff_CA: true,
+            pickup_CA: "",
+            dropoff_CA: "",
         }
     }
 };
@@ -258,10 +259,10 @@ const VillageReducer = (state = initialState, action) => {
             newState.admin.show_village = action.payload.village;
         }
         if (action.payload.id === "") {
-            newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
+            newState.active_operator = _.cloneDeep(BLANK_OPERATOR);
             newState.admin.show_operator = "";
         } else {
-            newState.active_operator = state.operators[action.payload.village][action.payload.id];
+            newState.active_operator = state.operators[action.payload.id];
             newState.admin.show_operator = action.payload.id;
         }
         return newState;
@@ -280,8 +281,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                         newState.active_operator.id = response.data.id;
                         //If its the first operator you need to add the village id
-                        if (!newState.operators[newState.active_operator.village_id]) newState.operators[newState.active_operator.village_id] = {};
-                        newState.operators[newState.active_operator.village_id][response.data.id] = newState.active_operator;
+                        newState.operators[response.data.id] = newState.active_operator;
                     });
                     break;
                 }
@@ -303,12 +303,8 @@ const VillageReducer = (state = initialState, action) => {
                         }
                     }).then((response) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                        newState.operators[newState.active_operator.village_id][newState.active_operator.id] = {...newState.active_operator, ...newUser};
+                        newState.operators[newState.active_operator.id] = {...newState.active_operator, ...newUser};
                         //if moving the village
-                        for (const operator of newState.operators) {
-                            if (operator.village_id === newState.active_operator.village_id) continue;
-                            delete newState.operators[operator.village_id][newState.active_operator.id]
-                        }
                     })
                     break;
                 }
@@ -320,7 +316,7 @@ const VillageReducer = (state = initialState, action) => {
                         }
                     }).then((response) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
-                        delete newState.operators[newState.active_operator.village_id][newState.active_operator.id];
+                        delete newState.operators[newState.active_operator.id];
                         newState.active_village = _.cloneDeep(BLANK_VILLAGE);
                         newState.active_operator = _.cloneDeep(BLANK_VILLAGE);
                     })
@@ -423,8 +419,9 @@ const VillageReducer = (state = initialState, action) => {
                 case "user_type":
                     newState.active_profile[action.payload.id] = action.payload.value;
                     break;
-                case "village_id":
+                case "primary_village_id":
                     newState.active_profile[action.payload.id] = action.payload.value;
+                    newState.active_profile.villages = [action.payload.value]
                     break;
                 case "add_address":
                     newState.active_profile.addresses.push(_.cloneDeep(ADDRESS_TEMPLATE));
@@ -484,9 +481,9 @@ const VillageReducer = (state = initialState, action) => {
             let mode = action.payload.field.split("|");
             if (mode[0] === "set") {
                 if (mode[1] === "pickup") {
-                    newState.active_ride.ride_data.meta.pickup_CA = false;
+                    newState.active_ride.ride_data.meta.pickup_CA = action.payload.value;
                 } else if (mode[1] === "dropoff") {
-                    newState.active_ride.ride_data.meta.dropoff_CA = false;
+                    newState.active_ride.ride_data.meta.dropoff_CA = action.payload.value;
                 }
             } else {
                 let addr_id = action.payload.value.split("|");
@@ -495,13 +492,11 @@ const VillageReducer = (state = initialState, action) => {
                 })[0];
                 if (mode[0] === "pickup") {
                     newState.active_ride.locations[action.payload.field].address = address.line_1;
-                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
-                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
+                    newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.pickup_CA = true;
                 } else if (mode[0] === "dropoff") {
                     newState.active_ride.locations[action.payload.field].address = address.line_1;
-                    //GEOLOCATIONS ARE NOT BEING SAVED THIS NEEDS TO HAPPEN
-                    //newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
+                    newState.active_ride.locations[action.payload.field].geolocation = address.geolocation;
                     newState.active_ride.ride_data.meta.dropoff_CA = true;
                 }
             }
@@ -533,11 +528,14 @@ const VillageReducer = (state = initialState, action) => {
         let index = newState.active_profile.id;
         if (index) {
             newState.users[index] = newState.active_profile;
-            axios.put(API_ROOT + "/database/users/user", {user: newState.active_profile}, {}).then(response => {
+            axios.put(API_ROOT + "/database/users/user", {user: newState.active_profile}, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
                 cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
             })
         }
-
         return newState;
     }
 
@@ -556,13 +554,7 @@ const VillageReducer = (state = initialState, action) => {
         newState.active_profile.status = "inactive";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            newState.users[index].status = "inactive";
-        }
-        //Update Firestore
+        newState.users[newState.active_profile.id].status = 'active'
         return newState;
     }
     case "user_activate": {
@@ -577,12 +569,8 @@ const VillageReducer = (state = initialState, action) => {
         newState.active_profile.status = "active";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            newState.users[index].status = "active";
-        }
+        newState.users[newState.active_profile.id].status = 'active'
+
         return newState;
     }
     case "user_perma_delete": {
@@ -595,12 +583,7 @@ const VillageReducer = (state = initialState, action) => {
         }).then(response => {
             cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
         });
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            delete newState.users[index];
-        }
+        delete newState.users[newState.active_profile.id]
         newState.active_profile = _.cloneDeep(BLANK_PROFILE);
         return newState;
     }
@@ -608,7 +591,7 @@ const VillageReducer = (state = initialState, action) => {
         case "ride_cancel": {
             let newState = _.cloneDeep(state);
             axios.delete(API_ROOT + '/database/rides/ride', {
-                data: {user_id: action.payload},
+                data: {ride_id: action.payload},
                 headers: {
                     "Authorization": "BEARER " + cookies.load('token')
                 }

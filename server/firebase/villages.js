@@ -15,13 +15,11 @@ exports.getVillages = async (village_id) => {
 
 
 exports.getVillage = async (village_id) => {
-    const doc = await firestore.collection('villages').where('id', '==', village_id).get()
-    if (!doc) {
-        return {}
-    }
-    const data = doc.data();
-    return {...data, id: doc.id}
-};
+    const querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get()
+    return querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    });
+}
 
 
 exports.addVillage = async (village) => {
