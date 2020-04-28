@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom';
 import fuzzysort from "fuzzysort";
 import moment from "moment";
 
@@ -121,47 +121,49 @@ class ProfileTable extends Component {
         // Estimate that sort takes 1 second per 100,000 items based on one google
         if (this.props.mode === "driver" && this.props.active_ride.locations.pickup.time && this.props.active_ride.locations.dropoff.time) {
             // Get rid of all the drivers who are not active or not driving when needed
-            let ride_date = new Date(this.props.active_ride.ride_data.date);
+            let ride_date = moment(this.props.active_ride.ride_data.date, 'YYYY-MM-DD');
             filtered_users = filtered_users.filter((a) => {
-                if (a.status !== "active") {
+                if (a.status === "inactive") {
                     return false;
                 }
                 // make sure that they're volunteering during pickup/dropoff window
                 // should be making sure they are volunteering when driver leaves their house
                 for (let i = 0; i < a.volunteer_hours.length; i++) {
-                    if ((ride_date.getDay() + 1) % 7 === Number(a.volunteer_hours[i].day)) {
+                    console.log(ride_date.day() % 7, Number(a.volunteer_hours[i].day))
+                    if (ride_date.day() % 7 === Number(a.volunteer_hours[i].day)) {
                         if (moment(a.volunteer_hours[i].start, "HH:mm").isBefore(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))
                             && moment(a.volunteer_hours[i].end, "HH:mm").isAfter(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
                             return true;
                         }
                     }
                 }
+                return false
             });
-            /*filtered_users = filtered_users.filter((a) => {
+            filtered_users = filtered_users.filter((a) => {
                 for (let ride of Object.values(this.props.rides)) {
                     let driver_leaves_home_time = moment(ride.locations.dropoff.time, "HH:mm").subtract(ride.ride_data.time_total.driver, 'second');
-                    if (ride_date === new Date(ride.ride_data.date) && a.id === ride.driver.id && ride.rider.id === this.props.active_ride.rider.id) {
+                    if (ride_date === moment(ride.ride_data.date, "YYYY-MM-DD") && a.id === ride.driver.id && ride.rider.id === this.props.active_ride.rider.id) {
                         if (driver_leaves_home_time.isAfter(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))
                             && driver_leaves_home_time.isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
                             return false;
                         }
                         if (moment(ride.locations.dropoff.time, "HH:mm").isAfter(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))
-                            && moment(ride.locations.dropoff.time,"HH:mm").isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
+                            && moment(ride.locations.dropoff.time, "HH:mm").isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
                             return false;
                         }
-                    } else if (ride_date === new Date(ride.ride_data.date) && a.id === ride.driver.id) {
+                    } else if (ride_date === moment(ride.ride_data.date, "YYYY-MM-DD") && a.id === ride.driver.id) {
                         if (driver_leaves_home_time.isAfter(moment(this.props.active_ride.locations.pickup.time, "HH:mm").subtract(30, 'minute'))
                             && driver_leaves_home_time.isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
                             return false;
                         }
                         if (moment(ride.locations.dropoff.time, "HH:mm").isAfter(moment(this.props.active_ride.locations.pickup.time, "HH:mm").subtract(30, 'minute'))
-                            && moment(ride.locations.dropoff.time,"HH:mm").isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
+                            && moment(ride.locations.dropoff.time, "HH:mm").isBefore(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {
                             return false;
                         }
                     }
                 }
                 return true;
-            });*/
+            });
             filtered_users.sort((a, b) => {
                 let dist_a = Math.pow(Math.pow((a.addresses[0].geolocation.lat - this.props.active_ride.locations.pickup.geolocation.lat), 2) + Math.pow((a.addresses[0].geolocation.lng - this.props.active_ride.locations.pickup.geolocation.lng), 2), .5);
                 let dist_b = Math.pow(Math.pow((b.addresses[0].geolocation.lat - this.props.active_ride.locations.dropoff.geolocation.lat), 2) + Math.pow((b.addresses[0].geolocation.lng - this.props.active_ride.locations.dropoff.geolocation.lng), 2), .5);
