@@ -115,7 +115,7 @@ class MileageReportPDF extends Component {
                       <Text style={styles.tableCell}>{(this.state.total_time/60).toFixed(2)}</Text>
                   </View>
                   <View style={styles.tableCol}>
-                      <Text style={styles.tableCell}>{this.state.total_miles}</Text>
+                      <Text style={styles.tableCell}>{(this.state.total_miles).toFixed(2)}</Text>
                   </View>
               </View>
           </View>
