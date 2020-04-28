@@ -21,7 +21,6 @@ services:
     build: https://github.com/ItsAMeNick/village-valet.git
     container_name: village-valet
     restart: always
-    mem_limit: 500m
     env_file: village-valet/.env
     labels:
       - traefik.http.routers.village-valet.rule=Host(`village-valet.tk`,`www.village-valet.tk`)
@@ -34,7 +33,6 @@ services:
     build: https://github.com/ItsAMeNick/village-valet.git#dev
     container_name: village-valet_dev
     restart: always
-    mem_limit: 500m
     env_file: village-valet/.env
     labels:
       - traefik.http.routers.village-valet_dev.rule=Host(`beta.village-valet.tk`)
