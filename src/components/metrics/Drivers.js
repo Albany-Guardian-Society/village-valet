@@ -36,6 +36,7 @@ class Drivers extends Component {
             }
         }
         return drivers.map((driver) => {
+          if (!(driver.id in results)) return null;
             return (
                 <tr key={driver.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{driver.id}</td>
