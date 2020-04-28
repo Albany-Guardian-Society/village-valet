@@ -169,22 +169,6 @@ class EditRide extends Component {
                                                           value={this.props.active_ride.ride_data.date}/>
                                         </td>
                                     </tr>
-                                    {/*<tr>*/}
-                                    {/*    <td>*/}
-                                    {/*        Mobility Aid:*/}
-                                    {/*    </td>*/}
-                                    {/*    <td>*/}
-                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}*/}
-                                    {/*    </td>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr>*/}
-                                    {/*    <td>*/}
-                                    {/*        Special Accommodations:*/}
-                                    {/*    </td>*/}
-                                    {/*    <td>*/}
-                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}*/}
-                                    {/*    </td>*/}
-                                    {/*</tr>*/}
                                     </tbody>
                                 </Table>
                             </Card.Body>
