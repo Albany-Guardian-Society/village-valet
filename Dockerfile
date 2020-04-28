@@ -9,4 +9,4 @@ RUN npm ci --silent
 RUN npm install react-scripts@3.2.0 -g --silent
 COPY . .
 RUN npm run build
-RUN npm run start
+#RUN npm run start
