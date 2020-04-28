@@ -409,8 +409,9 @@ const VillageReducer = (state = initialState, action) => {
                 case "user_type":
                     newState.active_profile[action.payload.id] = action.payload.value;
                     break;
-                case "village_id":
+                case "primary_village_id":
                     newState.active_profile[action.payload.id] = action.payload.value;
+                    newState.active_profile.villages = [action.payload.value]
                     break;
                 case "add_address":
                     newState.active_profile.addresses.push(_.cloneDeep(ADDRESS_TEMPLATE));
@@ -525,7 +526,6 @@ const VillageReducer = (state = initialState, action) => {
                 cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
             })
         }
-
         return newState;
     }
 
@@ -544,13 +544,7 @@ const VillageReducer = (state = initialState, action) => {
         newState.active_profile.status = "inactive";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            newState.users[index].status = "inactive";
-        }
-        //Update Firestore
+        newState.users[newState.active_profile.id].status = 'active'
         return newState;
     }
     case "user_activate": {
@@ -565,12 +559,8 @@ const VillageReducer = (state = initialState, action) => {
         newState.active_profile.status = "active";
         //Now edit the local copy, then update the DB:
         //Find the user in newState.users
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            newState.users[index].status = "active";
-        }
+        newState.users[newState.active_profile.id].status = 'active'
+
         return newState;
     }
     case "user_perma_delete": {
@@ -583,12 +573,7 @@ const VillageReducer = (state = initialState, action) => {
         }).then(response => {
             cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
         });
-        let index = newState.users.findIndex((i) => {
-            return i.id === newState.active_profile.id
-        });
-        if (index >= 0) {
-            delete newState.users[index];
-        }
+        delete newState.users[newState.active_profile.id]
         newState.active_profile = _.cloneDeep(BLANK_PROFILE);
         return newState;
     }

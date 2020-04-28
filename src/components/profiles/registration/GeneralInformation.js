@@ -19,7 +19,7 @@ class GeneralInformation extends Component {
     componentDidMount() {
         //by default have the village id match the operator's village
         if (!this.props.village_id) {
-            this.props.updateRegistration("personal_info", "village_id", this.props.operator_village);
+            this.props.updateRegistration("personal_info", "primary_village_id", this.props.operator_village);
         }
     }
 
@@ -33,7 +33,6 @@ class GeneralInformation extends Component {
                 break;
             case "reg_primary_village_id":
                 this.props.updateRegistration("personal_info", event.target.id.replace('reg_', ''), event.target.value)
-                this.props.updateRegistration("personal_info", "villages", [event.target.value])
                 break;
             default:
                 this.props.updateRegistration("personal_info", event.target.id.replace('reg_', ''), event.target.value);
