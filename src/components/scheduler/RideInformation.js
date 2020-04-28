@@ -32,7 +32,9 @@ class RideInformation extends Component {
     componentDidMount() {
         let today = moment()
         //Set the default day to be one week in advance
-        this.props.updateScheduler("date", null, today.add(8, 'days').format("YYYY-MM-DD"));
+        if (!this.props.active_ride.ride_data.date) {
+            this.props.updateScheduler("date", null, today.add(8, 'days').format("YYYY-MM-DD"));
+        }
     }
 
     handleChange(event) {
