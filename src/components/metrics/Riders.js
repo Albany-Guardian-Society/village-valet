@@ -34,12 +34,13 @@ class Riders extends Component {
             }
         }
         return riders.map((rider) => {
+          if (!(rider.id in results)) return null;
             return (
                 <tr key={rider.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{rider.id}</td>
                     <td>{rider.personal_info.first_name} {rider.personal_info.last_name}</td>
                     <td>{results[rider.id]['rides']}</td>
-                    <td>{results[rider.id]['mileage'].isFixed(2)}</td>
+                    <td>{/*results[rider.id]['mileage'].isFixed(2)*/}</td>
                     <td>{results[rider.id]['village_id']}</td>
                 </tr>
             )
