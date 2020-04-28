@@ -183,13 +183,28 @@ class RideInformation extends Component {
                                 Pickup to Dropoff
                             </Card.Header>
                             <Card.Body>
-                                <div style={{position: 'relative', width: '100%', height: '250px'}}>
+                                <Row style={{position: 'relative', width: '100%', height: '250px'}}>
                                     <MapContainer/>
-                                </div>
-                                <Row>Rider Estimate Trip Duration
-                                    : {(this.props.active_ride.ride_data.time_total.rider) ? moment("2015-01-01").startOf('day')
-                                        .seconds(this.props.active_ride.ride_data.time_total.rider)
-                                        .format('H:mm') : ""}</Row>
+                                </Row>
+                                <Row>
+                                    <Col>Estimated Rider Trip Duration:</Col>
+                                    <Col>
+                                        {this.props.active_ride.ride_data.time_total.rider ?
+                                            moment("2015-01-01").startOf('day')
+                                            .seconds(this.props.active_ride.ride_data.time_total.rider)
+                                            .format('H:mm:ss') : ""}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>Based on dropoff time, pickup time should be:</Col>
+                                    <Col>
+                                        {console.log(moment(this.props.active_ride.locations.dropoff.time))}
+                                        {(this.props.active_ride.locations.dropoff.time) ?
+                                            moment(this.props.active_ride.locations.dropoff.time, "HH:mm")
+                                                .subtract(this.props.active_ride.ride_data.time_total.rider, 'second')
+                                                .format('hh:mm:ss A') : ""}
+                                    </Col>
+                                </Row>
                             </Card.Body>
                         </Card>
                     </Col>
