@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RideEditor from "./EditRide";
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import moment from 'moment';
 
 class LedgerTable extends Component {
@@ -125,66 +124,38 @@ class LedgerTable extends Component {
             /**
              * check if ride is confirmed
              */
-            var button_set;
-            var status = <tr>Inactive</tr>;
-            var confirm_check = <tr>test</tr>;
+            let button_set;
+            let status;
+            const confirm_check = rides[key].ride_data.driver_confirmed ? <tr>D: Confirmed </tr> : <tr>D: Pending </tr>
+            const date = moment(rides[key].ride_data.date, "YYYY-MM-DD")
+            if (rides[key].status === "inactive") {
+                button_set = this.futureButtons2(rides[key]);
+                status = <tr>Inactive</tr>;
 
-            // Uncomment this block for confirmed rides
-
-            // if (rides[key].ride_data.driver_confirmed){
-            //     confirm_check = <tr> Confirmed </tr>
-            // }
-            // else {
-            //     confirm_check = <tr> Pending </tr>
-            // }
-
-            var date = moment(rides[key].ride_data.date, "YYYY-MM-DD").add('2','hours')
-            if (rides[key].status === "active") {
-                if (date.isAfter(moment().format("YYYY-MM-DD"))) {
-                    button_set = this.futureButtons1(rides[key]);
-                    status = <tr>Active</tr>;
-                }
-                else {
-                    button_set = this.passedButtons(rides[key])
-                }
-                return (
-                    <tr>
-                        <td>{rides[key].id}</td>
-                        <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
-                        <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
-                        <td>{rides[key].locations.pickup.address}</td>
-                        <td>{rides[key].locations.dropoff.address}</td>
-                        <td>{rides[key].ride_data.date}</td>
-                        <td>
-                            {status}
-                            {confirm_check}
-                        </td>
-                            {button_set}
-                    </tr>
-                )
             } else {
-                if (date.isAfter(moment().format("YYYY-MM-DD"))) {
-                    button_set = this.futureButtons2(rides[key]);
-                }
-                else {
-                    button_set = this.passedButtons(rides[key])
-                    }
-                return (
-                    <tr>
-                        <td>{rides[key].id}</td>
-                        <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
-                        <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
-                        <td>{rides[key].locations.pickup.address}</td>
-                        <td>{rides[key].locations.dropoff.address}</td>
-                        <td>{rides[key].ride_data.date}</td>
-                        <td>
-                            {status}
-                            {confirm_check}
-                        </td>
-                        {button_set}
-                    </tr>
-                )
+                button_set = this.futureButtons1(rides[key]);
+                status = <tr>Active</tr>;
+
             }
+            if (date.isBefore(moment().format("YYYY-MM-DD"))) {
+                button_set = this.passedButtons(rides[key])
+                status = <tr>Passed</tr>
+            }
+            return (
+                <tr>
+                    <td>{rides[key].id}</td>
+                    <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
+                    <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
+                    <td>{rides[key].locations.pickup.address}</td>
+                    <td>{rides[key].locations.dropoff.address}</td>
+                    <td>{rides[key].ride_data.date}</td>
+                    <td>
+                        {status}
+                        {confirm_check}
+                    </td>
+                    {button_set}
+                </tr>
+            )
         })
     }
 

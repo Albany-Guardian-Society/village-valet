@@ -472,6 +472,8 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.ride_data.meta.samereturn = action.payload.value;
         } else if (action.payload.type === "givendropoff") {
             newState.active_ride.ride_data.meta.givendropoff = action.payload.value;
+        } else if (action.payload.type === 'driver_confirmed') {
+            newState.active_ride.ride_data.driver_confirmed = action.payload.value;
         } else if (action.payload.type === "vehicle") {
             let vehicle = newState.users[action.payload.field].vehicles.filter((car) => {
                 return car.lp === action.payload.value;
@@ -604,7 +606,7 @@ const VillageReducer = (state = initialState, action) => {
 
         case "ride_save": {
             let newState = _.cloneDeep(state);
-            axios.put(API_ROOT + '/database/rides/ride/status', {
+            axios.put(API_ROOT + '/database/rides/ride', {
                 ride: action.payload
             }, {
                 headers: {
