@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "react-scripts build",
+    "build": "react-scripts --max_old_space_size=4096 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": " node -r dotenv-flow/config server.js --node-env=development"
