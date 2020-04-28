@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 
-import {LoadScript} from "@react-google-maps/api";
-
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -20,6 +18,14 @@ import VE from "../registration/VehicleInformation.js";
 import VS from "../registration/VolunteerSchedule.js";
 import VT from "../registration/DriverSpecific.js";
 
+const DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/**
+ * Profile
+ * @typedef {Object} Profile
+ * @property {string} sub_page - page to view within the profile
+ * @property {string} mode - read-only vs read/write (edit)
+ */
 class Profile extends Component {
     constructor(props) {
         super(props);
@@ -31,10 +37,20 @@ class Profile extends Component {
         this.genSubPage = this.genSubPage.bind(this);
     }
 
+    /**
+     * Sets the sub_page object variable
+     *
+     * @param {string} page - what search_term is set to
+     */
     changePage(page) {
         this.setState({sub_page: page});
     }
 
+    /**
+     * Displays the sub_page depending on mode
+     *
+     * @returns {HTMLDocument}
+     */
     genSubPage() {
         switch (this.state.sub_page) {
             case "general_info":
@@ -236,7 +252,7 @@ class Profile extends Component {
                         {this.props.user.volunteer_hours.map((item) => {
                             return (
                                 <tr key={item.day+item.start+item.end}>
-                                    <td>{item.day.replace(/^\w/, c => c.toUpperCase())}</td>
+                                    <td>{DOW[item.day]}</td>
                                     <td>{item.start}</td>
                                     <td>{item.end}</td>
                                 </tr>
@@ -300,15 +316,7 @@ class Profile extends Component {
                         })
                     );
                 } else if (this.state.mode === "edit") {
-                    return (
-                        <LoadScript
-                            id="script-loader"
-                            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                            libraries={["places"]}
-                        >
-                            <CA/>
-                        </LoadScript>
-                    );
+                    return (<CA/>);
                 }
                 break;
             case "special":
@@ -338,12 +346,18 @@ class Profile extends Component {
         }
     }
 
+    /**
+     * Saves profile information when save is clicked in edit mode
+     */
     handleSave() {
         this.setState({mode: "view"});
         //Moving firestore call to VillageReducer
         this.props.updateUser(this.props.user.id);
     }
 
+    /**
+     * Deactivates user when deactivate is clicked in edit mode
+     */
     handleDeactivate() {
         if (window.confirm("Are you sure you want to DEACTIVATE this user?")) {
             this.props.deactivateUser();
@@ -352,6 +366,9 @@ class Profile extends Component {
         }
     }
 
+    /**
+     * Reactivates user when reactivate is clicked in edit mode
+     */
     handleReactivate() {
         if (window.confirm("Are you sure you want to ACTIVATE this user?")) {
             this.props.activateUser();
@@ -360,6 +377,9 @@ class Profile extends Component {
         }
     }
 
+    /**
+     * Permanently deletes user when delete is clicked in edit mode
+     */
     handlePermaDelete() {
         if (window.confirm("Are you sure you want to DELETE this user?")) {
             let check_value = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
@@ -373,6 +393,11 @@ class Profile extends Component {
         }
     }
 
+    /**
+     * Displays the profile selected based on mode
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <div style={{paddingLeft: "3%", paddingRight: "3%"}}>
@@ -415,20 +440,19 @@ class Profile extends Component {
                             <ListGroup.Item active={this.state.sub_page === "emergency"} onClick={() => this.changePage("emergency")}>Emergency Contact</ListGroup.Item>
                             {this.props.user.user_type === "driver" ?
                                 <>
-                                <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
-                                <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Address</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule</ListGroup.Item>
+                                    <ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting</ListGroup.Item>
                                 </>
                             :
                                 <>
                                     <ListGroup.Item active={this.state.sub_page === "caregiver"}
-                                                    onClick={() => this.changePage("caregiver")}>Caregiver
-                                        Information</ListGroup.Item>
+                                                    onClick={() => this.changePage("caregiver")}>Caregiver Information</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "addresses"}
                                                     onClick={() => this.changePage("addresses")}>Addresses</ListGroup.Item>
                                     <ListGroup.Item active={this.state.sub_page === "special"}
-                                                    onClick={() => this.changePage("special")}>Special
-                                        Accommodations</ListGroup.Item>
+                                                    onClick={() => this.changePage("special")}>Special Accommodations</ListGroup.Item>
                                 </>
                             }
                         </ListGroup>
@@ -444,10 +468,16 @@ class Profile extends Component {
     }
 }
 
+/**
+ * Pulls user from state
+ */
 const mapStateToProps = state => ({
     user: state.active_profile,
 });
 
+/**
+ * Sets up functions to change users in reducer
+ */
 const mapDispatchToProps = dispatch => ({
     deactivateUser: () => dispatch({
         type: "user_deactivate",

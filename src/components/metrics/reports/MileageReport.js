@@ -12,8 +12,11 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: 'col',
     backgroundColor: '#E4E4E4',
+    width: 3600,
     margin: '20px',
-    width: '1000px',
+    '@media orientation: landscape': {
+      width: 3600,
+    },
   },
   table: { display: "table", width: "auto", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
   tableRow: { margin: "auto", flexDirection: "row" },
@@ -26,26 +29,58 @@ class MileageReportPDF extends Component {
     constructor(props) {
         super(props);
         this.state = {
+          total_miles: 0,
+          total_time: 0
         };
+        this.generateRows = this.generateRows.bind(this);
     }
 
-    generateRideItems() {
-        let counter = 0;
-        let total_time = 0;
-        let total_miles = 0;
-        let ride_ids = Object.keys(this.props.rides)
-        let myRides = ride_ids.filter((ride) => {
-            return this.props.rides[ride].driver.id === this.props.driver.id;
-        }).map((item) => {
-            counter += 1;
-            total_time += 0;
-            total_miles += 0;
-            return (<View style={styles.tableRow}>
+    generateRows() {
+      let ride_ids = Object.keys(this.props.rides);
+      let counter = 0;
+      let time = 0;
+      let miles = 0;
+      let rows = ride_ids.filter((ride) => {
+          return this.props.rides[ride].driver.id === this.props.driver.id;
+      }).map((item) => {
+          counter += 1;
+          time += this.props.rides[item].ride_data.mileage.driver;
+          miles += this.props.rides[item].ride_data.mileage.driver;
+          return (
+            <View style={styles.tableRow}>
+              <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>{counter}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>{this.props.rides[item].id}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>{this.props.rides[item].ride_data.date}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                  <Text style={(styles.tableCell}>{this.props.rides[item].ride_data.time_total.driver/60).toFixed(2)}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>{this.props.rides[item].ride_data.mileage.driver}</Text>
+              </View>
+          </View>
+        )});
+        if (this.state.total_time !== time || this.state.total_miles !== miles) {
+          this.setState({total_time: time, total_miles: miles});
+        }
+        return rows;
+    }
+
+    generateRideTable() {
+        return (
+          <>
+          <View style={styles.table}>
+            <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>{counter}</Text>
+                    <Text style={styles.tableCell}>Item Number</Text>
                 </View>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>{this.props.rides[item].id}</Text>
+                    <Text style={styles.tableCell}>Ride ID</Text>
                 </View>
                 <View style={styles.tableCol}>
                     <Text style={styles.tableCell}>Trip Date</Text>
@@ -56,29 +91,35 @@ class MileageReportPDF extends Component {
                 <View style={styles.tableCol}>
                     <Text style={styles.tableCell}>Trip Mileage</Text>
                 </View>
-            </View>)
-        });
-        myRides.push(<View>
-            <Text>{"Totals:"}</Text>
-        </View>);
-        myRides.push(<View style={styles.tableRow}>
-            <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{counter}</Text>
             </View>
-            <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{this.props.rides[item].id}</Text>
+            <View>
+              {this.generateRows()}
             </View>
-            <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Trip Date</Text>
             </View>
-            <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Trip Time</Text>
+            <View><Text>{" "}</Text></View>
+            <View>
+                <Text>{"Totals:"}</Text>
             </View>
-            <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Trip Mileage</Text>
-            </View>
-        </View>);
-        return myRides;
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                  <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}>0</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}>0</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}></Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}>{this.state.total_time}</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}>{this.state.total_miles}</Text>
+                  </View>
+              </View>
+          </View>
+        </>);
     }
 
     render() {
@@ -92,36 +133,20 @@ class MileageReportPDF extends Component {
                     <View>
                         <Text>AGS Village Valet - Mileage Report</Text>
                     </View>
+                    <View><Text>{" "}</Text></View>
                     <View>
                         <Text>{this.props.driver.personal_info.last_name + ", " + this.props.driver.personal_info.first_name}</Text>
-                        <Text>{"[Home Address]"}</Text>
-                        <Text>{"[Home CSZ]"}</Text>
+                        <Text>{this.props.driver.addresses[0].line_1}</Text>
+                        <Text>{this.props.driver.addresses[0].city + ", " + this.props.driver.addresses[0].state + " " + this.props.driver.addresses[0].zip}</Text>
                         <Text>{(this.props.driver.personal_info.email ? this.props.driver.personal_info.email + " " : "") + (this.props.driver.personal_info.phone_home ? this.props.driver.personal_info.phone_home + " " : "") + (this.props.driver.personal_info.phone_mobile ? this.props.driver.personal_info.phone_mobile + " " : "")}</Text>
                     </View>
+                    <View><Text>{" "}</Text></View>
                     <View>
                         <Text>{"From: [DATE]"}</Text>
                         <Text>{"To: [DATE]"}</Text>
                     </View>
-                    <View style={styles.table}>
-                        <View style={styles.tableRow}>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Item Number</Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Ride ID</Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Trip Date</Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Trip Time</Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Trip Mileage</Text>
-                            </View>
-                        </View>
-                        {this.generateRideItems()}
-                    </View>
+                    <View><Text>{" "}</Text></View>
+                    {this.generateRideTable()}
                 </Page>
             </Document>
         )

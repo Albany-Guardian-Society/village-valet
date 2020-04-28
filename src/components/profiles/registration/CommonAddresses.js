@@ -13,7 +13,9 @@ import {Autocomplete} from "@react-google-maps/api";
 class CommonAddresses extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            autocomplete_help: {}
+        };
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
@@ -26,7 +28,7 @@ class CommonAddresses extends Component {
         let field = event.target.id.split("|")[1];
         switch (field) {
             case "autocomplete":
-                this.forceUpdate();
+                this.props.updateRegistration("addresses", id + "|autocomplete", event.target.value);
                 break;
             default:
                 this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
@@ -43,21 +45,28 @@ class CommonAddresses extends Component {
         if (this.autocomplete[index] != null) {
             index = index - 1;
             const place = this.autocomplete[index + 1].getPlace();
-            this.full_address = place.formatted_address;
+            this.props.updateRegistration("addresses", index + "|autocomplete",place.formatted_address);
             for (const component of place.address_components) {
                 if (component.types.includes('street_number')) {
                     street_number = component.long_name
+                    this.props.updateRegistration("addresses", index + "|street_number", component.long_name);
                 } else if (component.types.includes('route')) {
-                    this.props.addresses[index].line_1 = `${street_number} ${component.short_name}`
+                    this.props.updateRegistration("addresses", index + "|line_1", `${street_number} ${component.short_name}`);
                 } else if (component.types.includes('locality')) {
-                    this.props.addresses[index].city = component.short_name
+                    this.props.updateRegistration("addresses", index + "|city", component.short_name);
                 } else if (component.types.includes('administrative_area_level_1')) {
-                    this.props.addresses[index].state = component.short_name
+                    this.props.updateRegistration("addresses", index + "|state", component.short_name);
                 } else if (component.types.includes('postal_code')) {
-                    this.props.addresses[index].zip = component.short_name
+                    this.props.updateRegistration("addresses", index + "|zip", component.short_name);
                 }
             }
-            this.props.triggerUpdate();
+            if (place.geometry.location) {
+                this.props.updateRegistration("addresses", index + "|lat", place.geometry.location.lat());
+                this.props.updateRegistration("addresses", index + "|lng", place.geometry.location.lng());
+            }
+
+            //Nolonger needed now that things are going through the reducer
+            //this.props.triggerUpdate();
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -75,14 +84,16 @@ class CommonAddresses extends Component {
                         <Col><Form.Control id={"addr_" + index + "|name"} placeholder="--Address Name--"
                                            onChange={this.handleChange} value={this.props.addresses[index].name}/></Col>
                         <Col sm={3} lg={2}>
+                            {this.props.mode === "rider" ?
                             <Button id={index} variant="danger" onClick={(e) => this.props.removeAddress(e.target.id)}>
                                 Remove Address
                             </Button>
+                            : null }
                         </Col>
                     </Row>
 
                     <Row className="reg_row">
-                        <Form.Label column sm={2} lg={2}>Address Search:</Form.Label>
+                        <Form.Label column sm={2} lg={2}><strong>Address Search:</strong></Form.Label>
                         <Col>
                             <Autocomplete
                                 onLoad={(autocomplete) => {
@@ -91,13 +102,14 @@ class CommonAddresses extends Component {
                                 onPlaceChanged={() => this.onPlaceChanged(index)}
                             >
                                 <Form.Control id={"addr_" + index + "|autocomplete"} placeholder="--Address--"
-                                              onChange={this.handleChange} value={this.full_address}/>
+                                              onChange={this.handleChange} value={this.props.addresses[index].autocomplete}/>
                             </Autocomplete>
                         </Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>Address Line 1:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|line_1"}
+                                           readOnly
                                            placeholder="--Primary Address Information--" onChange={this.handleChange}
                                            value={this.props.addresses[index].line_1}/></Col>
                         <Form.Label column sm={2} lg={2}>Address Line 2:</Form.Label>
@@ -108,13 +120,16 @@ class CommonAddresses extends Component {
                     <Row className="reg_row">
                         <Form.Label column sm={2} lg={2}>City:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|city"} placeholder="--City--"
+                                           readOnly
                                            onChange={this.handleChange} value={this.props.addresses[index].city}/></Col>
                         <Form.Label column sm={2} lg={2}>State:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|state"} placeholder="--State--"
+                                           readOnly
                                            onChange={this.handleChange}
                                            value={this.props.addresses[index].state}/></Col>
                         <Form.Label column sm={2} lg={2}>Zip:</Form.Label>
                         <Col><Form.Control id={"addr_" + index + "|zip"} placeholder="--ZIP--"
+                                           readOnly
                                            onChange={this.handleChange} value={this.props.addresses[index].zip}/></Col>
                     </Row>
                     <Row className="reg_row">
@@ -138,10 +153,16 @@ class CommonAddresses extends Component {
         return (
             <Card>
                 <Card.Header>
-                    <h5 style={{float: "left"}}>Common Addresses</h5>
+                    {this.props.mode === "rider" ?
+                        <h5 style={{float: "left"}}>Common Addresses</h5>
+                    :
+                        <h5 style={{float: "left"}}>Address</h5>
+                    }
+                    {this.props.mode === "rider" ?
                     <Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
                         Add Address
                     </Button>
+                    : null}
                 </Card.Header>
                 {this.generateAddressForms()}
                 <h6>{" "}</h6>

@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import firestore from "../../modules/firestore.js";
-
-import {LoadScript} from "@react-google-maps/api";
 
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import moment from 'moment';
 
 import SelectRider from "./SelectRider";
 import RideInformation from "./RideInformation";
 import SelectDriver from "./SelectDriver";
 import Confirmation from "./Confirmation";
+import axios from "axios";
+import {API_ROOT} from "../../modules/api";
+import cookie from "react-cookies";
 
 const PAGE_MAX = 3;
 
@@ -26,17 +27,41 @@ class Scheduler extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
+        this.props.clearRide();
     }
 
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-            firestore.collection("rides").add(this.props.active_ride)
-                .then((docRef) => {
-                    this.props.addRide(this.props.active_ride, docRef.id);
+            switch (this.props.users[this.props.active_ride.driver.id].personal_info.preferred_communication) {
+                case "email":
+                    break;
+                case "mobile":
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_mobile + ". Did they confirm?");
+                    break;
+                case "home":
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_home + ". Did they confirm?");
+                    break;
+                default:
+                    break;
+            }
+            axios.post(API_ROOT + '/database/rides/ride',
+                {ride: this.props.active_ride},
+                {
+                    headers: {
+                        'Authorization': 'BEARER ' + cookie.load('token')
+                    }
+                }
+            ).then((response) => {
+                this.props.addRide(this.props.active_ride, response.data.id);
+                if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+                    this.props.returnRide();
+                    this.setState({scheduler_page: 1});
+                } else {
                     this.props.clearRide();
                     //This is part of react-router and allows forced page routing
                     this.props.history.push('/Dashboard');
-                });
+                }
+            });
         }
     }
 
@@ -61,15 +86,7 @@ class Scheduler extends Component {
             case 0: //Rider
                 return (<SelectRider/>);
             case 1: //Info
-                return (
-                    <LoadScript
-                        id="script-loader"
-                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_TOKEN}
-                        libraries={["places"]}
-                    >
-                        <RideInformation/>
-                    </LoadScript>
-                );
+                return (<RideInformation/>);
             case 2: //Driver
                 return (<SelectDriver/>);
             case 3: //Confirm
@@ -90,22 +107,37 @@ class Scheduler extends Component {
                 return true;
             case 1:
                 //Need to specify a date
+                const date = moment(this.props.active_ride.ride_data.date, "YYYY-MM-DD")
                 if (this.props.active_ride.ride_data.date === "") {
                     this.setState({error_message: "INVALID DATE: Please provide a date."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) + 1 <= (Date.now() + 6.04e+8)) {
+                } else if (date.isBefore(moment().add('1', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) >= (Date.now() + (6.04e+8 * 4))) {
+                } else if (date.isAfter(moment().add('4', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."});
                     return false;
+                } else if (!this.props.active_ride.locations.pickup.geolocation) {
+                    this.setState({error_message: "INVALID PICKUP ADDRESS: Please provide pickup address."});
+                    return false;
+                } else if (!this.props.active_ride.locations.dropoff.geolocation) {
+                    this.setState({error_message: "INVALID DROPOFF ADDRESS: Please provide dropoff address."});
+                    return false;
+                } else if (!this.props.active_ride.locations.pickup.time) {
+                    this.setState({error_message: "INVALID PICKUP TIME: Please provide pickup time."});
+                    return false;
+                } else if (!this.props.active_ride.locations.dropoff.time || moment(this.props.active_ride.locations.dropoff.time, "HH:mm").isBefore(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))) {
+                    this.setState({error_message: "INVALID DROPOFF TIME: Please provide dropoff time."});
+                    return false;
                 }
-                //Add additional validation!
                 return true;
             case 2:
                 //Need to pick a driver
                 if (this.props.active_ride.driver.id === "") {
                     this.setState({error_message: "INVALID DATE: Please select a driver."});
+                    return false;
+                } else if (!this.props.active_ride.driver.vehicle.make_model) {
+                    this.setState({error_message: "INVALID VEHICLE: Please select a vehicle."});
                     return false;
                 }
                 return true;
@@ -168,6 +200,7 @@ class Scheduler extends Component {
 
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
+    users: state.users,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -179,6 +212,10 @@ const mapDispatchToProps = dispatch => ({
         type: "clear_active_ride",
         payload: null
     }),
+    returnRide: () => dispatch({
+        type: "setup_return_ride",
+        payload: null
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scheduler);

@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
-import firestore from "../modules/firestore.js";
-import bcrypt from "bcryptjs";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom';
+import axios from "axios";
 
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
@@ -16,6 +15,10 @@ import Image from "react-bootstrap/Image";
 import logo from "../assets/VillageValetLogo.jpg"
 
 import "../App.css";
+import cookie from 'react-cookies'
+
+
+import {API_ROOT} from "../modules/api"
 
 // Above are all the imports for this file.
 // Every file will need React, Component, connect
@@ -82,26 +85,23 @@ class Login extends Component {
     // It just does some firebase calls checking against the operators table.
     // The two important React things are the "this.props.updateAuth" and "this.setState"
     // The first as discussed above saves things only to this component. (Updating the state
-    // triggers a "re-render", so by chaning the text of errorMessage I can make it appear
-    // on the page without any code besids assigning a variable.)
+    // triggers a "re-render", so by changing the text of errorMessage I can make it appear
+    // on the page without any code besides assigning a variable.)
     // The this.props.updateAuth is a dispatch function (defined at the bottom of the file)
     // It passes a message to the reducer stack to be "reduced" into the store.
     handleLogin() {
-        //Verify that the username and password match operator credetials
-        firestore.collection("operators").where("username", "==", this.state.username.toLowerCase()).get()
-        .then(querySnapshot => {
-            const data = querySnapshot.docs.map(doc => doc.data());
-            if (data.length === 1) {
-                if (bcrypt.compareSync(this.state.password, data[0].password)) {
-                    this.props.updateAuth(data[0]);
-                    //This is part of react-router and allows forced page routing
-                    this.props.history.push('/Dashboard');
-                } else {
-                    this.setState({errorMessage: "Login Failed: Your username/password do not match."})
-                }
-            } else {
-                this.setState({errorMessage: "Login Failed: Your username cannot be found."});
+        axios.post(API_ROOT + "/admin/login", {
+            username: this.state.username.toLowerCase(),
+            password: this.state.password
+        }).then((response) => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                const user = {...response.data};
+                this.props.updateAuth(user);
+                this.props.history.push('/Dashboard');
+                window.location.reload();
             }
+        ).catch(error => {
+            this.setState({errorMessage: "Login Failed: " + error.response.data.error})
         })
     }
 

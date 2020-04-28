@@ -6,9 +6,26 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table"
 
-import MapContainer from "../google-maps/MapContainer";
+import MapContainer from "../google-maps/MapContainer.js";
+import moment from "moment";
 
+
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+/**
+ * Confirmation
+ * @typedef {Object} Confirmation
+ *
+ */
 class Confirmation extends Component {
+    /**
+     * Confirmation Constructor
+     * @params {Object} props - Dictionary of all local variables
+     */
     constructor(props) {
         super(props);
         this.state = {};
@@ -19,6 +36,12 @@ class Confirmation extends Component {
 
     };
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container>
@@ -34,27 +57,29 @@ class Confirmation extends Component {
                             </tr>
                             <tr>
                                 <td>Pickup Location:</td>
-                                <td>{`${this.props.active_ride.locations.pickup.address}`}</td>
-                            </tr>
-                            <tr>
-                                <td>Dropoff Location:</td>
-                                <td>{`${this.props.active_ride.locations.dropoff.address}`}</td>
+                                <td>{this.props.active_ride.locations.pickup.address}</td>
                             </tr>
                             <tr>
                                 <td>Pickup Time:</td>
-                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
+                                <td>{moment(this.props.active_ride.locations.pickup.time, 'HH:mm').format('hh:mm a')}</td>
+                            </tr>
+                            <tr>
+                                <td>Dropoff Location:</td>
+                                <td>{this.props.active_ride.locations.dropoff.address}</td>
                             </tr>
                             <tr>
                                 <td>Dropoff Time:</td>
-                                <td>{`${this.props.active_ride.locations.pickup.time}`}</td>
+                                <td>{moment(this.props.active_ride.locations.dropoff.time, 'HH:mm').format('hh:mm a')}</td>
                             </tr>
                             <tr>
-                                <td>Trip Duration:</td>
-                                <td>{`${this.props.active_ride.ride_data.time_total}`}</td>
+                                <td>Driver Trip Duration:</td>
+                                <td>{this.props.active_ride.ride_data.time_total.driver ? moment("2015-01-01").startOf('day')
+                                    .seconds(this.props.active_ride.ride_data.time_total.driver)
+                                    .format('H [hours] mm [minutes]') : ""}</td>
                             </tr>
                             <tr>
                                 <td>Driver:</td>
-                                <td>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</td>
+                                <td>{this.props.active_ride.driver.first_name} {this.props.active_ride.driver.last_name}</td>
                             </tr>
                         </Table>
                     </Col>
@@ -64,8 +89,13 @@ class Confirmation extends Component {
     }
 }
 
+/**
+ * Pulls active_ride and users from state *
+ *
+ */
+
 const mapStateToProps = state => ({
-    active_ride: state.active_ride
+    active_ride: state.active_ride,
 });
 
 const mapDispatchToProps = dispatch => ({
