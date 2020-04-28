@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import Table from "react-bootstrap/Table";
+import moment from "moment";
 
 class Drivers extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -15,30 +15,36 @@ class Drivers extends Component {
      * @returns {*[]}
      */
     renderTableData() {
+        const results = {}
         let drivers = Object.values(this.props.users).filter((user) => {
-            return(user.user_type === 'driver')
+            return (user.user_type === 'driver')
         });
+        const rides = Object.values(this.props.rides).filter(ride => moment(ride.ride_data.date, 'YYYY-MM-DD').isBefore(moment()))
+        for (const driver of drivers) {
+            for (const ride of rides) {
+                if (Object.keys(results).indexOf(driver.id) === -1) {
+                    results[driver.id] = {}
+                    results[driver.id]['rides'] = 0
+                    results[driver.id]['mileage'] = 0
+                    results[driver.id]['time'] = 0
+                }
+                if (ride.driver.id !== driver.id) continue;
+                results[driver.id]['rides'] += 1
+                results[driver.id]['mileage'] += ride.ride_data.mileage.driver ? ride.ride_data.mileage.driver : 0
+                results[driver.id]['time'] += ride.ride_data.time_total.driver ? ride.ride_data.time_total.driver : 0
 
-        //const result = {};
-
-        // Object.keys(drivers)
-        //     .forEach(key => result[key] = drivers[key]);
-        //
-        // Object.keys(this.props.rides)
-        //     .forEach(key => result[key] = this.props.rides[key]);
-        //
-        // // console.log(result);
-        // console.log(this.props.rides);
-        // console.log(drivers);
-        // console.log(result);
+            }
+        }
         return drivers.map((driver) => {
             return (
                 <tr key={driver.id} style={{display: 'table', tableLayout: 'fixed', width: '100%'}}>
                     <td>{driver.id}</td>
                     <td>{driver.personal_info.first_name} {driver.personal_info.last_name}</td>
-                    <td>N/A</td>
-                    <td>N/A</td>
-                    <td>N/A</td>
+                    <td>{results[driver.id]['rides']}</td>
+                    <td>{results[driver.id]['mileage'].toFixed(2)}</td>
+                    <td>{moment("2015-01-01").startOf('day')
+                        .seconds(results[driver.id]['time'])
+                        .format('H [hours] mm [minutes]')}</td>
                 </tr>
             )
         })
