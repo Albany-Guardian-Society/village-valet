@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   table: { display: "table", width: "90%", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
   tableRow: { margin: "auto", flexDirection: "row" },
-  tableCol: { width: "18%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableCol: { width: "20%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
   tableCell: { margin: "auto", marginTop: 5, fontSize: 10 },
 });
 
@@ -44,7 +44,7 @@ class MileageReportPDF extends Component {
           return this.props.rides[ride].driver.id === this.props.driver.id;
       }).map((item) => {
           counter += 1;
-          time += this.props.rides[item].ride_data.mileage.driver;
+          time += this.props.rides[item].ride_data.time_total.driver;
           miles += this.props.rides[item].ride_data.mileage.driver;
           return (
             <View style={styles.tableRow}>
@@ -112,7 +112,7 @@ class MileageReportPDF extends Component {
                       <Text style={styles.tableCell}></Text>
                   </View>
                   <View style={styles.tableCol}>
-                      <Text style={styles.tableCell}>{this.state.total_time}</Text>
+                      <Text style={styles.tableCell}>{(this.state.total_time/60).toFixed(2)}</Text>
                   </View>
                   <View style={styles.tableCol}>
                       <Text style={styles.tableCell}>{this.state.total_miles}</Text>
