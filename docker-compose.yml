@@ -32,7 +32,7 @@ services:
 
   village-valet_dev:
     build: https://github.com/ItsAMeNick/village-valet.git#dev
-    container_name: village-valet
+    container_name: village-valet_dev
     restart: always
     mem_limit: 500m
     env_file: village-valet/.env
