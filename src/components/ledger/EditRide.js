@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import firebase from 'firebase/app';
 
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -10,9 +9,8 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Button from "react-bootstrap/Button";
-import {ButtonToolbar} from "react-bootstrap";
 
 //import './pic_placeholder.png';
 
@@ -55,6 +53,9 @@ class EditRide extends Component {
         } else if (label_flag[1] === "meta" && label_flag[2] === "samereturn") {
             //updating the date
             this.props.updateScheduler(label_flag[2], null, event.target.checked)
+        } else if (label_flag[1] === "driverconfirmed") {
+            console.log(event.target)
+            this.props.updateScheduler("driver_confirmed", null, event.target.checked);
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
@@ -165,26 +166,22 @@ class EditRide extends Component {
                                             <Form.Label>Date:</Form.Label>
                                         </td>
                                         <td>
-                                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                            <Form.Control type="date" placeholder="" id='sched_date'
+                                                          onChange={this.handleChange}
                                                           value={this.props.active_ride.ride_data.date}/>
                                         </td>
                                     </tr>
-                                    {/*<tr>*/}
-                                    {/*    <td>*/}
-                                    {/*        Mobility Aid:*/}
-                                    {/*    </td>*/}
-                                    {/*    <td>*/}
-                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}`}*/}
-                                    {/*    </td>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr>*/}
-                                    {/*    <td>*/}
-                                    {/*        Special Accommodations:*/}
-                                    {/*    </td>*/}
-                                    {/*    <td>*/}
-                                    {/*        {`${this.props.users[this.props.active_ride.rider.id].accommodations.special}`}*/}
-                                    {/*    </td>*/}
-                                    {/*</tr>*/}
+                                    <tr>
+                                        <td>
+                                            <Form.Label>Driver Confirm:</Form.Label>
+                                        </td>
+                                        <td>
+                                            {console.log()}
+                                            <Form.Control type="checkbox" placeholder="" id='sched_driverconfirmed'
+                                                          onChange={this.handleChange}
+                                                          checked={this.props.active_ride.ride_data.driver_confirmed}/>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </Table>
                             </Card.Body>
@@ -326,8 +323,8 @@ const mapDispatchToProps = dispatch => ({
     }),
 
     saveRide: (ride) => dispatch({
-        type: "save_ride",
-        payload : ride
+        type: "ride_save",
+        payload: ride
     })
 
 });

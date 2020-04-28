@@ -157,7 +157,7 @@ const BLANK_VILLAGE = {
     village_name: "",
     email: "",
     phone: "",
-    vetting: "",
+    vetting: [],
     defaults: {}
 }
 
@@ -342,6 +342,16 @@ const VillageReducer = (state = initialState, action) => {
                     newState.active_village[action.payload.field] = action.payload.value;
                     break;
                 }
+                case "edit_vetting": {
+                    const index = newState.active_village.vetting.indexOf(action.payload.field);
+                    if (index > -1) {
+                        newState.active_village.vetting.splice(index, 1);
+                    }
+                    if (action.payload.value && action.payload.value.length > 0) {
+                        newState.active_village.vetting.push(action.payload.value)
+                    }
+                    break;
+                }
                 case "save": {
                     axios.put(API_ROOT + '/database/villages/village', {village: newState.active_village}, {
                         headers: {
@@ -351,7 +361,7 @@ const VillageReducer = (state = initialState, action) => {
                         cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
 
                     })
-            newState.villages[newState.active_village.id] = _.cloneDeep(newState.active_village);
+                    newState.villages[newState.active_village.id] = _.cloneDeep(newState.active_village);
                     break;
                 }
                 case "delete": {
@@ -462,6 +472,8 @@ const VillageReducer = (state = initialState, action) => {
             newState.active_ride.ride_data.meta.samereturn = action.payload.value;
         } else if (action.payload.type === "givendropoff") {
             newState.active_ride.ride_data.meta.givendropoff = action.payload.value;
+        } else if (action.payload.type === 'driver_confirmed') {
+            newState.active_ride.ride_data.driver_confirmed = action.payload.value;
         } else if (action.payload.type === "vehicle") {
             let vehicle = newState.users[action.payload.field].vehicles.filter((car) => {
                 return car.lp === action.payload.value;
@@ -592,6 +604,20 @@ const VillageReducer = (state = initialState, action) => {
             return newState;
         }
 
+        case "ride_save": {
+            let newState = _.cloneDeep(state);
+            axios.put(API_ROOT + '/database/rides/ride', {
+                ride: action.payload
+            }, {
+                headers: {
+                    "Authorization": "BEARER " + cookies.load('token')
+                }
+            }).then(response => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+            })
+            newState.rides[action.payload.id] = action.payload
+            return newState
+        }
         case "ride_deactivate": {
             let newState = _.cloneDeep(state);
             let rideID = action.payload;

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RideEditor from "./EditRide";
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
+import moment from 'moment';
 
 class LedgerTable extends Component {
     constructor(props) {
@@ -50,7 +50,7 @@ class LedgerTable extends Component {
     }
 
     /**
-     * Reactivates an inactive ride when reactivated is clicked
+     * Reactivates an inactive ride when reactivate is clicked
      */
     handleReactivateRide(rideID) {
         if (window.confirm("Are you sure you want to REACTIVATE this ride?")) {
@@ -58,6 +58,59 @@ class LedgerTable extends Component {
             window.alert("REACTIVATED: " + rideID);
         }
     }
+
+    futureButtons1(rides) {
+        return(
+            <td>
+                <Button id={rides.id + "edit"} variant="primary" className="mr-1" size="sm"
+                           onClick={(e) => this.handleSelect(e)}>
+                Edit
+                </Button>
+
+                <Button id={rides.id + "deactivate"} variant="warning" className="mr-1" size="sm"
+                        onClick={() => this.handleDeactivateRide(rides.id)}>
+                    Deactivate
+                </Button>
+                <Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                </Button>
+            </td>
+        )
+    }
+
+    futureButtons2(rides) {
+        return(
+            <td>
+                <Button id={rides.id + "edit"} variant="primary" className="mr-1" size="sm"
+                        onClick={(e) => this.handleSelect(e)}>
+                    Edit
+                </Button>
+
+                <Button id={rides.id + "reactivate"} variant="success" className="mr-1" size="sm"
+                        onClick={() => this.handleReactivateRide(rides.id)}>
+                    Reactivate
+                </Button>
+                <Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                </Button>
+            </td>
+        )
+    }
+
+    passedButtons(rides){
+        return(
+            <td>
+                <Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                </Button>
+            </td>
+                )
+
+
+}
 
     /**
      *
@@ -67,60 +120,42 @@ class LedgerTable extends Component {
         let rides = this.props.rides;
         let keys = Object.keys(rides);
         return keys.map((key) => {
-            if (rides[key].status === "active") {
-                return (
-                    <tr>
-                        <td>{rides[key].id}</td>
-                        <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
-                        <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
-                        <td>{rides[key].locations.pickup.address}</td>
-                        <td>{rides[key].locations.dropoff.address}</td>
-                        <td>{rides[key].ride_data.date}</td>
-                        <td>Active</td>
-                        <td>
 
-                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
-                                    onClick={(e) => this.handleSelect(e)}>
-                                Edit
-                            </Button>
-                            <Button id={rides[key].id + "deactivate"} variant="warning" className="mr-1" size="sm"
-                                    onClick={() => this.handleDeactivateRide(rides[key].id)}>
-                                Deactivate
-                            </Button>
-                            <Button id={rides[key].id + "cancel"} variant="danger" className="mr-1" size="sm"
-                                    onClick={() => this.handleCancel(rides[key].id)}>
-                                Cancel
-                            </Button>
-                        </td>
-                    </tr>
-                )
+            /**
+             * check if ride is confirmed
+             */
+            let button_set;
+            let status;
+            const confirm_check = rides[key].ride_data.driver_confirmed ? <tr>D: Confirmed </tr> : <tr>D: Pending </tr>
+            const date = moment(rides[key].ride_data.date, "YYYY-MM-DD")
+            if (rides[key].status === "inactive") {
+                button_set = this.futureButtons2(rides[key]);
+                status = <tr>Inactive</tr>;
+
             } else {
-                return (
-                    <tr>
-                        <td>{rides[key].id}</td>
-                        <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
-                        <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
-                        <td>{rides[key].locations.pickup.address}</td>
-                        <td>{rides[key].locations.dropoff.address}</td>
-                        <td>{rides[key].ride_data.date}</td>
-                        <td>Inactive</td>
-                        <td>
-                            <Button id={rides[key].id + "edit"} variant="primary" className="mr-1" size="sm"
-                                    onClick={(e) => this.handleSelect(e)}>
-                                Edit
-                            </Button>
-                            <Button id={rides[key].id + "reactivate"} variant="success" className="mr-1" size="sm"
-                                    onClick={() => this.handleReactivateRide(rides[key].id)}>
-                                Reactivate
-                            </Button>
-                            <Button id={rides[key].id + "cancel"} variant="danger" size="sm"
-                                    onClick={() => this.handleCancel(rides[key].id)}>
-                                Cancel
-                            </Button>
-                        </td>
-                    </tr>
-                )
+                button_set = this.futureButtons1(rides[key]);
+                status = <tr>Active</tr>;
+
             }
+            if (date.isBefore(moment().format("YYYY-MM-DD"))) {
+                button_set = this.passedButtons(rides[key])
+                status = <tr>Passed</tr>
+            }
+            return (
+                <tr>
+                    <td>{rides[key].id}</td>
+                    <td>{rides[key].driver.first_name} {rides[key].driver.last_name}</td>
+                    <td>{rides[key].rider.first_name} {rides[key].rider.last_name}</td>
+                    <td>{rides[key].locations.pickup.address}</td>
+                    <td>{rides[key].locations.dropoff.address}</td>
+                    <td>{rides[key].ride_data.date}</td>
+                    <td>
+                        {status}
+                        {confirm_check}
+                    </td>
+                    {button_set}
+                </tr>
+            )
         })
     }
 
