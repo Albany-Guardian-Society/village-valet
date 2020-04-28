@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
       width: 3600,
     },
   },
-  table: { display: "table", width: "auto", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
+  table: { display: "table", width: "90%", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
   tableRow: { margin: "auto", flexDirection: "row" },
-  tableCol: { width: "25%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableCol: { width: "18%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
   tableCell: { margin: "auto", marginTop: 5, fontSize: 10 },
 });
 
@@ -58,10 +58,10 @@ class MileageReportPDF extends Component {
                   <Text style={styles.tableCell}>{this.props.rides[item].ride_data.date}</Text>
               </View>
               <View style={styles.tableCol}>
-                  <Text style={(styles.tableCell}>{this.props.rides[item].ride_data.time_total.driver/60).toFixed(2)}</Text>
+                  <Text style={styles.tableCell}>{(this.props.rides[item].ride_data.time_total.driver/60).toFixed(2)}</Text>
               </View>
               <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{this.props.rides[item].ride_data.mileage.driver}</Text>
+                  <Text style={styles.tableCell}>{(this.props.rides[item].ride_data.mileage.driver).toFixed(2)}</Text>
               </View>
           </View>
         )});
@@ -103,10 +103,10 @@ class MileageReportPDF extends Component {
             <View style={styles.table}>
               <View style={styles.tableRow}>
                   <View style={styles.tableCol}>
-                      <Text style={styles.tableCell}>0</Text>
+                      <Text style={styles.tableCell}></Text>
                   </View>
                   <View style={styles.tableCol}>
-                      <Text style={styles.tableCell}>0</Text>
+                      <Text style={styles.tableCell}></Text>
                   </View>
                   <View style={styles.tableCol}>
                       <Text style={styles.tableCell}></Text>
