@@ -34,7 +34,6 @@ class MapContainer extends Component {
     }
 
     storeRouteInfo(response) {
-        if (!this.props.ride.driver.id || this.timePast) return;
         if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
             this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[0].distance.value);
             this.props.ride.ride_data.time_total.rider = response.routes[0].legs[0].duration.value
@@ -42,8 +41,10 @@ class MapContainer extends Component {
             this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[1].distance.value);
             this.props.ride.ride_data.time_total.rider = response.routes[0].legs[1].duration.value
         }
-        this.props.ride.ride_data.mileage.driver = this.convertMetersToMiles(response.routes[0].legs[0].distance.value) + this.convertMetersToMiles(response.routes[0].legs[1].distance.value);
-        this.props.ride.ride_data.time_total.driver = response.routes[0].legs[0].duration.value + response.routes[0].legs[1].duration.value;
+        if (this.props.ride.driver.id) {
+            this.props.ride.ride_data.mileage.driver = this.convertMetersToMiles(response.routes[0].legs[0].distance.value) + this.convertMetersToMiles(response.routes[0].legs[1].distance.value);
+            this.props.ride.ride_data.time_total.driver = response.routes[0].legs[0].duration.value + response.routes[0].legs[1].duration.value;
+        }
         this.props.updateActiveRide(this.props.ride)
     }
 
