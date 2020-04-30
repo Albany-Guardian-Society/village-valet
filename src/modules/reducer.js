@@ -5,6 +5,7 @@ import {API_ROOT} from "./api";
 import cookies from "react-cookies"
 import cookie from "react-cookies"
 
+
 // The reducer is an internal middle man that handles passing information from each
 // of the various components to something called the store.  The store is basically a
 // global state.  This state is also never edited, but rather a copy is made, updated
@@ -15,6 +16,7 @@ import cookie from "react-cookies"
 // The type is matched against a switch statement to perform a state update.
 // The payload is used to information from a component to the reducer and then save to store
 
+/**@module Reducer */
 /** ADDRESS_TEMPLATE represents a blank address object, it is used as a template for all addresses.*/
 const ADDRESS_TEMPLATE = {
     name: "",
