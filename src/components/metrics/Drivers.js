@@ -12,7 +12,7 @@ class Drivers extends Component {
 
     /**
      * Populates Drivers table with information from database
-     * @returns {*[]}
+     * @returns {Object[]}
      */
     renderTableData() {
         const results = {}
@@ -53,7 +53,7 @@ class Drivers extends Component {
 
     /**
      * Displays the Table Headers/Column Titles
-     * @returns {*[]}
+     * @returns {Object[]}
      */
     renderTableHeader() {
         let header = ['Driver Id', 'Driver', 'Rides', 'Mileage', 'Volunteer Hours'];

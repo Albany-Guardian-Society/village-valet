@@ -12,7 +12,7 @@ class Riders extends Component {
 
     /**
      * Populates Table with Riders' information
-     * @returns {*[]}
+     * @returns {Object[]}
      */
     renderTableData() {
         const results = {}
@@ -49,7 +49,7 @@ class Riders extends Component {
 
     /**
      * Renders the Riders table's headers
-     * @returns {*[]}
+     * @returns {Object[]}
      */
     renderTableHeader() {
         let header = ['Rider Id', 'Rider', 'Rides', 'Mileage', 'Village'];
