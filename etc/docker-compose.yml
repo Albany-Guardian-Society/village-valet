@@ -1,3 +1,5 @@
+GNU nano 2.5.3                                                                        File: /drone/docker-compose.yml
+
 version: '3'
 services:
   traefik:
@@ -5,8 +7,8 @@ services:
     container_name: traefik
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/traefik/traefik.yml:/etc/traefik/traefik.yml
@@ -18,26 +20,14 @@ services:
       - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
 
   village-valet:
-    build: https://github.com/ItsAMeNick/village-valet.git
+    build: https://github.com/ItsAMeNick/village-valet.git#dev
     container_name: village-valet
     restart: always
-    env_file: village-valet/.env
     labels:
-      - traefik.http.routers.village-valet.rule=Host(`village-valet.tk`,`www.village-valet.tk`)
-      - traefik.http.routers.village-valet.tls=true
-      - traefik.http.routers.village-valet.tls.certresolver=tls
-    volumes:
-      - /drone/village-valet/serviceAccountKey.json:/app/serviceAccountKey.json
-
-  village-valet_dev:
-    build: https://github.com/ItsAMeNick/village-valet.git#dev
-    container_name: village-valet_dev
-    restart: always
-    env_file: village-valet/.env
-    labels:
-      - traefik.http.routers.village-valet_dev.rule=Host(`beta.village-valet.tk`)
+      - traefik.http.routers.village-valet_dev.rule=Host(`village-valet.tk`,`www.village-valet.tk`)
       - traefik.http.routers.village-valet_dev.tls=true
       - traefik.http.routers.village-valet_dev.tls.certresolver=tls
     volumes:
-      - /drone/village-valet/serviceAccountKey.json:/app/serviceAccountKey.json
+      - /drone/village-valet/serviceAccountKey.json:/usr/src/app/keys/serviceAccountKey.json
+    env_file: village-valet/.env
 
