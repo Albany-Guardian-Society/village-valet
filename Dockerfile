@@ -1,5 +1,5 @@
 # build environment
-FROM node:13.12.0-alpine
+FROM node:12-alpine
 WORKDIR /usr/src/app
 ENV GENERATE_SOURCEMAP false
 COPY package.json ./
