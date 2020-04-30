@@ -4,5 +4,5 @@ if (hostname === 'localhost') {
     hostname += ':3000'
 }
 
-export const API_ROOT = `http://${hostname}/api/${apiVersion}`;
+export const API_ROOT = `https://${hostname}/api/${apiVersion}`;
 
