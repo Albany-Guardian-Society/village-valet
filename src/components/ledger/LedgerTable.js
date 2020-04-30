@@ -18,6 +18,7 @@ class LedgerTable extends Component {
 
     /**
      * Switches to the Edit ride functionality
+     * @param event -  ride object
      */
     handleSelect(event) {
         // event.target.id is the id of the ride
@@ -31,6 +32,8 @@ class LedgerTable extends Component {
 
     /**
      * Permanently deletes ride
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
      */
     handleCancel(rideID) {
         if (window.confirm("Are you sure you want to DELETE this ride?")) {
@@ -41,6 +44,8 @@ class LedgerTable extends Component {
 
     /**
      * Deactivates ride when deactivate is clicked
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
      */
     handleDeactivateRide(rideID) {
         if (window.confirm("Are you sure you want to DEACTIVATE this ride?")) {
@@ -51,6 +56,8 @@ class LedgerTable extends Component {
 
     /**
      * Reactivates an inactive ride when reactivate is clicked
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
      */
     handleReactivateRide(rideID) {
         if (window.confirm("Are you sure you want to REACTIVATE this ride?")) {
@@ -58,6 +65,12 @@ class LedgerTable extends Component {
             window.alert("REACTIVATED: " + rideID);
         }
     }
+
+    /**
+     * Action buttons for upcoming rides with deactivate
+     * @param rides[key]
+     * @return HTMLTableDataCellElement - of Buttons
+     */
 
     futureButtons1(rides) {
         return(
@@ -79,6 +92,12 @@ class LedgerTable extends Component {
         )
     }
 
+    /**
+     * Action buttons for upcoming rides with Reactivate
+     * @param rides[key]
+     * @return HTMLTableDataCellElement - of Buttons
+     */
+
     futureButtons2(rides) {
         return(
             <td>
@@ -98,6 +117,12 @@ class LedgerTable extends Component {
             </td>
         )
     }
+
+    /**
+     * Action buttons for passed rides ie only 'Cancel'
+     * @param rides[key]
+     * @returns HTMLButtonElement
+     */
 
     passedButtons(rides){
         return(
@@ -128,6 +153,10 @@ class LedgerTable extends Component {
             let status;
             const confirm_check = rides[key].ride_data.driver_confirmed ? <tr>D: Confirmed </tr> : <tr>D: Pending </tr>
             const date = moment(rides[key].ride_data.date, "YYYY-MM-DD")
+
+            /**
+             * check for inactive and active rides - activate or reactivate
+             */
             if (rides[key].status === "inactive") {
                 button_set = this.futureButtons2(rides[key]);
                 status = <tr>Inactive</tr>;
@@ -137,6 +166,9 @@ class LedgerTable extends Component {
                 status = <tr>Active</tr>;
 
             }
+            /**
+             *  Check for date for ride to see if upcoming or passed
+             */
             if (date.isBefore(moment().format("YYYY-MM-DD"))) {
                 button_set = this.passedButtons(rides[key])
                 status = <tr>Passed</tr>
@@ -160,7 +192,6 @@ class LedgerTable extends Component {
     }
 
     /**
-     *
      * Displays Ledger table Headers/Column Titles with
      */
     renderTableHeader() {

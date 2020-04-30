@@ -16,6 +16,12 @@ class RideDetails extends Component {
     handleChange(event) {
     }
 
+    /**
+     * Shows driver and rider name, pick up/ drop off locations and time
+     * Gets ride from active_ride
+     * @returns HTMLDivElement - with ride info
+     */
+
     displayDetails() {
         if (this.props.ride.id === "") {
             return <div/>

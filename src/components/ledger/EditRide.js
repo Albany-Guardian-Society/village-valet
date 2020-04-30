@@ -32,16 +32,30 @@ class EditRide extends Component {
         console.log(this.props.active_ride);
     }
 
+    /**
+     * Goes back to ledger page
+     * @param event - button click
+     */
+
     handleBack(event){
         this.props.history.push('/Ledger/');
     }
+
+    /**
+     * Saves ride changes
+     * @param event - button click
+     * @returns windows confirm and saves ride in reducer
+     */
 
     handleSave(event){
         this.props.saveRide(this.props.active_ride)
         console.log(this.props.active_ride)
         window.alert('Saved!')
     }
-
+    /**
+     * Updates scheduler every time a field is changed - redcuer is not changed till save button is clicked
+     * @param event - form change
+     */
     handleChange(event) {
         let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date") {
@@ -61,6 +75,11 @@ class EditRide extends Component {
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
         }
     };
+
+    /**
+     * Autofills common addresses of given type
+     * @params event, type - form change, type of address (home, work etc)
+     */
 
     handleCommonAddress(event, type) {
         if (event.target.value === "other") {
@@ -86,11 +105,19 @@ class EditRide extends Component {
         return items
     }
 
+    /**
+     * Autocompletes with addrs
+     * @param autocomplete -
+     */
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
         this.count += 1
     }
 
+    /**
+     * When address of pick up or drop off is changed the form field is updated with a suitable addrs - Google Maps
+     * @param variable, number
+     */
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
@@ -104,7 +131,10 @@ class EditRide extends Component {
             console.log('Autocomplete is not loaded yet!')
         }
     }
-
+    /**
+     * Retrieves common addresses for rider
+     * @param mode - used in RideInfo page on scheduler
+     */
     getCommonAddresses(mode) {
         let options = [];
         if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);

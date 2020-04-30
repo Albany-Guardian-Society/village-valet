@@ -16,6 +16,11 @@ class UpcomingRides extends Component {
     handleChange(event) {
     }
 
+    /**
+     * Filters for future rides by date
+     * @returns ride object
+     */
+
     filterRides() {
         if (this.props.rides) {
             return Object.values(this.props.rides).filter(ride => ride.ride_data.date ===
