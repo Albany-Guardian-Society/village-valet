@@ -23,8 +23,8 @@ import Confirmation from "./Confirmation";
 
 const PAGE_MAX = 3;
 /**
- * Scheduler
- * @typedef {Object} Scheduler
+ * @class Scheduler
+ * {Object} Scheduler
  *
  */
 class Scheduler extends Component {

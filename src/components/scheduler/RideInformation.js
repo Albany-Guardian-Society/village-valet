@@ -18,8 +18,8 @@ import MapContainer from "../google-maps/MapContainer";
 // and layout without much need for custom CSS or HTML
 
 /**
- * RideInformation
- * @typedef {Object} RideInformation
+ * @class RideInformation
+ * {Object} RideInformation
  *
  */
 class RideInformation extends Component {

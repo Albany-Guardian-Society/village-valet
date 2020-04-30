@@ -16,8 +16,8 @@ import axios from 'axios';
 // and layout without much need for custom CSS or HTML.
 
 /**
- * Confirmation
- * @typedef {Object} Confirmation
+ * @class Confirmation
+ * {Object} Confirmation
  *
  */
 class Confirmation extends Component {

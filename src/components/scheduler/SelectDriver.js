@@ -17,8 +17,8 @@ import Table from "react-bootstrap/Table";
 // and layout without much need for custom CSS or HTML.
 
 /**
- * SelectDriver
- * @typedef {Object} SelectDriver
+ * @class SelectDriver
+ * {Object} SelectDriver
  *
  */
 class SelectDriver extends Component {

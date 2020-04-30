@@ -15,8 +15,8 @@ import ProfileTable from "../profiles/ProfileTable";
 // and layout without much need for custom CSS or HTML.
 
 /**
- * SelectRider
- * @typedef {Object} SelectRider
+ * @class SelectRider
+ * {Object} SelectRider
  *
  */
 class SelectRider extends Component {
