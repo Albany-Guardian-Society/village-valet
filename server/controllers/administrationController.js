@@ -37,6 +37,13 @@ exports.confirmRide = async (req, res) => {
     res.status(500).send({error: 'Could not edit ride in database'})
 };
 
+/**
+ * A function which will confirm the admin on initial setup.  Redirects to login page if complete
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.confirmAdmin = async (req, res) => {
     const {scope, id, village_id} = res.locals.jwtPayload;
     if (scope !== 'confirm_admin') {
@@ -70,6 +77,7 @@ exports.confirmAdmin = async (req, res) => {
  *
  * @param {Request} req - Request that was received from the client
  * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
  */
 exports.googleMapsToken = async (req, res) => {
     res.status(200).send({token: GoogleMapsToken})
