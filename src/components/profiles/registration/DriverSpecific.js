@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 
 /**
  * Driver Specific Registration Information
- * @typedef {Object} DriverSpecific
+ * @class DriverSpecific
  */
 class DriverSpecific extends Component {
     constructor(props) {

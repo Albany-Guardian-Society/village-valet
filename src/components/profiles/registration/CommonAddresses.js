@@ -12,7 +12,7 @@ import {Autocomplete} from "@react-google-maps/api";
 
 /**
  * Common Addresses
- * @typedef {Object} CommonAddresses
+ * @class CommonAddresses
  */
 class CommonAddresses extends Component {
     constructor(props) {

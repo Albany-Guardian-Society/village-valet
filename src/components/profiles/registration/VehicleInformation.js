@@ -11,7 +11,7 @@ import "./registration.css"
 
 /**
  * Vehicle Information
- * @typedef {Object} VehicleInformation
+ * @class VehicleInformation
  */
 class VehicleInformation extends Component {
     constructor(props) {

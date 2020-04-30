@@ -11,7 +11,7 @@ import ProfileTable from "./ProfileTable";
 
 /**
  * Profiles
- * @typedef {Object} Profiles
+ * @class Profiles
  * @property {string} search_term - word used for profile table fuzzysort
  */
 class Profiles extends Component {
