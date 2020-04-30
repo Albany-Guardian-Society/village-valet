@@ -17,15 +17,11 @@ import moment from "moment";
 // and layout without much need for custom CSS or HTML.
 
 /**
- * Confirmation
+ * @class Confirmation
  * @typedef {Object} Confirmation
  *
  */
 class Confirmation extends Component {
-    /**
-     * Confirmation Constructor
-     * @params {Object} props - Dictionary of all local variables
-     */
     constructor(props) {
         super(props);
         this.state = {};

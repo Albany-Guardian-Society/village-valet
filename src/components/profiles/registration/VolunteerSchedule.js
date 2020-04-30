@@ -7,6 +7,10 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+/**
+ * Driver Volunteer Schedule
+ * @class VolunteerSchedule
+ */
 class VolunteerSchedule extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +19,11 @@ class VolunteerSchedule extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when address is entered
+     *
+     * @param {Object} event - address entered
+     */
     handleChange(event) {
         let id = event.target.id.split("|")[0].replace("vol_", "");
         let field = event.target.id.split("|")[1];
@@ -25,6 +34,11 @@ class VolunteerSchedule extends Component {
         }
 	}
 
+    /**
+     * Creates the forms on the page
+     *
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
+     */
     generateHourRows() {
         let hour_rows = [];
         let last_index = String(this.props.volunteer_hours.length-1);
@@ -56,6 +70,11 @@ class VolunteerSchedule extends Component {
         return hour_rows;
     }
 
+    /**
+     * Displays the volunteer hours and all its forms
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -74,10 +93,16 @@ class VolunteerSchedule extends Component {
     }
 }
 
+/**
+ * Pulls volunteer hours information from state's active ride
+ */
 const mapStateToProps = state => ({
     volunteer_hours: state.active_profile.volunteer_hours,
 });
 
+/**
+ * Sets up functions to send registration and volunteer hour information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

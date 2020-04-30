@@ -9,8 +9,11 @@ import Form from "react-bootstrap/Form";
 import "./registration.css"
 
 // May wish to add the ability for multiple emergency_contacts
-// Accounting for this later
 
+/**
+ * Emergency Contact Information
+ * @class EmergencyInformation
+ */
 class EmergencyInformation extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +22,11 @@ class EmergencyInformation extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
     handleChange(event) {
         switch (event.target.id) {
             default:
@@ -27,6 +35,11 @@ class EmergencyInformation extends Component {
         }
 	}
 
+    /**
+     * Displays the emergency contact information
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -73,11 +86,17 @@ class EmergencyInformation extends Component {
     }
 }
 
+/**
+ * Pulls emergency contact information and user type from state's active ride
+ */
 const mapStateToProps = state => ({
     emergency_contact: state.active_profile.emergency_contact,
     user_type: state.active_profile.user_type
 });
 
+/**
+ * Sets up function to send emergency contact information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

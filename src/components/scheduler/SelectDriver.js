@@ -10,6 +10,17 @@ import MapContainer from "../google-maps/MapContainer";
 import ProfileTable from "../profiles/ProfileTable";
 import moment from "moment";
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+/**
+ * @class SelectDriver
+ * @typedef {Object} SelectDriver
+ *
+ */
 class SelectDriver extends Component {
     constructor(props) {
         super(props);
@@ -19,11 +30,23 @@ class SelectDriver extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Fills field for vehicle selection
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
     handleChange(event){
         if (event.target.id === "search") this.setState({search_term: event.target.value});
         else if (event.target.id === "sched_vehicle") this.props.updateScheduler("vehicle", this.props.active_ride.driver.id, event.target.value);
     };
 
+    /**
+     * Loads vehicle options for driver
+     *
+     * @example
+     *     {this.vehicleOptions()}
+     */
     vehicleOptions() {
         let options = [<option value={""} label={""} key={"null"}/>];
         if (!this.props.active_ride.driver.id) return options;
@@ -34,6 +57,12 @@ class SelectDriver extends Component {
         return options;
     };
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container className="SelectDriver" style={{minWidth: "100%"}}>
@@ -83,11 +112,19 @@ class SelectDriver extends Component {
     }
 }
 
+/**
+ * Pulls active_ride and users from state
+ *
+ */
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
     users: state.users
 });
 
+/**
+ * Sets up functions to send scheduler information to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     updateScheduler: (type, field, value) => dispatch({
         type: "scheduler",

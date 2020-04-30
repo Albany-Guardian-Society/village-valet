@@ -8,7 +8,7 @@ import Table from "react-bootstrap/Table";
 
 /**
  * Profile Table
- * @typedef {Object} ProfileTable
+ * @class ProfileTable
  * @property {string} selcted_row - which row in the table has been selected (darkly highlighted on screen)
  */
 class ProfileTable extends Component {

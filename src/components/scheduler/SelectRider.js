@@ -8,6 +8,17 @@ import Col from "react-bootstrap/Col";
 
 import ProfileTable from "../profiles/ProfileTable";
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+/**
+ * @class SelectRider
+ * @typedef {Object} SelectRider
+ *
+ */
 class SelectRider extends Component {
     constructor(props) {
         super(props);
@@ -16,11 +27,22 @@ class SelectRider extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
     }
-
+    /**
+     * Sets rider to selection in scheduler
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
     handleChange(event){
         this.setState({search_term: event.target.value})
     };
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container className="SelectRider" style={{minWidth: "100%"}}>
@@ -36,6 +58,10 @@ class SelectRider extends Component {
     }
 }
 
+/**
+ * Pulls users from state
+ *
+ */
 const mapStateToProps = state => ({
     users: state.users,
 });

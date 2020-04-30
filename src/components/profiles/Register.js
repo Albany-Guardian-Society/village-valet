@@ -27,6 +27,12 @@ import cookies from "react-cookies";
 const DRIVER_MAX = 5;
 const RIDER_MAX = 4;
 
+/**
+ * Profile Table
+ * @class ProfileTable
+ * @property {string} error_message - what displays in red box on top of screen if not validated correctly
+ * @property {int} page - current page in registration process
+ */
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -42,6 +48,11 @@ class Register extends Component {
 	handleChange(event) {
 	}
 
+    /**
+     * Changes registration page
+     *
+     * @param {int} increment - whether we go to the next or previous page
+     */
     changePage(increment) {
         if (increment <= 0 || this.validateRegistration()) {
             let proposed_page = this.state.page + increment;
@@ -61,6 +72,9 @@ class Register extends Component {
         }
     }
 
+    /**
+     * Displays proper page based on page number and user type
+     */
     generatePage() {
         // The directory of pages should change based on a rider/driver, 0
         // will always be the same
@@ -86,25 +100,45 @@ class Register extends Component {
         }
     }
 
+    /**
+     * Email validation using redux
+     *
+     * @param {string} email - to be validated
+     * @returns {bool} true if valid false if invalid
+     */
     validateEmail(email) {
         let emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return emailPattern.test(email);
     }
 
+    /**
+     * Phone number validation using redux
+     *
+     * @param {string} number - to be validated
+     * @returns {bool} true if valid false if invalid
+     */
     validatePhoneNumber(number){
         let phoneNumberPattern = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
         return phoneNumberPattern.test(number);
     }
 
+    /**
+     * Zip code validation using redux
+     *
+     * @param {string} zip - to be validated
+     * @returns {bool} true if valid false if invalid
+     */
     validateZipCode(zip){
         let zipCodePattern = /^\d{5}$|^\d{5}-\d{4}$/;
         return zipCodePattern.test(zip);
     }
 
+    /**
+     * Validates most fields in registration process
+     *
+     * @returns {bool} true if valid false if invalid
+     */
     validateRegistration() {
-        //Validate the registration
-        // Might want to have a "list of errors and then display a bunch of them? might be ugly"
-        // THis solution works for now
         switch (this.state.page) {
             case 0:
                 if (!this.props.registration.user_type) {
@@ -311,6 +345,9 @@ class Register extends Component {
         }
     }
 
+    /**
+     * Handles registration confirmation
+     */
     handleSubmit() {
         if (this.validateRegistration() && window.confirm("Are you sure you want to register this account for " + this.props.registration.personal_info.first_name + " " + this.props.registration.personal_info.last_name + "?")) {
             axios.post(API_ROOT + "/database/users/user", {user: this.props.registration}, {
@@ -326,6 +363,11 @@ class Register extends Component {
         }
     }
 
+    /**
+     * Displays the registration page
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
@@ -370,10 +412,16 @@ class Register extends Component {
     }
 }
 
+/**
+ * Pulls registration from state
+ */
 const mapStateToProps = state => ({
     registration: state.active_profile
 });
 
+/**
+ * Sets up functions to send new profile information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     addUser: (user, id) => dispatch({
         type: "add_user",

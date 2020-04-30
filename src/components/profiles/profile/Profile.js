@@ -22,7 +22,7 @@ const DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "
 
 /**
  * Profile
- * @typedef {Object} Profile
+ * @class Profile
  * @property {string} sub_page - page to view within the profile
  * @property {string} mode - read-only vs read/write (edit)
  */

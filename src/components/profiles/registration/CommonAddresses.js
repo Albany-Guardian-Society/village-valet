@@ -10,12 +10,14 @@ import Button from "react-bootstrap/Button";
 import "./registration.css"
 import {Autocomplete} from "@react-google-maps/api";
 
+/**
+ * Common Addresses
+ * @class CommonAddresses
+ */
 class CommonAddresses extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            autocomplete_help: {}
-        };
+        this.state = {};
         this.handleChange = this.handleChange.bind(this);
 
         this.autocomplete = {};
@@ -23,6 +25,11 @@ class CommonAddresses extends Component {
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
 
+    /**
+     * Handles when address is entered
+     *
+     * @param {Object} event - address entered
+     */
     handleChange(event) {
         let id = event.target.id.split("|")[0].replace("addr_", "");
         let field = event.target.id.split("|")[1];
@@ -36,10 +43,21 @@ class CommonAddresses extends Component {
         }
     }
 
+    /**
+     * Puts autocomplete information into
+     *
+     * @param {Object} autocomplete - address to be set
+     * @param {int} index - index of common addresses
+     */
     onLoad(autocomplete, index) {
         this.autocomplete[index] = autocomplete;
     }
 
+    /**
+     * Handles change to address search form
+     *
+     * @param {int} index - autocomplete index
+     */
     onPlaceChanged(index) {
         let street_number = 0;
         if (this.autocomplete[index] != null) {
@@ -64,14 +82,16 @@ class CommonAddresses extends Component {
                 this.props.updateRegistration("addresses", index + "|lat", place.geometry.location.lat());
                 this.props.updateRegistration("addresses", index + "|lng", place.geometry.location.lng());
             }
-
-            //Nolonger needed now that things are going through the reducer
-            //this.props.triggerUpdate();
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
     }
 
+    /**
+     * Creates the forms on the page
+     *
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
+     */
     generateAddressForms() {
         let body = [];
         let index = 0;
@@ -149,6 +169,11 @@ class CommonAddresses extends Component {
         return(body);
     }
 
+    /**
+     * Displays the common addresses and all its forms
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -171,11 +196,17 @@ class CommonAddresses extends Component {
     }
 }
 
+/**
+ * Pulls addresses and user type from state's active ride
+ */
 const mapStateToProps = state => ({
     addresses: state.active_profile.addresses,
     user_type: state.active_profile.user_type
 });
 
+/**
+ * Sets up functions to send registration, address, and autocomplete information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

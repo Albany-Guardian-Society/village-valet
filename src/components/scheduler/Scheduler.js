@@ -16,8 +16,19 @@ import axios from "axios";
 import {API_ROOT} from "../../modules/api";
 import cookie from "react-cookies";
 
-const PAGE_MAX = 3;
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+const PAGE_MAX = 3;
+/**
+ * @class Scheduler
+ * @typedef {Object} Scheduler
+ *
+ */
 class Scheduler extends Component {
     constructor(props) {
         super(props);
@@ -30,6 +41,14 @@ class Scheduler extends Component {
         this.props.clearRide();
     }
 
+    /**
+     * Final step of scheduler.
+     * Allows operator to look over information before submitting rider
+     *
+     * @example
+     *
+     onClick={() => {this.handleSubmit()}}
+     */
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
             switch (this.props.users[this.props.active_ride.driver.id].personal_info.preferred_communication) {
@@ -65,6 +84,12 @@ class Scheduler extends Component {
         }
     }
 
+    /**
+     * Keeps track of which page of the scheduler operator is on
+     *
+     * @example
+     *          this.changePage(1)
+     */
     changePage(increment) {
         if (increment <= 0 || this.validate()) {
             let proposed_page = this.state.scheduler_page + increment;
@@ -81,6 +106,12 @@ class Scheduler extends Component {
         }
     }
 
+    /**
+     * Controls alternating between the pages imported into the scheduler
+     *
+     * @example
+     *           {this.showPage()}
+     */
     showPage() {
         switch (this.state.scheduler_page) {
             case 0: //Rider
@@ -96,6 +127,13 @@ class Scheduler extends Component {
         }
     }
 
+    /**
+     * Checks for completion for mandatory forms on each page
+     * If something isnt valid the operator will not be able to change pages
+     *
+     * @example
+     *           {this.showPage()}
+     */
     validate() {
         switch (this.state.scheduler_page) {
             case 0:
@@ -148,6 +186,12 @@ class Scheduler extends Component {
         }
     }
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
@@ -198,11 +242,19 @@ class Scheduler extends Component {
     }
 }
 
+/**
+ * Pulls active_ride from state
+ *
+ */
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
     users: state.users,
 });
-
+/**
+ * Sets up functions to send information about rides that were added, cleared, and
+ * returned to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     addRide: (user, id) => dispatch({
         type: "add_ride",

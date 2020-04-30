@@ -8,6 +8,10 @@ import Form from "react-bootstrap/Form";
 
 import "./registration.css"
 
+/**
+ * General Information
+ * @class GeneralInformation
+ */
 class GeneralInformation extends Component {
     constructor(props) {
         super(props);
@@ -16,13 +20,20 @@ class GeneralInformation extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Makes user's village id the operator's village id by default
+     */
     componentDidMount() {
-        //by default have the village id match the operator's village
         if (!this.props.village_id) {
             this.props.updateRegistration("personal_info", "primary_village_id", this.props.operator_village);
         }
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
 	handleChange(event) {
         switch (event.target.id) {
             case "reg_language":
@@ -40,6 +51,9 @@ class GeneralInformation extends Component {
         }
 	}
 
+	/**
+     * Generates list of villages
+     */
     villageOptions() {
         let options = [];
         let villages = Object.keys(this.props.villages);
@@ -51,6 +65,11 @@ class GeneralInformation extends Component {
         return options;
     }
 
+    /**
+     * Displays the general information
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <div>
@@ -132,6 +151,9 @@ class GeneralInformation extends Component {
     }
 }
 
+/**
+ * Pulls information from state's active ride
+ */
 const mapStateToProps = state => ({
     personal_info: state.active_profile.personal_info,
     user_type: state.active_profile.user_type,
@@ -141,6 +163,9 @@ const mapStateToProps = state => ({
     operator_village: state.operator.village_id
 });
 
+/**
+ * Sets up function to send general information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

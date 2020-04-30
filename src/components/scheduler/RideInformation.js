@@ -11,8 +11,17 @@ import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
 import moment from "moment";
 
-//import './pic_placeholder.png';
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
 
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML
+
+/**
+ * @class RideInformation
+ * @typedef {Object} RideInformation
+ *
+ */
 class RideInformation extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +38,13 @@ class RideInformation extends Component {
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
     }
 
+    /**
+     * Updates and saves selected date and time on the page
+     * in the form
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
     componentDidMount() {
         let today = moment()
         //Set the default day to be one week in advance
@@ -54,6 +70,16 @@ class RideInformation extends Component {
         }
     };
 
+
+    /**
+     * When the operator selects "other" the autocomplete form will
+     * become editable
+     * If they do not select other then it will the form will filled and will not
+     * be able to be changed.
+     *
+     * @example
+     *     onChange={this.handleCommonAddress}
+     */
     handleCommonAddress(event, type) {
         if (event.target.value === "other") {
             //Update store
@@ -78,14 +104,34 @@ class RideInformation extends Component {
         return items
     }
 
+    onSelected(e) {
+        console.log("value", e.target.value);
+        //here you will see the current selected value of the select input
+    }
+
+    /**
+     * Creates more autocompletes and keeps track of them at different indices
+     *
+     * @example
+     *     onChange={this.handleChanget}
+     */
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
         this.count += 1
     }
 
+    /**
+     * Uses autocomplete to list relevant addresses for pick up and drop off
+     * based on what is typed in.
+     *
+     * @example
+     *     onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+     */
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
+            this.props.updateScheduler(variable, "address", place.formatted_address);
+            this.props.updateScheduler(variable, "geolocation", {lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
             if (place.geometry !== null) {
                 this.props.updateScheduler(variable, "address", place.formatted_address);
                 this.props.updateScheduler(variable, "geolocation", {
@@ -93,12 +139,19 @@ class RideInformation extends Component {
                     lng: place.geometry.location.lng()
                 });
             }
-
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
     }
 
+    /**
+     * Grabs all common addresses for person of interest
+     * and loads them into the available options
+     *
+     * @example
+     *      {this.getCommonAddresses("pickup")}
+     *
+     */
     getCommonAddresses(mode) {
         let options = [];
         if (!this.props.active_ride.locations[mode].address) options.push(<option value={""} label={""} key="null"/>);
@@ -119,6 +172,12 @@ class RideInformation extends Component {
         return options;
     };
 
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container className="RideInformation" style={{minWidth: "100%"}}>
@@ -238,7 +297,7 @@ class RideInformation extends Component {
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
-                                                onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
+                                                onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
                                             >
                                                 <Form.Control type="text" placeholder="Pickup Location"
                                                               disabled = {this.props.active_ride.ride_data.meta.pickup_CA !== "other"}
@@ -338,12 +397,18 @@ class RideInformation extends Component {
         );
     }
 }
-
+/**
+ * Pulls active_ride and users from state
+ *
+ */
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
     users: state.users
 });
-
+/**
+ * Sets up functions to send scheduler information to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     updateScheduler: (type, field, value) => dispatch({
         type: "scheduler",
