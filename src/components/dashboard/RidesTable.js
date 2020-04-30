@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
+/** @class RidesTable shows table of relevant rides*/
+
 class RidesTable extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +27,7 @@ class RidesTable extends Component {
         let table = [];
         for (const ride of this.props.rides) {
             table.push(<Row style={{padding: "5px"}} key={ride.id}><Button size="lg" variant="light" block={true}
-                                                                           onClick={() => this.handleClick(ride)}>{`Ride Id: ${ride.ride_id}`}</Button></Row>)
+                                                                           onClick={() => this.handleClick(ride)}>{`Ride Id: ${ride.id}`}</Button></Row>)
         }
         return table
     };

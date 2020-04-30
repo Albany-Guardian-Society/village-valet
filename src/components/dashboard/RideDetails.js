@@ -4,6 +4,8 @@ import * as moment from "moment";
 
 import Container from "react-bootstrap/Container";
 
+/** @class RideDetails shoes details of the active/selected ride*/
+
 class RideDetails extends Component {
     constructor(props) {
         super(props);
@@ -16,12 +18,18 @@ class RideDetails extends Component {
     handleChange(event) {
     }
 
+    /**
+     * Shows driver and rider name, pick up/ drop off locations and time
+     * Gets ride from active_ride
+     * @returns HTMLDivElement - with ride info
+     */
+
     displayDetails() {
-        if (this.props.ride.ride_id === "") {
+        if (this.props.ride.id === "") {
             return <div/>
         }
         return <div>
-            Ride Id: {this.props.ride.ride_id}<br/>
+            Ride Id: {this.props.ride.id}<br/>
             Rider Name: {`${this.props.ride.rider.first_name} ${this.props.ride.rider.last_name}`} <br/>
             Driver Name: {`${this.props.ride.driver.first_name} ${this.props.ride.driver.last_name}`} <br/>
             Date: {this.props.ride.ride_data.date} <br/>

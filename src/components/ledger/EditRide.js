@@ -9,20 +9,15 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table"
 import {Autocomplete} from "@react-google-maps/api";
 import MapContainer from "../google-maps/MapContainer";
-import moment from "moment";
+import {withRouter} from 'react-router-dom';
+import Button from "react-bootstrap/Button";
 
-// Above are all the imports for this file.
-// Every file will need React, Component, connect
+//import './pic_placeholder.png';
 
-// The second section of imports are React Bootstrap components.  These allow for easy styling
-// and layout without much need for custom CSS or HTML
+/** @class EditRide makes a component similar to RideInformation to edit rides  */
 
-/**
- * @class RideInformation
- * {Object} RideInformation
- *
- */
-class RideInformation extends Component {
+class EditRide extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -36,23 +31,34 @@ class RideInformation extends Component {
 
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
+        console.log('HERE')
+        console.log(this.props.active_ride);
     }
 
     /**
-     * Updates and saves selected date and time on the page
-     * in the form
-     *
-     * @example
-     *     onChange={this.handleChange}
+     * Goes back to ledger page
+     * @param event - button click
      */
-    componentDidMount() {
-        let today = moment()
-        //Set the default day to be one week in advance
-        if (!this.props.active_ride.ride_data.date) {
-            this.props.updateScheduler("date", null, today.add(8, 'days').format("YYYY-MM-DD"));
-        }
+
+    handleBack(event){
+        this.props.history.push('/Ledger/');
     }
 
+    /**
+     * Saves ride changes
+     * @param event - button click
+     * @returns windows confirm and saves ride in reducer
+     */
+
+    handleSave(event){
+        this.props.saveRide(this.props.active_ride)
+        console.log(this.props.active_ride)
+        window.alert('Saved!')
+    }
+    /**
+     * Updates scheduler every time a field is changed - redcuer is not changed till save button is clicked
+     * @param event - form change
+     */
     handleChange(event) {
         let label_flag = event.target.id.split("_");
         if (label_flag[1] === "date") {
@@ -64,28 +70,26 @@ class RideInformation extends Component {
         } else if (label_flag[1] === "meta" && label_flag[2] === "samereturn") {
             //updating the date
             this.props.updateScheduler(label_flag[2], null, event.target.checked)
+        } else if (label_flag[1] === "driverconfirmed") {
+            console.log(event.target)
+            this.props.updateScheduler("driver_confirmed", null, event.target.checked);
         } else {
             //updating the location
             this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
         }
     };
 
-
     /**
-     * When the operator selects "other" the autocomplete form will
-     * become editable
-     * If they do not select other then it will the form will filled and will not
-     * be able to be changed.
-     *
-     * @example
-     *     onChange={this.handleCommonAddress}
+     * Autofills common addresses of given type
+     * @params event, type - form change, type of address (home, work etc)
      */
+
     handleCommonAddress(event, type) {
         if (event.target.value === "other") {
             //Update store
-            this.props.updateScheduler("common_address", "set|"+type, event.target.value);
+            this.props.updateScheduler("common_address", "set"+"|"+type, null)
         } else {
-            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""));
+            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""))
         }
     }
 
@@ -104,16 +108,9 @@ class RideInformation extends Component {
         return items
     }
 
-    onSelected(e) {
-        console.log("value", e.target.value);
-        //here you will see the current selected value of the select input
-    }
-
     /**
-     * Creates more autocompletes and keeps track of them at different indices
-     *
-     * @example
-     *     onChange={this.handleChanget}
+     * Autocompletes with addrs
+     * @param autocomplete -
      */
     onLoad(autocomplete) {
         this.autocomplete[this.count] = autocomplete;
@@ -121,36 +118,25 @@ class RideInformation extends Component {
     }
 
     /**
-     * Uses autocomplete to list relevant addresses for pick up and drop off
-     * based on what is typed in.
-     *
-     * @example
-     *     onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+     * When address of pick up or drop off is changed the form field is updated with a suitable addrs - Google Maps
+     * @param variable, number
      */
     onPlaceChanged(variable, number) {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", {lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
-            if (place.geometry !== null) {
-                this.props.updateScheduler(variable, "address", place.formatted_address);
-                this.props.updateScheduler(variable, "geolocation", {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng()
-                });
-            }
+            this.props.updateScheduler(variable, "geolocation", {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            });
+
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
     }
-
     /**
-     * Grabs all common addresses for person of interest
-     * and loads them into the available options
-     *
-     * @example
-     *      {this.getCommonAddresses("pickup")}
-     *
+     * Retrieves common addresses for rider
+     * @param mode - used in RideInfo page on scheduler
      */
     getCommonAddresses(mode) {
         let options = [];
@@ -172,17 +158,30 @@ class RideInformation extends Component {
         return options;
     };
 
-    /**
-     * Displays the confirmation page.
-     *
-     * @returns {HTMLDocument}
-     *
-     */
     render() {
         return (
-            <Container className="RideInformation" style={{minWidth: "100%"}}>
-                <h1>Ride Information</h1>
+            <Container className="Edit Ride" style={{minWidth: "100%"}}>
+                {/*h1 {text-align: center;}*/}
                 <Row>
+                    <Col sm={2}>
+                    <td>
+
+                        <Button variant="secondary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
+                                onClick={(e) => this.handleBack(e)}>
+                            Back
+                        </Button>
+
+                    <Button variant="primary" className="mr-1" size="lg" style={{ marginRight: "auto" }}
+                            onClick={(e) => this.handleSave(e)}>
+                        Save
+                    </Button>
+                        </td>
+                    </Col>
+                    <Col sm={8}>
+                        <h1>Edit Ride</h1>
+                    </Col>
+                </Row>
+                    <Row>
                     <Col>
                         <Card>
                             <Card.Header>
@@ -190,7 +189,7 @@ class RideInformation extends Component {
                             </Card.Header>
                             <Card.Body>
                                 <Table borderless>
-                                <tbody>
+                                    <tbody>
                                     <tr>
                                         <td>Name:</td>
                                         <td>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}</td>
@@ -200,37 +199,20 @@ class RideInformation extends Component {
                                             <Form.Label>Date:</Form.Label>
                                         </td>
                                         <td>
-                                            <Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                            <Form.Control type="date" placeholder="" id='sched_date'
+                                                          onChange={this.handleChange}
                                                           value={this.props.active_ride.ride_data.date}/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Form.Label>Trip Purpose:</Form.Label>
+                                            <Form.Label>Driver Confirm:</Form.Label>
                                         </td>
                                         <td>
-                                            <Form.Control as="select" placeholder="" id='sched_purpose' onChange={this.handleChange} value={this.props.active_ride.ride_data.purpose}>
-                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Religious", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
-                                                    .map((item) => {
-                                                        return <option label={item} value={item} key={item}/>
-                                                    })}
-                                            </Form.Control>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Mobility Aid:
-                                        </td>
-                                        <td>
-                                            {this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid ? `${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}` : "N/A"}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Special Accommodations:
-                                        </td>
-                                        <td>
-                                            {this.props.users[this.props.active_ride.rider.id].accommodations.special ? `${this.props.users[this.props.active_ride.rider.id].accommodations.special}` : "N/A"}
+                                            {console.log()}
+                                            <Form.Control type="checkbox" placeholder="" id='sched_driverconfirmed'
+                                                          onChange={this.handleChange}
+                                                          checked={this.props.active_ride.ride_data.driver_confirmed}/>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -244,28 +226,9 @@ class RideInformation extends Component {
                                 Pickup to Dropoff
                             </Card.Header>
                             <Card.Body>
-                                <Row style={{position: 'relative', width: '100%', height: '250px'}}>
+                                <div style={{ position: 'relative', width: '100%', height: '250px' }}>
                                     <MapContainer/>
-                                </Row>
-                                <Row>
-                                    <Col>Estimated Rider Trip Duration:</Col>
-                                    <Col>
-                                        {this.props.active_ride.ride_data.time_total.rider ?
-                                            moment("2015-01-01").startOf('day')
-                                            .seconds(this.props.active_ride.ride_data.time_total.rider)
-                                            .format('H:mm:ss') : ""}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>Based on dropoff time, pickup time should be:</Col>
-                                    <Col>
-                                        {console.log(moment(this.props.active_ride.locations.dropoff.time))}
-                                        {(this.props.active_ride.locations.dropoff.time) ?
-                                            moment(this.props.active_ride.locations.dropoff.time, "HH:mm")
-                                                .subtract(this.props.active_ride.ride_data.time_total.rider, 'second')
-                                                .format('hh:mm:ss A') : ""}
-                                    </Col>
-                                </Row>
+                                </div>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -284,23 +247,14 @@ class RideInformation extends Component {
                                         <td>
                                             <Form.Label>Address:</Form.Label>
                                         </td>
-                                        <td>
-                                            <Form.Control as="select"
-                                                          id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}
-                                                          value={this.props.active_ride.ride_data.meta.pickup_CA}>
-                                                  {this.getCommonAddresses("pickup")}
-                                            </Form.Control>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
+
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
-                                                onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+                                                onPlaceChanged={() => this.onPlaceChanged('pickup', 0)}
                                             >
                                                 <Form.Control type="text" placeholder="Pickup Location"
-                                                              disabled = {this.props.active_ride.ride_data.meta.pickup_CA !== "other"}
+                                                              disabled = {this.props.active_ride.ride_data.meta.pickup_CA}
                                                               id='sched_pickup_address' onChange={this.handleChange}
                                                               value={this.props.active_ride.locations.pickup.address}/>
                                             </Autocomplete>
@@ -338,22 +292,9 @@ class RideInformation extends Component {
                             </Card.Header>
                             <Card.Body>
                                 <Table borderless>
-                                <tbody>
+                                    <tbody>
                                     <tr>
-                                        <td>
-                                            <Form.Label>Address:</Form.Label>
-                                        </td>
-                                        <td>
-                                            <Form.Control as="select"
-                                                          id='sched_dropoff_address'
-                                                          onChange={(e) => this.handleCommonAddress(e, "dropoff")}
-                                                          value={this.props.active_ride.ride_data.meta.dropbox_CA}>
-                                                {this.getCommonAddresses("dropoff")}
-                                            </Form.Control>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
+                                        <Form.Label>Address:</Form.Label>
                                         <td>
                                             <Autocomplete
                                                 onLoad={this.onLoad}
@@ -361,7 +302,7 @@ class RideInformation extends Component {
                                             >
                                                 <Form.Control type="text" placeholder="Dropoff Location"
                                                               id='sched_dropoff_address' onChange={this.handleChange}
-                                                              disabled = {this.props.active_ride.ride_data.meta.dropoff_CA !== "other"}
+                                                              disabled = {this.props.active_ride.ride_data.meta.dropoff_CA}
                                                               value={this.props.active_ride.locations.dropoff.address}/>
                                             </Autocomplete>
                                         </td>
@@ -386,7 +327,7 @@ class RideInformation extends Component {
                                                           value={this.props.active_ride.locations.dropoff.special}/>
                                         </td>
                                     </tr>
-                                </tbody>
+                                    </tbody>
                                 </Table>
                             </Card.Body>
                         </Card>
@@ -397,19 +338,14 @@ class RideInformation extends Component {
         );
     }
 }
-/**
- * Pulls active_ride and users from state
- *
- */
+
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
     users: state.users
 });
-/**
- * Sets up functions to send scheduler information to the reducer
- *
- */
+
 const mapDispatchToProps = dispatch => ({
+
     updateScheduler: (type, field, value) => dispatch({
         type: "scheduler",
         payload: {
@@ -418,6 +354,12 @@ const mapDispatchToProps = dispatch => ({
             value: value
         }
     }),
+
+    saveRide: (ride) => dispatch({
+        type: "ride_save",
+        payload: ride
+    })
+
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RideInformation);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditRide));
