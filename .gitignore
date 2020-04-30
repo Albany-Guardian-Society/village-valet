@@ -22,5 +22,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/serviceAccountKey.json
+/keys/serviceAccountKey.json
 /build/
+/keys/
