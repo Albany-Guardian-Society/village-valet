@@ -9,6 +9,10 @@ import Button from "react-bootstrap/Button";
 
 import "./registration.css"
 
+/**
+ * Vehicle Information
+ * @typedef {Object} VehicleInformation
+ */
 class VehicleInformation extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +21,11 @@ class VehicleInformation extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
     handleChange(event) {
         let id = event.target.id.split("|")[0].replace("car_", "");
         let field = event.target.id.split("|")[1];
@@ -27,6 +36,11 @@ class VehicleInformation extends Component {
         }
 	}
 
+    /**
+     * Creates the forms on the page
+     *
+     * @returns {[HTMLFormElement]} - HTML forms to be displayed
+     */
     generateVehicleForms() {
         let body = [];
         let index = 0;
@@ -105,6 +119,11 @@ class VehicleInformation extends Component {
         return(body);
     }
 
+    /**
+     * Displays the vehicle information and all its forms
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -121,11 +140,17 @@ class VehicleInformation extends Component {
     }
 }
 
+/**
+ * Pulls vehicles and user type from state's active ride
+ */
 const mapStateToProps = state => ({
     vehicles: state.active_profile.vehicles,
     user_type: state.active_profile.user_type
 });
 
+/**
+ * Sets up functions to send registration and vehicle information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

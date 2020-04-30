@@ -9,8 +9,11 @@ import Form from "react-bootstrap/Form";
 import "./registration.css"
 
 // May wish to add the ability for multiple caregivers
-// Accounting for this later
 
+/**
+ * Caregiver Information
+ * @typedef {Object} CaregiverInformation
+ */
 class CaregiverInformation extends Component {
     constructor(props) {
         super(props);
@@ -18,6 +21,11 @@ class CaregiverInformation extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
     handleChange(event) {
         switch (event.target.id) {
             default:
@@ -26,6 +34,11 @@ class CaregiverInformation extends Component {
         }
     }
 
+    /**
+     * Displays the caregiver information
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -74,11 +87,17 @@ class CaregiverInformation extends Component {
     }
 }
 
+/**
+ * Pulls caregiver and user type from state's active ride
+ */
 const mapStateToProps = state => ({
     caregiver: state.active_profile.caregiver,
     user_type: state.active_profile.user_type
 });
 
+/**
+ * Sets up function to send caregiver information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",
