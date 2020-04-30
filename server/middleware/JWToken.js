@@ -4,6 +4,12 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+/**
+ * Checks to verify if the JWT is a valid token from website. Continues if good, errors out if bad
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @param {function} next - Function to continue
+ */
 const checkJWT = (req, res, next) => {
     //Get the jwt token from the head
     let bearerHeader = req.headers["authorization"];
@@ -36,6 +42,12 @@ const checkJWT = (req, res, next) => {
     next()
 };
 
+/**
+ * Checks to verify if the JWT is a valid token from user. Continues if good, errors out if bad
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @param {function} next - Function to continue
+ */
 const checkParameterJWT = (req, res, next) => {
     //Get the jwt token from the head
     const token = req.query.token;

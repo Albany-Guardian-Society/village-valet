@@ -21,7 +21,11 @@ transporter = nodemailer.createTransport({
     }
 });
 
-
+/**
+ * Sends an email
+ * @param {Object} message - Message Object
+ * @returns {Promise<*>}
+ */
 exports.sendEmail = async (message) => {
     return await transporter.sendMail({
         from: `"Village Valet" <${EMAIL}>`, // sender address

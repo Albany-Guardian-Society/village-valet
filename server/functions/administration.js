@@ -13,7 +13,10 @@ require("dotenv").config()
 const EMAIL = process.env.SMTP_EMAIL;
 const HOST_NAME = process.env.HOST_NAME;
 
-
+/**
+ * Sends Expiration Notification Email. Currently not in use
+ * @returns {Promise<void>}
+ */
 exports.sendExpirationNotifications = async () => {
     const drivers = await getDrivers();
     const operators = await getOperators();
@@ -101,6 +104,11 @@ exports.sendExpirationNotifications = async () => {
     }
 }
 
+/**
+ * Sends ride confirmation emails
+ * @param {Object} ride - Ride object
+ * @returns {Promise<void>}
+ */
 exports.sendConfirmationEmail = async (ride) => {
     const driver = await getUser(ride.ride_data.village_id, ride.driver.id)
     const rider = await getUser(ride.ride_data.village_id, ride.rider.id)
@@ -180,6 +188,11 @@ exports.sendConfirmationEmail = async (ride) => {
     }
 }
 
+/**
+ * Sends ride cancellation email
+ * @param {Object} ride - Ride object
+ * @returns {Promise<void>}
+ */
 exports.sendCancellationEmail = async (ride) => {
     const driver = await getUser(ride.ride_data.village_id, ride.driver.id)
     const rider = await getUser(ride.ride_data.village_id, ride.rider.id)
@@ -234,6 +247,10 @@ exports.sendCancellationEmail = async (ride) => {
     }
 }
 
+/**
+ * Runs startup if no admin exists
+ * @returns {Promise<void>}
+ */
 exports.adminStartUp = async () => {
     const admins = await getOperatorByUsername('admin');
     for (const admin of admins) {
@@ -266,7 +283,12 @@ exports.adminStartUp = async () => {
     admin.id = await addOperator(admin);
     await sendStartUpEmail(admin, password)
 }
-
+/**
+ * Sends admin username and password email
+ * @param {Object} admin - Operator Object
+ * @param {string} password
+ * @returns {Promise<void>}
+ */
 const sendStartUpEmail = async (admin, password) => {
     const message = {
         // Comma separated list of recipients
