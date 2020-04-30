@@ -12,6 +12,9 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
+/**
+ * @type {string}
+ */
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
@@ -20,6 +23,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *
  * @param {Request} req - Request that was received from the client
  * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
  */
 exports.login = async (req, res) => {
     const {username, password} = req.body;
@@ -48,10 +52,11 @@ exports.login = async (req, res) => {
 };
 
 /**
- * Receives a password change request, and if valid,
+ * Receives a password change request, and if valid, changes the password of the operator. Currently not in use
  *
  * @param {Request} req - Request that was received from the client
  * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
  */
 exports.changePassword = async (req, res) => {
     const {scope, password} = req.body;
@@ -82,6 +87,13 @@ exports.changePassword = async (req, res) => {
     }
 };
 
+/**
+ * Return all operator information (except password) to admin
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getAllOperators = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     if (village_id !== 'admin') {
@@ -91,6 +103,13 @@ exports.getAllOperators = async (req, res) => {
     res.status(200).send(await getOperators())
 };
 
+/**
+ * Returns a single operator to either to the admin or that specific operator
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getOneOperator = async (req, res) => {
     const {id, village_id} = res.locals.jwtPayload;
     const operator_id = req.query.id;
@@ -101,6 +120,13 @@ exports.getOneOperator = async (req, res) => {
     res.status(200).send(await getOperatorById(operator_id))
 };
 
+/**
+ * Return the requester's own information
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getSelfOperator = async (req, res) => {
     const {id} = res.locals.jwtPayload;
     const operator = await getOperatorById(id)
@@ -111,6 +137,13 @@ exports.getSelfOperator = async (req, res) => {
     res.status(404).send({error: "Operator not found"})
 };
 
+/**
+ * Takes request and adds operator to the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.postOperator = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const operator = req.body.operator;
@@ -130,6 +163,13 @@ exports.postOperator = async (req, res) => {
     res.status(500).send({error: "Could not add operator to database"})
 };
 
+/**
+ * Takes request and edits operator in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.putOperator = async (req, res) => {
     const {id, village_id} = res.locals.jwtPayload;
     const operator = req.body.operator;
@@ -156,6 +196,13 @@ exports.putOperator = async (req, res) => {
     res.status(500).send({error: "Could not edit operator in database"})
 };
 
+/**
+ * Takes request and removes operator frome the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.deleteOperator = async (req, res) => {
     const {id, village_id} = res.locals.jwtPayload;
     const operator_id = req.body['operator_id'];
