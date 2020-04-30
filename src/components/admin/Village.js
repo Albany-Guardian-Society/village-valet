@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 
+/** @class Village The village component. */
 class Village extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +18,11 @@ class Village extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+    * componentDidUpdate fires when the component updates
+    *
+    * @param {props} prevProps the props of the state before it updated
+    */
     componentDidUpdate(prevProps) {
         //Make sure that if they change the selected the mode is changed
         if (this.props.show_village !== prevProps.show_village) {
@@ -24,11 +30,17 @@ class Village extends Component {
         }
     }
 
+    /**
+    * handleChange handles any changes being made by this component
+    *
+    * @param {Event} event contains the information about what fired the function
+    */
     handleChange(event) {
         let field = event.target.id.split("|")[1];
         this.props.changeVillage("edit", field, event.target.value);
 	}
 
+    /** saveVillage sends village information to the reducer to be saved*/
     saveVillage() {
         if (this.validate()) {
             if (this.state.mode === "new") {
@@ -40,6 +52,7 @@ class Village extends Component {
         }
     }
 
+    /** deleteVillage sends village information to the reducer to be deleted*/
     deleteVillage() {
         if (window.confirm("Are you sure you want to delete this village?\nTHIS CANNOT BE UNDONE!")) {
             this.props.changeVillage("delete");
@@ -47,6 +60,7 @@ class Village extends Component {
         }
     }
 
+    /** validate validated the infomration in the operator*/
     validate() {
         if (this.props.active_village.village_name === "") {
             window.alert("INVALID NAME: Please provide a village name.");
@@ -64,6 +78,11 @@ class Village extends Component {
         return true;
     }
 
+    /**
+    * render renders the HTML
+    *
+    * @return {HTML} The HTML visable element
+    */
     render() {
         return (
         <>

@@ -10,21 +10,38 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 
+/** @class Admin The admin page component. */
 class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
     }
-    
+
+    /**
+    * showVillage sets the selected village
+    *
+    * @param {string} village The village ID to set as the shown village
+    */
     showVillage(village) {
         this.props.show("", village);
     }
 
+    /**
+    * showOperator sets the selected operator
+    *
+    * @param {string} id The id of the operator to be set as shown
+    * @param {string} village The village ID to set as the shown village
+    */
     showOperator(id, village) {
         this.props.show(id, village);
     }
 
+    /**
+    * genVillageRows creates the display for the village rows
+    *
+    * @return {HTML} List of the villages objects as HTML list items
+    */
     genVillageRows() {
         let rows = [];
         rows.push(<Button
@@ -47,6 +64,11 @@ class Admin extends Component {
         return rows;
     }
 
+    /**
+    * genOperatorRows creates the display for the operator rows
+    *
+    * @return {HTML} List of the operator objects as HTML list items
+    */
     genOperatorRows() {
         let rows = [];
         let villages = Object.values(this.props.villages)
@@ -68,6 +90,11 @@ class Admin extends Component {
         return rows;
     }
 
+    /**
+    * render renders the HTML
+    *
+    * @return {HTML} The HTML visable element
+    */
     render() {
         return (
             <Row style={{paddingLeft:"15px", paddingRight:"15px", height: "85vh"}}>

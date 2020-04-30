@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+/** @class Operator The operator component. */
 class Operator extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +18,11 @@ class Operator extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+    * componentDidUpdate fires when the component updates
+    *
+    * @param {props} prevProps the props of the state before it updated
+    */
     componentDidUpdate(prevProps) {
         //Make sure that if they change the selected the mode is changed
         if (this.props.show_operator !== prevProps.show_operator) {
@@ -24,6 +30,11 @@ class Operator extends Component {
         }
     }
 
+    /**
+    * handleChange handles any changes being made by this component
+    *
+    * @param {Event} event contains the information about what fired the function
+    */
 	handleChange(event) {
         let field = event.target.id.split("|")[1];
         if (field === "password") {
@@ -36,6 +47,11 @@ class Operator extends Component {
         }
 	}
 
+    /**
+    * villageOptions created the dropdown lists for village options
+    *
+    * @return {HTML} List of valid village options
+    */
     villageOptions() {
         let options = [];
         let villages = Object.values(this.props.villages);
@@ -47,6 +63,7 @@ class Operator extends Component {
         return [<option key={""} value={""} label={""}/>, ...options];
     }
 
+    /** saveOperator sends operator information to the reducer to be saved*/
     saveOperator() {
         if (this.validate()) {
             if (this.state.mode === "new") {
@@ -58,6 +75,7 @@ class Operator extends Component {
         }
     }
 
+    /** deleteOperator sends operator information to the reducer to be deleted*/
     deleteOperator() {
         if (window.confirm("Are you sure you want to delete this operator?\nTHIS CANNOT BE UNDONE!")) {
             this.props.changeOperator("delete");
@@ -65,6 +83,7 @@ class Operator extends Component {
         }
     }
 
+    /** validate validated the infomration in the operator*/
     validate() {
         if (this.props.active_operator.first_name === "") {
             window.alert("INVALID NAME: Please provide a first name.");
@@ -91,6 +110,11 @@ class Operator extends Component {
         return true;
     }
 
+    /**
+    * render renders the HTML
+    *
+    * @return {HTML} The HTML visable element
+    */
     render() {
         return (
         <>
