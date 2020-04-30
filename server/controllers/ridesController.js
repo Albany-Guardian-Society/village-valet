@@ -2,6 +2,13 @@ const {addRide, getRide, getRides, getRidesByDate, removeRide, updateRide} = req
 const {sendConfirmationEmail, sendCancellationEmail} = require("../functions/administration");
 
 
+/**
+ * Returns to requester all rides they have access to
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getAllRides = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const date = req.query.date;
@@ -12,6 +19,14 @@ exports.getAllRides = async (req, res) => {
     res.status(200).send(await getRidesByDate(village_id, date))
 };
 
+
+/**
+ * Returns to requester the specific ride, if they have access to
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getOneRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const id = req.query.id;
@@ -22,6 +37,14 @@ exports.getOneRide = async (req, res) => {
     res.status(200).send(await getRide(village_id, id))
 };
 
+
+/**
+ * Takes the request and adds the ride to the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.postRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
@@ -43,6 +66,14 @@ exports.postRide = async (req, res) => {
     res.status(500).send({error: "Could not add ride to database"})
 };
 
+
+/**
+ * Takes the request and edits the entire ride in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.putRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride = req.body.ride;
@@ -66,6 +97,13 @@ exports.putRide = async (req, res) => {
     res.status(500).send({error: "Could not  update ride in database"})
 };
 
+/**
+ * Takes the request and edits only the status of ride in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.patchRideStatus = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const {ride_id, status} = req.body;
@@ -90,7 +128,13 @@ exports.patchRideStatus = async (req, res) => {
     res.status(500).send({error: "Could not  update ride in database"})
 };
 
-
+/**
+ * Takes the request and removes the ride from the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.deleteRide = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const ride_id = req.body.ride_id;
