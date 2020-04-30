@@ -39,7 +39,7 @@ class VehicleInformation extends Component {
     /**
      * Creates the forms on the page
      *
-     * @returns {[HTMLFormElement]} - HTML forms to be displayed
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
      */
     generateVehicleForms() {
         let body = [];

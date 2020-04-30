@@ -16,7 +16,7 @@ import ProfileTable from "../profiles/ProfileTable";
 
 /**
  * @class SelectRider
- * {Object} SelectRider
+ * @typedef {Object} SelectRider
  *
  */
 class SelectRider extends Component {

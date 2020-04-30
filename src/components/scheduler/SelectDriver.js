@@ -18,7 +18,7 @@ import moment from "moment";
 
 /**
  * @class SelectDriver
- * {Object} SelectDriver
+ * @typedef {Object} SelectDriver
  *
  */
 class SelectDriver extends Component {

@@ -37,7 +37,7 @@ class VolunteerSchedule extends Component {
     /**
      * Creates the forms on the page
      *
-     * @returns {[HTMLFormElement]} - HTML forms to be displayed
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
      */
     generateHourRows() {
         let hour_rows = [];

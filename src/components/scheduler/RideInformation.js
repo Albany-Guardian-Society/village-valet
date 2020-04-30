@@ -19,7 +19,7 @@ import moment from "moment";
 
 /**
  * @class RideInformation
- * {Object} RideInformation
+ * @typedef {Object} RideInformation
  *
  */
 class RideInformation extends Component {

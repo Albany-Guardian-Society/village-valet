@@ -26,7 +26,7 @@ import cookie from "react-cookies";
 const PAGE_MAX = 3;
 /**
  * @class Scheduler
- * {Object} Scheduler
+ * @typedef {Object} Scheduler
  *
  */
 class Scheduler extends Component {

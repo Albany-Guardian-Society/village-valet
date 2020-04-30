@@ -18,7 +18,7 @@ import moment from "moment";
 
 /**
  * @class Confirmation
- * {Object} Confirmation
+ * @typedef {Object} Confirmation
  *
  */
 class Confirmation extends Component {
