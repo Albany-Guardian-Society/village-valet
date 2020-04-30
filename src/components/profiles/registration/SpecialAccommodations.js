@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 
 /**
  * Special Accommodations
- * @typedef {Object} SpecialAccommodations
+ * @class SpecialAccommodations
  */
 class SpecialAccommodations extends Component {
     constructor(props) {

@@ -12,7 +12,7 @@ import "./registration.css"
 
 /**
  * Caregiver Information
- * @typedef {Object} CaregiverInformation
+ * @class CaregiverInformation
  */
 class CaregiverInformation extends Component {
     constructor(props) {

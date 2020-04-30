@@ -12,7 +12,7 @@ import "./registration.css"
 
 /**
  * Emergency Contact Information
- * @typedef {Object} EmergencyInformation
+ * @class EmergencyInformation
  */
 class EmergencyInformation extends Component {
     constructor(props) {

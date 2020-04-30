@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 
 /**
  * Driver Volunteer Schedule
- * @typedef {Object} VolunteerSchedule
+ * @class VolunteerSchedule
  */
 class VolunteerSchedule extends Component {
     constructor(props) {

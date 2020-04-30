@@ -29,7 +29,7 @@ const RIDER_MAX = 4;
 
 /**
  * Profile Table
- * @typedef {Object} ProfileTable
+ * @class ProfileTable
  * @property {string} error_message - what displays in red box on top of screen if not validated correctly
  * @property {int} page - current page in registration process
  */

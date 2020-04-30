@@ -10,7 +10,7 @@ import "./registration.css"
 
 /**
  * General Information
- * @typedef {Object} GeneralInformation
+ * @class GeneralInformation
  */
 class GeneralInformation extends Component {
     constructor(props) {
