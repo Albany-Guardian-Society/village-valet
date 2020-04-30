@@ -9,6 +9,8 @@ import ProfileTable from "../profiles/ProfileTable";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
+/** @class Reports page you can view and download*/
+
 class Reports extends Component {
     constructor(props) {
         super(props);

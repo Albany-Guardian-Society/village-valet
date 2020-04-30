@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
+/** @class Drivers shows driver profiles*/
+
 class Drivers extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +21,8 @@ class Drivers extends Component {
         let drivers = Object.values(this.props.users).filter((user) => {
             return (user.user_type === 'driver')
         });
+
+
         const rides = Object.values(this.props.rides).filter(ride => moment(ride.ride_data.date, 'YYYY-MM-DD').isBefore(moment()))
         for (const driver of drivers) {
             for (const ride of rides) {

@@ -5,6 +5,8 @@ import Card from "react-bootstrap/Card"
 import MapContainer from "../google-maps/MapContainer";
 import RideDetails from "./RideDetails";
 
+/** @class RideBreakdown is a container holding ride details*/
+
 class RideBreakdown extends Component {
     constructor(props) {
         super(props);

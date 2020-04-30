@@ -6,6 +6,8 @@ import Card from "react-bootstrap/Card";
 
 import RidesTable from "./RidesTable";
 
+/** @class ActiveRides produces current rides */
+
 class ActiveRides extends Component {
     constructor(props) {
         super(props);
