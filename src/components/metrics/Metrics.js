@@ -13,20 +13,48 @@ import Drivers from "./Drivers.js";
 import Reports from "./Reports";
 import Col from "react-bootstrap/Col";
 
+//Reports
+import MileageReport from "./reports/MileageReport.js";
+
+/** @class Metrics holds the metrics components */
+
 class Metrics extends Component {
     constructor(props) {
         super(props);
         this.state = {
+          metric_options: "drivers",
         };
 		this.handleChange = this.handleChange.bind(this);
     }
 
-	handleChange(value) {
+    /**
+     * handles the metrics tab button presses
+     * @param value: the metric/report selected
+     */
+	   handleChange(value) {
         this.setState({metric_options:value})
 
     }
 
-	changeTable() {
+    /**
+     * changes the report to be downloaded
+     * @returns {*}: Components to the corresponding metric/report
+     */
+    pickReport() {
+      if (this.state.metric_options === "reports") {
+        if (this.props.active_profile.id) {
+          return <MileageReport/>
+        } else {
+          return <p>Select a Person</p>
+        }
+      }
+    }
+
+    /**
+     * changes the displayed table
+     * @returns {*}: Components to the corresponding metric/report
+     */
+	   changeTable() {
         switch (this.state.metric_options) {
             case "riders":
                 return (<Riders/>);
@@ -39,6 +67,10 @@ class Metrics extends Component {
         }
     }
 
+    /**
+     * Displays the metrics toolbar, download button, and selected metric/report
+     * @returns {*}
+     */
     render() {
         return (
             <Container style={{minWidth: "100%"}}>
@@ -53,9 +85,7 @@ class Metrics extends Component {
                     </ToggleButtonGroup>
 
                     <Col sm={2}>
-                        <ButtonGroup aria-label="First group">
-                            <Button  variant="info">Download</Button>
-                        </ButtonGroup>
+                        {this.pickReport()}
                     </Col>
                 </ButtonToolbar>
                 <hr/>
@@ -66,6 +96,7 @@ class Metrics extends Component {
 }
 
 const mapStateToProps = state => ({
+  active_profile: state.active_profile
 });
 
 const mapDispatchToProps = dispatch => ({

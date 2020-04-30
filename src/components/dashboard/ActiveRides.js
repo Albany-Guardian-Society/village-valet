@@ -6,6 +6,8 @@ import Card from "react-bootstrap/Card";
 
 import RidesTable from "./RidesTable";
 
+/** @class ActiveRides produces current rides */
+
 class ActiveRides extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +17,11 @@ class ActiveRides extends Component {
 
     handleChange(event) {
     }
+
+    /**
+     * Filters for active rides pick up date and time drop of date and time
+     * @returns ride object
+     */
 
     filterRides() {
         if (this.props.rides) {

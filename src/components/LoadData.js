@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import firestore from "../modules/firestore.js";
+import axios from "axios"
 
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import {API_ROOT} from "../modules/api";
+import cookie from 'react-cookies'
+import * as jwt from "jsonwebtoken"
+
 
 class LoadData extends Component {
     constructor(props) {
@@ -17,29 +21,51 @@ class LoadData extends Component {
 
 	componentDidMount() {
         //Load the villages
-        this.setState({message: "Loading Village"});
-        firestore.collection("villages").get()
-        .then(querySnapshot => {
-            let data = {};
-            const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
-            for (let item in raw_data) {
-                data[raw_data[item].id] = raw_data[item];
+        const token = cookie.load('token')
+        this.setState({message: "Loading Operator"})
+        const jwtPayload = jwt.decode(token)
+        axios.get(API_ROOT + "/database/operators/self", {
+            headers: {
+                "Authorization": "BEARER " + token
             }
-            this.props.load("villages", data);
-        }).then(() => {
-            this.setState({status: 20});
-        }).then(() => {
-            //The master admin account should surpase village designation!
-            //if the admin account is used then do not use the .where(village_id)
-            if (this.props.village_id === "admin") {
-                //Load the Users
-                this.setState({message: "Loading Users"});
-                firestore.collection("users").get()
-                .then(querySnapshot => {
+        }).then((resp) => {
+            this.props.updateAuth(resp.data)
+            if (jwtPayload.village_id === 'admin') {
+                axios.get(API_ROOT + "/database/operators/all", {
+                    headers: {
+                        "Authorization": "BEARER " + token
+                    }
+                }).then(response => {
                     let data = {};
-                    const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
-                    for (let item in raw_data) {
-                        data[raw_data[item].id] = raw_data[item];
+                    for (const item of response.data) {
+                        data[item.id] = item;
+                    }
+                    this.props.load("operators", data);
+                })
+            }
+            this.setState({message: "Loading Village"});
+            axios.get(API_ROOT + "/database/villages/all", {
+                headers: {
+                    "Authorization": "BEARER " + token
+                }
+            }).then(response => {
+                let data = {};
+                for (const item of response.data) {
+                    data[item.id] = item;
+                }
+                this.props.load("villages", data);
+            }).then(() => {
+                this.setState({status: 20});
+            }).then(() => {
+                this.setState({message: "Loading Users"});
+                axios.get(API_ROOT + "/database/users/all", {
+                    headers: {
+                        "Authorization": "BEARER " + token
+                    }
+                }).then(response => {
+                    let data = {};
+                    for (const item of response.data) {
+                        data[item.id] = item;
                     }
                     this.props.load("users", data);
                 }).then(() => {
@@ -47,77 +73,33 @@ class LoadData extends Component {
                 }).then(() => {
                     //Load the Rides
                     this.setState({message: "Loading Rides"});
-                    firestore.collection("rides").get()
-                    .then(querySnapshot => {
+                    axios.get(API_ROOT + "/database/rides/all", {
+                        headers: {
+                            "Authorization": "BEARER " + token
+                        }
+                    }).then(response => {
                         let data = {};
-                        const raw_data = querySnapshot.docs.map(doc => {
-                            return {...doc.data(), id: doc.id}
-                        });
-                        for (let item in raw_data) {
-                            data[raw_data[item].id] = raw_data[item];
+                        for (const item of response.data) {
+                            data[item.id] = item;
                         }
                         this.props.load("rides", data);
                     }).then(() => {
                         this.setState({status: 80});
                     }).then(() => {
-                        //Load the operators - ADMIN ONLY
-                        //This will be handled by an API call that never lets the encrypted passwords touch the frontend
-                        this.setState({message: "Loading Operators"});
-                        firestore.collection("operators").get()
-                        .then(querySnapshot => {
-                            let data = {};
-                            const raw_data = querySnapshot.docs.map(doc => {
-                                let new_doc = {...doc.data(), id: doc.id};
-                                new_doc.password = "";
-                                return new_doc;
-                            });
-                            for (let item in raw_data) {
-                                if (!data[raw_data[item].village_id]) data[raw_data[item].village_id] = {};
-                                data[raw_data[item].village_id][raw_data[item].id] = raw_data[item];
+                        axios.get(API_ROOT + "/admin/googlemaps", {
+                            headers: {
+                                "Authorization": "BEARER " + token
                             }
-                            this.props.load("operators", data);
-                        }).then(() => {
+                        }).then((response) => {
+                            cookie.save('googlemapstoken', response.data.token, {path: '/', maxAge: 3600})
+                            cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
                             this.setState({status: 100});
-                    }).then(() => {
-                        this.props.load("loaded", true);
+                        }).then(() => {
+                            this.props.load("loaded", true);
+                        })
                     })
                 })
             })
-            } else {
-                //Load the Users
-                this.setState({message: "Loading Users"});
-                firestore.collection("users").where("village_id", "==", this.props.village_id).get()
-                .then(querySnapshot => {
-                    let data = {};
-                    const raw_data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
-                    for (let item in raw_data) {
-                        data[raw_data[item].id] = raw_data[item];
-                    }
-                    this.props.load("users", data);
-                    // const data = querySnapshot.docs.map(doc => {return {...doc.data(), id: doc.id}});
-                    // this.props.load("users", data);
-                }).then(() => {
-                    this.setState({status: 60});
-                }).then(() => {
-                    //Load the Rides
-                    this.setState({message: "Loading Rides"});
-                    firestore.collection("rides").where("village_id", "==", this.props.village_id).get()
-                    .then(querySnapshot => {
-                        let data = {};
-                        const raw_data = querySnapshot.docs.map(doc => {
-                            return {...doc.data(), id: doc.id}
-                        });
-                        for (let item in raw_data) {
-                            data[raw_data[item].id] = raw_data[item];
-                        }
-                        this.props.load("rides", data);
-                    }).then(() => {
-                        this.setState({status: 100});
-                    }).then(() => {
-                        this.props.load("loaded", true);
-                    })
-                })
-            }
         })
     }
 
@@ -142,6 +124,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    updateAuth: (user) => dispatch({
+        type: "authenticate",
+        payload: user
+    }),
     load: (tag, data) => dispatch({
         type: "load",
         payload: {

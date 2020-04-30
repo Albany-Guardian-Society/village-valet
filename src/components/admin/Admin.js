@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 
 import Operator from "./Operator.js";
 import Village from "./Village.js";
@@ -10,33 +10,38 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 
+/** @class Admin The admin page component. */
 class Admin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show_village: "",
-            show_operator: "",
         };
-		this.handleChange = this.handleChange.bind(this);
     }
 
-    componentDidMount() {
-        this.props.debug();
-    }
-
-	handleChange(event) {
-	}
-
+    /**
+    * showVillage sets the selected village
+    *
+    * @param {string} village The village ID to set as the shown village
+    */
     showVillage(village) {
-        this.setState({show_village: village, show_operator: ""});
         this.props.show("", village);
     }
 
+    /**
+    * showOperator sets the selected operator
+    *
+    * @param {string} id The id of the operator to be set as shown
+    * @param {string} village The village ID to set as the shown village
+    */
     showOperator(id, village) {
-        this.setState({show_operator: id, show_village: village});
         this.props.show(id, village);
     }
 
+    /**
+    * genVillageRows creates the display for the village rows
+    *
+    * @return {HTML} List of the villages objects as HTML list items
+    */
     genVillageRows() {
         let rows = [];
         rows.push(<Button
@@ -47,40 +52,49 @@ class Admin extends Component {
                       --Clear Selection--
                   </Button>);
         rows.push(<br key={"break"}/>);
-        for (let i in this.props.villages) {
-            let v = this.props.villages[i];
+        for (const village of Object.values(this.props.villages)) {
             rows.push(<ListGroup.Item
-                          active={this.state.show_village === v.id}
-                          onClick={() => this.showVillage(v.id)}
-                          key={v.id}
-                      >
-                          {v.village_name}
-                      </ListGroup.Item>);
+                active={this.props.show_village === village.id}
+                onClick={() => this.showVillage(village.id)}
+                key={village.id}
+            >
+                {village.village_name}
+            </ListGroup.Item>);
         }
         return rows;
     }
 
+    /**
+    * genOperatorRows creates the display for the operator rows
+    *
+    * @return {HTML} List of the operator objects as HTML list items
+    */
     genOperatorRows() {
         let rows = [];
-        let villages = Object.keys(this.props.operators);
-        if (this.state.show_village !== "") {
-            villages = [this.state.show_village];
+        let villages = Object.values(this.props.villages)
+        if (this.props.show_village !== "") {
+            villages = [this.props.villages[this.props.show_village]];
         }
-        for (let v in villages) {
-            for (let i in this.props.operators[villages[v]]) {
-                let o = this.props.operators[villages[v]][i];
+        for (const village of villages) {
+            const operators = Object.values(this.props.operators).filter(o => o.village_id === village.id)
+            for (const operator of operators) {
                 rows.push(<ListGroup.Item
-                              active={this.state.show_operator === o.id}
-                              onClick={() => this.showOperator(o.id, villages[v])}
-                              key={o.id}
-                          >
-                              {o.first_name + " " + o.last_name}
-                          </ListGroup.Item>);
+                    active={this.props.show_operator === operator.id}
+                    onClick={() => this.showOperator(operator.id, village.id)}
+                    key={operator.id}
+                >
+                    {operator.first_name + " " + operator.last_name}
+                </ListGroup.Item>);
             }
         }
         return rows;
     }
 
+    /**
+    * render renders the HTML
+    *
+    * @return {HTML} The HTML visable element
+    */
     render() {
         return (
             <Row style={{paddingLeft:"15px", paddingRight:"15px", height: "85vh"}}>
@@ -111,13 +125,13 @@ class Admin extends Component {
                 <Col xs={6} style={{height: "100%"}}>
                     <Row>
                         <Col><Card>
-                            <Village show_village={this.state.show_village}/>
+                            <Village show_village={this.props.show_village}/>
                         </Card></Col>
                     </Row>
                     <br/>
                     <Row>
                         <Col><Card>
-                            <Operator show_village={this.state.show_village} show_operator={this.state.show_operator}/>
+                            <Operator show_village={this.props.show_village} show_operator={this.props.show_operator}/>
                         </Card></Col>
                     </Row>
                 </Col>
@@ -129,6 +143,8 @@ class Admin extends Component {
 const mapStateToProps = state => ({
     villages: state.villages,
     operators: state.operators,
+    show_village: state.admin.show_village,
+    show_operator: state.admin.show_operator,
 });
 
 const mapDispatchToProps = dispatch => ({

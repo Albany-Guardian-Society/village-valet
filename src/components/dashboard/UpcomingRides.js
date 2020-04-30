@@ -5,6 +5,7 @@ import Card from "react-bootstrap/Card"
 import RidesTable from "./RidesTable";
 import * as moment from "moment";
 
+/** @class UpcomingRides shows upcoming rides*/
 
 class UpcomingRides extends Component {
     constructor(props) {
@@ -15,6 +16,11 @@ class UpcomingRides extends Component {
 
     handleChange(event) {
     }
+
+    /**
+     * Filters for future rides by date
+     * @returns ride object
+     */
 
     filterRides() {
         if (this.props.rides) {

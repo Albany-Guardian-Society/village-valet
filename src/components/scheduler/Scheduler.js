@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import firestore from "../../modules/firestore.js";
 
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/Container";
@@ -13,6 +12,9 @@ import SelectRider from "./SelectRider";
 import RideInformation from "./RideInformation";
 import SelectDriver from "./SelectDriver";
 import Confirmation from "./Confirmation";
+import axios from "axios";
+import {API_ROOT} from "../../modules/api";
+import cookie from "react-cookies";
 
 
 // Above are all the imports for this file.
@@ -36,6 +38,7 @@ class Scheduler extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
+        this.props.clearRide();
     }
 
     /**
@@ -48,19 +51,36 @@ class Scheduler extends Component {
      */
     handleSubmit() {
         if (window.confirm("Are you sure you want to schedule this ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-            firestore.collection("rides").add(this.props.active_ride)
-                .then((docRef) => {
-                    this.props.addRide(this.props.active_ride, docRef.id);
-                    if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
-                        this.props.returnRide();
-                        this.setState({scheduler_page : 1});
+            switch (this.props.users[this.props.active_ride.driver.id].personal_info.preferred_communication) {
+                case "email":
+                    break;
+                case "mobile":
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_mobile + ". Did they confirm?");
+                    break;
+                case "home":
+                    this.props.active_ride.ride_data.driver_confirmed = window.confirm("Call this number to confirm: " + this.props.users[this.props.active_ride.driver.id].personal_info.phone_home + ". Did they confirm?");
+                    break;
+                default:
+                    break;
+            }
+            axios.post(API_ROOT + '/database/rides/ride',
+                {ride: this.props.active_ride},
+                {
+                    headers: {
+                        'Authorization': 'BEARER ' + cookie.load('token')
                     }
-                    else {
-                        this.props.clearRide();
-                        //This is part of react-router and allows forced page routing
-                        this.props.history.push('/Dashboard');
-                    }
-                });
+                }
+            ).then((response) => {
+                this.props.addRide(this.props.active_ride, response.data.id);
+                if (this.props.active_ride.ride_data.meta.return === false && window.confirm("Would you like to schedule a return ride for " + this.props.active_ride.rider.first_name + " " + this.props.active_ride.rider.last_name + " on " + this.props.active_ride.ride_data.date)) {
+                    this.props.returnRide();
+                    this.setState({scheduler_page: 1});
+                } else {
+                    this.props.clearRide();
+                    //This is part of react-router and allows forced page routing
+                    this.props.history.push('/Dashboard');
+                }
+            });
         }
     }
 
@@ -125,13 +145,14 @@ class Scheduler extends Component {
                 return true;
             case 1:
                 //Need to specify a date
+                const date = moment(this.props.active_ride.ride_data.date, "YYYY-MM-DD")
                 if (this.props.active_ride.ride_data.date === "") {
                     this.setState({error_message: "INVALID DATE: Please provide a date."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) + 1 <= (Date.now() + 6.04e+8)) {
+                } else if (date.isBefore(moment().add('1', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled at least one (1) week in advance."});
                     return false;
-                } else if (new Date(this.props.active_ride.ride_data.date) >= (Date.now() + (6.04e+8 * 4))) {
+                } else if (date.isAfter(moment().add('4', 'week'))) {
                     this.setState({error_message: "INVALID DATE: Rides must be scheduled no more than four (4) weeks in advance."});
                     return false;
                 } else if (!this.props.active_ride.locations.pickup.geolocation) {
@@ -227,6 +248,7 @@ class Scheduler extends Component {
  */
 const mapStateToProps = state => ({
     active_ride: state.active_ride,
+    users: state.users,
 });
 /**
  * Sets up functions to send information about rides that were added, cleared, and
