@@ -1,15 +1,13 @@
-const fs = require('fs');
+const {readdirSync} = require('fs')
 
-fs.readdir('.', (err, files) => {
-    files.forEach(file => {
-        console.log(file);
-    });
-});
+const getDirectories = source =>
+    readdirSync(source, {withFileTypes: true})
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name)
 
-const serviceAccount = require("./keys/serviceAccountKey.json");
 const admin = require("firebase-admin");
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert('./keys/serviceAccountKey.json'),
     databaseURL: "https://village-valet.firebaseio.com"
 });
 
