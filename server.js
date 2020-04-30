@@ -1,3 +1,10 @@
+const fs = require('fs');
+
+fs.readdir('.', (err, files) => {
+    files.forEach(file => {
+        console.log(file);
+    });
+});
 const serviceAccount = require("./serviceAccountKey.json");
 const admin = require("firebase-admin");
 admin.initializeApp({
