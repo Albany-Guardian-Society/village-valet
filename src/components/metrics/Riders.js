@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 
+/** @class Riders shows rider profiles*/
+
 class Riders extends Component {
     constructor(props) {
         super(props);

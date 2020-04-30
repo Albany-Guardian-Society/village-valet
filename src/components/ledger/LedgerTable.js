@@ -6,6 +6,8 @@ import Button from "react-bootstrap/Button";
 import {withRouter} from 'react-router-dom';
 import moment from 'moment';
 
+/** @class LedgerTable makes a ledger of all passed, present, and upcoming rides*/
+
 class LedgerTable extends Component {
     constructor(props) {
         super(props);

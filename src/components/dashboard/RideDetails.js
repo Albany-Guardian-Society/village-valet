@@ -4,6 +4,8 @@ import * as moment from "moment";
 
 import Container from "react-bootstrap/Container";
 
+/** @class RideDetails shoes details of the active/selected ride*/
+
 class RideDetails extends Component {
     constructor(props) {
         super(props);

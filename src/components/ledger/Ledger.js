@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 import LedgerTable from "./LedgerTable";
 import EditRide from "./EditRide";
 
+/** @class Ledger holds the Ledger Table where you can see all rides and perform actions on them*/
+
 class Ledger extends Component {
     constructor(props) {
         super(props);

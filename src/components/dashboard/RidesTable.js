@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
+/** @class RidesTable shows table of relevant rides*/
+
 class RidesTable extends Component {
     constructor(props) {
         super(props);

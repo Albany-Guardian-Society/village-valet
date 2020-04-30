@@ -14,6 +14,8 @@ const TEST = [
     }
 ];
 
+/** @class Villages shows villages -- currently needs development*/
+
 class Villages extends Component {
     constructor(props) {
         super(props);

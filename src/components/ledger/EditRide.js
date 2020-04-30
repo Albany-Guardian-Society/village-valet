@@ -14,7 +14,10 @@ import Button from "react-bootstrap/Button";
 
 //import './pic_placeholder.png';
 
+/** @class EditRide makes a component similar to RideInformation to edit rides  */
+
 class EditRide extends Component {
+
     constructor(props) {
         super(props);
         this.state = {

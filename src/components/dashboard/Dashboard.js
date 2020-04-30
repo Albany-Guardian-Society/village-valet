@@ -9,6 +9,8 @@ import ActiveRides from "./ActiveRides.js";
 import UpcomingRides from "./UpcomingRides.js";
 import RideBreakdown from "./RideBreakdown.js";
 
+/** @class Home is the dashboard page for the operator*/
+
 class Home extends Component {
     constructor(props) {
         super(props);

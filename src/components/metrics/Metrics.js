@@ -16,6 +16,8 @@ import Col from "react-bootstrap/Col";
 //Reports
 import MileageReport from "./reports/MileageReport.js";
 
+/** @class Metrics holds the metrics components */
+
 class Metrics extends Component {
     constructor(props) {
         super(props);
