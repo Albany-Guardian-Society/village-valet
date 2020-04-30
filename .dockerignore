@@ -1,0 +1,6 @@
+.drone.yml
+.env.example
+.gitignore
+.npmignore
+etc/
+README.md
