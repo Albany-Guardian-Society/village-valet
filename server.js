@@ -1,10 +1,3 @@
-const {readdirSync} = require('fs')
-
-const getDirectories = source =>
-    readdirSync(source, {withFileTypes: true})
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name)
-
 const admin = require("firebase-admin");
 admin.initializeApp({
     credential: admin.credential.cert('./keys/serviceAccountKey.json'),
