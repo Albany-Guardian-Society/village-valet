@@ -5,6 +5,9 @@ require("dotenv").config()
 const GoogleMapsToken = process.env.GOOGLE_MAPS_TOKEN
 
 /**
+ * @module AdministrationController
+ */
+/**
  * A function which will confirm the driver will be picking up the rider. Sends a 200 if completed
  *
  * @param {Request} req - Request that was received from the client

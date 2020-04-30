@@ -1,9 +1,13 @@
 const {firestore} = require("../../server");
 
 /**
+ * @module Users
+ */
+
+/**
  * Returns all users belonging to a village
  * @param {string} village_id - Village document Id
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getUsers = async (village_id) => {
     let querySnapshot;
@@ -21,7 +25,7 @@ exports.getUsers = async (village_id) => {
  * Returns a user by on document id
  * @param {string} village_id - Village Document Id
  * @param {string} user_id - Village Document Id
- * @returns {Promise<{}|{[p: string]: *}>}
+ * @returns {Promise<{}>}
  */
 exports.getUser = async (village_id, user_id) => {
     const doc = await firestore.collection('users').doc(user_id).get();
@@ -37,7 +41,7 @@ exports.getUser = async (village_id, user_id) => {
 
 /**
  * Returns all drivers
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getDrivers = async () => {
     const querySnapshot = await firestore.collection('users').where("user_type", "==", "driver").get();

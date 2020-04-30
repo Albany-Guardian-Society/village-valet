@@ -1,5 +1,10 @@
 const {addVillage, getVillage, getVillages, removeVillage, updateVillage} = require("../firebase/villages");
 
+
+/**
+ * @module VillagesController
+ */
+
 /**
  * Returns to requester all villages they have access to.
  *

@@ -1,8 +1,12 @@
 const {firestore} = require("../../server");
 
 /**
+ * @module Operators
+ */
+
+/**
  * Returns all operators in the database
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getOperators = async () => {
     const querySnapshot = await firestore.collection('operators').get();
@@ -16,7 +20,7 @@ exports.getOperators = async () => {
 /**
  * Returns a specific operator by id in the database, without password
  * @param {string} operator_id - Document id of the operator
- * @returns {Promise<{}|{[p: string]: *}>}
+ * @returns {Promise<{}>}
  */
 exports.getOperatorById = async (operator_id) => {
     const doc = await firestore.collection('operators').doc(operator_id).get();
@@ -31,7 +35,7 @@ exports.getOperatorById = async (operator_id) => {
 /**
  * Returns a specific operator by id in the database, with password
  * @param {string} operator_id - Document id of the operator
- * @returns {Promise<{}|{[p: string]: *}>}
+ * @returns {Promise<{}>}
  */
 exports.getOperatorByIdFull = async (operator_id) => {
     const doc = await firestore.collection('operators').doc(operator_id).get();
@@ -45,7 +49,7 @@ exports.getOperatorByIdFull = async (operator_id) => {
 /**
  * Returns a specific operator by username in the database, with password
  * @param operator_username - Username of the operator
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getOperatorByUsername = async (operator_username) => {
     const querySnapshot = await firestore.collection('operators').where('username', '==', operator_username).get();
@@ -56,7 +60,7 @@ exports.getOperatorByUsername = async (operator_username) => {
 
 /**
  * Returns all admins in the database. Currently not in use
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getAdmins = async () => {
     const querySnapshot = await firestore.collection('operators')

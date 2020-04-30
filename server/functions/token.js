@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
-
+/**
+ * @module UserTokenGenerator
+ */
+/**
+ * Secret Key to Sign Tokens
+ */
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**

@@ -13,7 +13,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 /**
- * @const {string}
+ * @module OperatorController
+ */
+
+/**
+ * Secret Key to Sign Tokens
  */
 const JWT_SECRET = process.env.JWT_SECRET;
 

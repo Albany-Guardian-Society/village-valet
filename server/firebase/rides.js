@@ -1,10 +1,14 @@
 const {firestore} = require("../../server");
 
 /**
+ * @module Rides
+ */
+
+/**
  * Returns all riles belonging to a village
  *
  * @param {string} village_id - Village Document Id
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getRides = async (village_id) => {
     let querySnapshot;

@@ -1,5 +1,8 @@
 const {addUser, getUser, getUsers, removeUser, updateUser} = require("../firebase/users");
 
+/**
+ * @module UsersController
+ */
 
 /**
  * Returns to requester all users they have access to.

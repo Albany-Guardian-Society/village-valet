@@ -2,6 +2,12 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
+/**
+ * @module JWTCheckerMiddleware
+ */
+/**
+ * Secret Key to Sign Tokens
+ */
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**

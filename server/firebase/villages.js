@@ -1,9 +1,14 @@
 const {firestore} = require("../../server");
 
+
+/**
+ * @module Villages
+ */
+
 /**
  * Return all villages accessible
  * @param {string } village_id - Requesting village document id
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getVillages = async (village_id) => {
     let querySnapshot;
@@ -20,7 +25,7 @@ exports.getVillages = async (village_id) => {
 /**
  * Return a village based on document id
  * @param {string } village_id - Village document id
- * @returns {Promise<{[p: string]: *}[]>}
+ * @returns {Promise<Object[]>}
  */
 exports.getVillage = async (village_id) => {
     const querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get()

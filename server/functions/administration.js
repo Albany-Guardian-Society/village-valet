@@ -10,7 +10,17 @@ const bcrypt = require("bcryptjs");
 
 require("dotenv").config()
 
+/**
+ * @module Administration
+ */
+/**
+ * Village Valet Email
+ */
 const EMAIL = process.env.SMTP_EMAIL;
+/**
+ *  Village Valet Domain Name
+
+ */
 const HOST_NAME = process.env.HOST_NAME;
 
 /**

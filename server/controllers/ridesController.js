@@ -1,6 +1,9 @@
 const {addRide, getRide, getRides, getRidesByDate, removeRide, updateRide} = require("../firebase/rides");
 const {sendConfirmationEmail, sendCancellationEmail} = require("../functions/administration");
 
+/**
+ * @module RidesController
+ */
 
 /**
  * Returns to requester all rides they have access to
