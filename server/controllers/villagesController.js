@@ -1,10 +1,29 @@
 const {addVillage, getVillage, getVillages, removeVillage, updateVillage} = require("../firebase/villages");
 
+
+/**
+ * @module VillagesController
+ */
+
+/**
+ * Returns to requester all villages they have access to.
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getAllVillages = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     res.status(200).send(await getVillages(village_id))
 };
 
+/**
+ * Returns to requester a village specified by id, if they have access to it.
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.getOneVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const query_village_id = req.query.id;
@@ -15,6 +34,13 @@ exports.getOneVillage = async (req, res) => {
     res.status(200).send(await getVillage(query_village_id))
 };
 
+/**
+ * Takes request and adds the village to the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.postVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const village = req.body.village;
@@ -34,6 +60,13 @@ exports.postVillage = async (req, res) => {
     res.status(500).send({error: "Could not add village to database"})
 };
 
+/**
+ * Takes request and edits the entire village in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.putVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const village = req.body.village;
@@ -62,6 +95,13 @@ exports.putVillage = async (req, res) => {
 };
 
 
+/**
+ * Takes request and removes the village from to the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise<void>}
+ */
 exports.deleteVillage = async (req, res) => {
     const {village_id} = res.locals.jwtPayload;
     const body_village_id = req.body['village_id'];

@@ -1,6 +1,15 @@
 const {firestore} = require("../../server");
 
 
+/**
+ * @module Villages
+ */
+
+/**
+ * Return all villages accessible
+ * @param {string } village_id - Requesting village document id
+ * @returns {Promise<Object[]>}
+ */
 exports.getVillages = async (village_id) => {
     let querySnapshot;
     if (village_id === 'admin') {
@@ -13,7 +22,11 @@ exports.getVillages = async (village_id) => {
     });
 };
 
-
+/**
+ * Return a village based on document id
+ * @param {string } village_id - Village document id
+ * @returns {Promise<Object[]>}
+ */
 exports.getVillage = async (village_id) => {
     const querySnapshot = await firestore.collection('villages').where('id', '==', village_id).get()
     return querySnapshot.docs.map(doc => {
@@ -21,7 +34,11 @@ exports.getVillage = async (village_id) => {
     });
 }
 
-
+/**
+ * Adds village to database
+ * @param {Object} village - Village Object
+ * @returns {Promise<string | boolean>}
+ */
 exports.addVillage = async (village) => {
     return firestore.collection('villages').add(village)
         .then((doc) => {
@@ -33,6 +50,11 @@ exports.addVillage = async (village) => {
         })
 };
 
+/**
+ * Removes village from database
+ * @param {string} village_id - Village document id
+ * @returns {Promise<boolean>}
+ */
 exports.removeVillage = async (village_id) => {
     return firestore.collection('villages').doc(village_id).delete()
         .then(() => {
@@ -44,6 +66,11 @@ exports.removeVillage = async (village_id) => {
         })
 };
 
+/**
+ * Updates village in database
+ * @param {Object} village - Village Object
+ * @returns {Promise<boolean>}
+ */
 exports.updateVillage = async (village) => {
     return firestore.collection('villages').doc(village.id).update(village)
         .then(() => {

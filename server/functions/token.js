@@ -1,9 +1,19 @@
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
-
+/**
+ * @module UserTokenGenerator
+ */
+/**
+ * Secret Key to Sign Tokens
+ */
 const JWT_SECRET = process.env.JWT_SECRET;
 
+/**
+ * Generates Ride Confirmation Token
+ * @param {Object} ride - Ride object
+ * @returns {token}
+ */
 exports.generateRideConfirmationToken = (ride) => {
     return jwt.sign({
         scope: 'confirm_ride',
@@ -16,6 +26,11 @@ exports.generateRideConfirmationToken = (ride) => {
     })
 }
 
+/**
+ * Generates Ride Confirmation Token
+ * @param {Object} admin - Operator Object
+ * @returns {token}
+ */
 exports.generateAdminConfirmationToken = (admin) => {
     return jwt.sign({
         scope: 'confirm_admin',

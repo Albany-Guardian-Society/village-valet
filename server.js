@@ -94,7 +94,7 @@ app.get('/*', (req, res) => res.sendFile(path.resolve('./build/index.html')));
 
 app.listen(PORT, () => console.log('Server running on ' + PORT));
 
-cron.schedule("0 6 * * *", sendExpirationNotifications);
+//cron.schedule("0 6 * * *", sendExpirationNotifications);
 
 adminStartUp().then()
 
