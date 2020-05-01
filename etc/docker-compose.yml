@@ -20,11 +20,11 @@ services:
       - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
 
   village-valet:
-    build: https://github.com/ItsAMeNick/village-valet.git#dev
+    build: https://github.com/ItsAMeNick/village-valet.git
     container_name: village-valet
     restart: always
     labels:
-      - traefik.http.routers.village-valet_dev.rule=Host(`village-valet.tk`,`www.village-valet.tk`)
+      - traefik.http.routers.village-valet_dev.rule=Host(`example.com`,`www.example.com`)
       - traefik.http.routers.village-valet_dev.tls=true
       - traefik.http.routers.village-valet_dev.tls.certresolver=tls
     volumes:
