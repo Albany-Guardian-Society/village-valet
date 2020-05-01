@@ -29,7 +29,6 @@ class MapContainer extends Component {
      *@param {Object} nextProps
      * @params {object} nextState
      * @param {object} nextContext
-     * @example
      *
      */
 

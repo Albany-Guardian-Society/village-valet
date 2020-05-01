@@ -30,7 +30,6 @@ class LoadData extends Component {
     /**
      * Loads all information into to the site on login
      *
-     * @example
      *
      */
 
