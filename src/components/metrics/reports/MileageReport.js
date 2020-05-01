@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
   tableCell: { margin: "auto", marginTop: 5, fontSize: 10 },
 });
 
+/** @class MileageReportPDF produces a PDF report of millage statistics for rides - may need some development*/
+
 //PDF
 class MileageReportPDF extends Component {
     constructor(props) {

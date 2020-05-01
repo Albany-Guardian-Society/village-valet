@@ -9,6 +9,8 @@ import cookies from "react-cookies"
 
 import "../App.css";
 
+/** @class Navigation holds buttons to navigate through the website*/
+
 class Navigation extends Component {
     constructor(props) {
         super(props);

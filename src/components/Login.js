@@ -29,7 +29,7 @@ import {API_ROOT} from "../modules/api"
 
 // Finally, the last three imports are for the logo and custom css
 
-//Components in a react webapp are classes (for the most part)
+/** @class Login authenticates the login for the operator, without this the app cannot be used*/
 class Login extends Component {
     // The construction will be pretty constant.  The "props" are variables passed down from
     // the components parent (through an HTML attribute)
