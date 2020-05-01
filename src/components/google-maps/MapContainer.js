@@ -25,8 +25,7 @@ class MapContainer extends Component {
     }
 
     /**
-     * Final step of scheduler.
-     * Allows operator to look over information before submitting rider
+     * Checks to see if map should be updated
      *@param {Object} nextProps
      * @params {object} nextState
      * @param {object} nextContext
