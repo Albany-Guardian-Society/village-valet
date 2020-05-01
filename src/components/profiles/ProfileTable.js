@@ -129,7 +129,6 @@ class ProfileTable extends Component {
                 // make sure that they're volunteering during pickup/dropoff window
                 // should be making sure they are volunteering when driver leaves their house
                 for (let i = 0; i < a.volunteer_hours.length; i++) {
-                    console.log(ride_date.day() % 7, Number(a.volunteer_hours[i].day))
                     if (ride_date.day() % 7 === Number(a.volunteer_hours[i].day)) {
                         if (moment(a.volunteer_hours[i].start, "HH:mm").isBefore(moment(this.props.active_ride.locations.pickup.time, "HH:mm"))
                             && moment(a.volunteer_hours[i].end, "HH:mm").isAfter(moment(this.props.active_ride.locations.dropoff.time, "HH:mm"))) {

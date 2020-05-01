@@ -31,8 +31,6 @@ class EditRide extends Component {
 
         this.onLoad = this.onLoad.bind(this);
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
-        console.log('HERE')
-        console.log(this.props.active_ride);
     }
 
     /**
@@ -52,7 +50,6 @@ class EditRide extends Component {
 
     handleSave(event){
         this.props.saveRide(this.props.active_ride)
-        console.log(this.props.active_ride)
         window.alert('Saved!')
     }
     /**
@@ -71,7 +68,6 @@ class EditRide extends Component {
             //updating the date
             this.props.updateScheduler(label_flag[2], null, event.target.checked)
         } else if (label_flag[1] === "driverconfirmed") {
-            console.log(event.target)
             this.props.updateScheduler("driver_confirmed", null, event.target.checked);
         } else {
             //updating the location
@@ -209,7 +205,6 @@ class EditRide extends Component {
                                             <Form.Label>Driver Confirm:</Form.Label>
                                         </td>
                                         <td>
-                                            {console.log()}
                                             <Form.Control type="checkbox" placeholder="" id='sched_driverconfirmed'
                                                           onChange={this.handleChange}
                                                           checked={this.props.active_ride.ride_data.driver_confirmed}/>

@@ -76,7 +76,7 @@ class MapContainer extends Component {
     }
 
     locationOrder() {
-        if (this.props.ride.locations.dropoff == null || this.props.ride.locations.pickup == null) return;
+        if (!this.props.ride.locations.dropoff.geolocation || !this.props.ride.locations.pickup) return;
         if (this.props.ride.driver.id) {
             if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
                 this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
@@ -99,7 +99,7 @@ class MapContainer extends Component {
         }
     }
     makeDirections() {
-        if (!this.locations['origin'].lat || !this.locations['destination'].lat) {
+        if (!this.locations['origin'] || !this.locations['destination']) {
             return;
         }
         let key;

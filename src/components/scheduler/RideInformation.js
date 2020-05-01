@@ -131,7 +131,10 @@ class RideInformation extends Component {
         if (this.autocomplete[number] != null) {
             const place = this.autocomplete[number].getPlace();
             this.props.updateScheduler(variable, "address", place.formatted_address);
-            this.props.updateScheduler(variable, "geolocation", {lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
+            this.props.updateScheduler(variable, "geolocation", {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            });
             if (place.geometry !== null) {
                 this.props.updateScheduler(variable, "address", place.formatted_address);
                 this.props.updateScheduler(variable, "geolocation", {
@@ -259,7 +262,6 @@ class RideInformation extends Component {
                                 <Row>
                                     <Col>Based on dropoff time, pickup time should be:</Col>
                                     <Col>
-                                        {console.log(moment(this.props.active_ride.locations.dropoff.time))}
                                         {(this.props.active_ride.locations.dropoff.time) ?
                                             moment(this.props.active_ride.locations.dropoff.time, "HH:mm")
                                                 .subtract(this.props.active_ride.ride_data.time_total.rider, 'second')
