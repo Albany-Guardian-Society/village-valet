@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/ledger/LedgerTable.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/ledger/LedgerTable.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+import {withRouter} from 'react-router-dom';
+import moment from 'moment';
+
+/** @class LedgerTable makes a ledger of all passed, present, and upcoming rides*/
+
+class LedgerTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+        // this.handleChange = this.handleChange.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
+
+    }
+
+    /**
+     * Switches to the Edit ride functionality
+     * @param event -  ride object
+     */
+    handleSelect(event) {
+        // event.target.id is the id of the ride
+        // Highlight the row
+        this.setState({selected_row: event.target.id.replace('edit','')});
+        // This is the ride being selected
+        this.props.setActiveRide(this.props.rides[event.target.id.replace('edit','')]);
+        // When clicked go to schedule ride to edit ride
+        this.props.history.push('/Ledger/EditRide/');
+    }
+
+    /**
+     * Permanently deletes ride
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
+     */
+    handleCancel(rideID) {
+        if (window.confirm("Are you sure you want to DELETE this ride?")) {
+            this.props.cancelRide(rideID);
+            window.alert("CANCELLED: " + rideID);
+        }
+    }
+
+    /**
+     * Deactivates ride when deactivate is clicked
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
+     */
+    handleDeactivateRide(rideID) {
+        if (window.confirm("Are you sure you want to DEACTIVATE this ride?")) {
+            this.props.deactivateRide(rideID);
+            window.alert("DEACTIVATED: " + rideID);
+        }
+    }
+
+    /**
+     * Reactivates an inactive ride when reactivate is clicked
+     * @param rideID -  ID of ride
+     * @return window confirm and alert
+     */
+    handleReactivateRide(rideID) {
+        if (window.confirm("Are you sure you want to REACTIVATE this ride?")) {
+            this.props.reactivateRide(rideID);
+            window.alert("REACTIVATED: " + rideID);
+        }
+    }
+
+    /**
+     * Action buttons for upcoming rides with deactivate
+     * @param rides[key]
+     * @return HTMLTableDataCellElement - of Buttons
+     */
+
+    futureButtons1(rides) {
+        return(
+            &lt;td>
+                &lt;Button id={rides.id + "edit"} variant="primary" className="mr-1" size="sm"
+                           onClick={(e) => this.handleSelect(e)}>
+                Edit
+                &lt;/Button>
+
+                &lt;Button id={rides.id + "deactivate"} variant="warning" className="mr-1" size="sm"
+                        onClick={() => this.handleDeactivateRide(rides.id)}>
+                    Deactivate
+                &lt;/Button>
+                &lt;Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                &lt;/Button>
+            &lt;/td>
+        )
+    }
+
+    /**
+     * Action buttons for upcoming rides with Reactivate
+     * @param rides[key]
+     * @return HTMLTableDataCellElement - of Buttons
+     */
+
+    futureButtons2(rides) {
+        return(
+            &lt;td>
+                &lt;Button id={rides.id + "edit"} variant="primary" className="mr-1" size="sm"
+                        onClick={(e) => this.handleSelect(e)}>
+                    Edit
+                &lt;/Button>
+
+                &lt;Button id={rides.id + "reactivate"} variant="success" className="mr-1" size="sm"
+                        onClick={() => this.handleReactivateRide(rides.id)}>
+                    Reactivate
+                &lt;/Button>
+                &lt;Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                &lt;/Button>
+            &lt;/td>
+        )
+    }
+
+    /**
+     * Action buttons for passed rides ie only 'Cancel'
+     * @param rides[key]
+     * @returns HTMLButtonElement
+     */
+
+    passedButtons(rides){
+        return(
+            &lt;td>
+                &lt;Button id={rides.id + "cancel"} variant="danger" className="mr-1" size="sm"
+                        onClick={() => this.handleCancel(rides.id)}>
+                    Cancel
+                &lt;/Button>
+            &lt;/td>
+                )
+
+
+}
+
+    /**
+     *
+     * Displays Ledger table information with appropriate status tags and buttons
+     */
+    renderTableData() {
+        let rides = this.props.rides;
+        let keys = Object.keys(rides);
+        return keys.map((key) => {
+
+            /**
+             * check if ride is confirmed
+             */
+            let button_set;
+            let status;
+            const confirm_check = rides[key].ride_data.driver_confirmed ? &lt;tr>D: Confirmed &lt;/tr> : &lt;tr>D: Pending &lt;/tr>
+            const date = moment(rides[key].ride_data.date, "YYYY-MM-DD")
+
+            /**
+             * check for inactive and active rides - activate or reactivate
+             */
+            if (rides[key].status === "inactive") {
+                button_set = this.futureButtons2(rides[key]);
+                status = &lt;tr>Inactive&lt;/tr>;
+
+            } else {
+                button_set = this.futureButtons1(rides[key]);
+                status = &lt;tr>Active&lt;/tr>;
+
+            }
+            /**
+             *  Check for date for ride to see if upcoming or passed
+             */
+            if (date.isBefore(moment().format("YYYY-MM-DD"))) {
+                button_set = this.passedButtons(rides[key])
+                status = &lt;tr>Passed&lt;/tr>
+            }
+            return (
+                &lt;tr>
+                    &lt;td>{rides[key].id}&lt;/td>
+                    &lt;td>{rides[key].driver.first_name} {rides[key].driver.last_name}&lt;/td>
+                    &lt;td>{rides[key].rider.first_name} {rides[key].rider.last_name}&lt;/td>
+                    &lt;td>{rides[key].locations.pickup.address}&lt;/td>
+                    &lt;td>{rides[key].locations.dropoff.address}&lt;/td>
+                    &lt;td>{rides[key].ride_data.date}&lt;/td>
+                    &lt;td>
+                        {status}
+                        {confirm_check}
+                    &lt;/td>
+                    {button_set}
+                &lt;/tr>
+            )
+        })
+    }
+
+    /**
+     * Displays Ledger table Headers/Column Titles with
+     */
+    renderTableHeader() {
+        let header = ['Ride', 'Driver', 'Rider', 'Origin', 'Destination', 'Date','Status', 'Action'];
+        return header.map((item) => {
+            return &lt;th key={item}>{item}&lt;/th>
+        })
+    }
+
+    /**
+     *
+     * @returns The full table with headers and information
+     */
+    render() {
+        return (
+            &lt;Container style={{minWidth: "100%"}}>
+                &lt;Table striped bordered hover>
+                    &lt;thead>
+                    &lt;tr>
+                        {this.renderTableHeader()}
+                    &lt;/tr>
+                    &lt;/thead>
+                    &lt;tbody>
+                    {this.renderTableData()}
+                    &lt;/tbody>
+                &lt;/Table>
+            &lt;/Container>
+        );
+    }
+}
+
+/**
+ * Pulls users and rides from state
+ * @param state
+ * @returns {{rides: {}, users: {}}}
+ */
+const mapStateToProps = state => ({
+    rides: state.rides,
+    users: state.users
+});
+
+/**
+ * Handles the backend calls for ride changes (reducer)
+ * @param dispatch
+ * @returns {{reactivateRide: (function(*=): *), deactivateRide: (function(*=): *), cancelRide: (function(*=): *), setActiveRide: (function(*=): *)}}
+ */
+const mapDispatchToProps = dispatch => ({
+    setActiveRide: (ride) => dispatch({
+        type: "active_ride",
+        payload: ride
+    }),
+
+    cancelRide: (rideID) => dispatch({
+        type: "ride_cancel",
+        payload: rideID
+    }),
+
+    deactivateRide: (rideID) => dispatch({
+        type: "ride_deactivate",
+        payload: rideID
+    }),
+
+    reactivateRide: (rideID) => dispatch({
+        type: "ride_reactivate",
+        payload: rideID
+    }),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LedgerTable));
+
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

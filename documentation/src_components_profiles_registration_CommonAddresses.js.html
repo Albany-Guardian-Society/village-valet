@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/profiles/registration/CommonAddresses.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/profiles/registration/CommonAddresses.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+
+import "./registration.css"
+import {Autocomplete} from "@react-google-maps/api";
+
+/**
+ * Common Addresses
+ * @class CommonAddresses
+ */
+class CommonAddresses extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+        this.handleChange = this.handleChange.bind(this);
+
+        this.autocomplete = {};
+        this.onLoad = this.onLoad.bind(this);
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
+    }
+
+    /**
+     * Handles when address is entered
+     *
+     * @param {Object} event - address entered
+     */
+    handleChange(event) {
+        let id = event.target.id.split("|")[0].replace("addr_", "");
+        let field = event.target.id.split("|")[1];
+        switch (field) {
+            case "autocomplete":
+                this.props.updateRegistration("addresses", id + "|autocomplete", event.target.value);
+                break;
+            default:
+                this.props.updateRegistration("addresses", id + "|" + field, event.target.value);
+                break;
+        }
+    }
+
+    /**
+     * Puts autocomplete information into
+     *
+     * @param {Object} autocomplete - address to be set
+     * @param {int} index - index of common addresses
+     */
+    onLoad(autocomplete, index) {
+        this.autocomplete[index] = autocomplete;
+    }
+
+    /**
+     * Handles change to address search form
+     *
+     * @param {int} index - autocomplete index
+     */
+    onPlaceChanged(index) {
+        let street_number = 0;
+        if (this.autocomplete[index] != null) {
+            index = index - 1;
+            const place = this.autocomplete[index + 1].getPlace();
+            this.props.updateRegistration("addresses", index + "|autocomplete",place.formatted_address);
+            for (const component of place.address_components) {
+                if (component.types.includes('street_number')) {
+                    street_number = component.long_name
+                    this.props.updateRegistration("addresses", index + "|street_number", component.long_name);
+                } else if (component.types.includes('route')) {
+                    this.props.updateRegistration("addresses", index + "|line_1", `${street_number} ${component.short_name}`);
+                } else if (component.types.includes('locality')) {
+                    this.props.updateRegistration("addresses", index + "|city", component.short_name);
+                } else if (component.types.includes('administrative_area_level_1')) {
+                    this.props.updateRegistration("addresses", index + "|state", component.short_name);
+                } else if (component.types.includes('postal_code')) {
+                    this.props.updateRegistration("addresses", index + "|zip", component.short_name);
+                }
+            }
+            if (place.geometry.location) {
+                this.props.updateRegistration("addresses", index + "|lat", place.geometry.location.lat());
+                this.props.updateRegistration("addresses", index + "|lng", place.geometry.location.lng());
+            }
+        } else {
+            console.log('Autocomplete is not loaded yet!')
+        }
+    }
+
+    /**
+     * Creates the forms on the page
+     *
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
+     */
+    generateAddressForms() {
+        let body = [];
+        let index = 0;
+        if (this.props.addresses.length === 0) body.push(&lt;br key={"break"}/>);
+        for (let a in this.props.addresses) { // eslint-disable-line no-unused-vars
+            body.push(
+                &lt;Card.Body key={index}>
+                    &lt;Row className="reg_row">
+                        &lt;Form.Label column sm={2} lg={2}>Address Name:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|name"} placeholder="--Address Name--"
+                                           onChange={this.handleChange} value={this.props.addresses[index].name}/>&lt;/Col>
+                        &lt;Col sm={3} lg={2}>
+                            {this.props.mode === "rider" ?
+                            &lt;Button id={index} variant="danger" onClick={(e) => this.props.removeAddress(e.target.id)}>
+                                Remove Address
+                            &lt;/Button>
+                            : null }
+                        &lt;/Col>
+                    &lt;/Row>
+
+                    &lt;Row className="reg_row">
+                        &lt;Form.Label column sm={2} lg={2}>&lt;strong>Address Search:&lt;/strong>&lt;/Form.Label>
+                        &lt;Col>
+                            &lt;Autocomplete
+                                onLoad={(autocomplete) => {
+                                    this.onLoad(autocomplete, index)
+                                }}
+                                onPlaceChanged={() => this.onPlaceChanged(index)}
+                            >
+                                &lt;Form.Control id={"addr_" + index + "|autocomplete"} placeholder="--Address--"
+                                              onChange={this.handleChange} value={this.props.addresses[index].autocomplete}/>
+                            &lt;/Autocomplete>
+                        &lt;/Col>
+                    &lt;/Row>
+                    &lt;Row className="reg_row">
+                        &lt;Form.Label column sm={2} lg={2}>Address Line 1:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|line_1"}
+                                           readOnly
+                                           placeholder="--Primary Address Information--" onChange={this.handleChange}
+                                           value={this.props.addresses[index].line_1}/>&lt;/Col>
+                        &lt;Form.Label column sm={2} lg={2}>Address Line 2:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|line_2"} placeholder="--Unit/Care Of/Attention--"
+                                           onChange={this.handleChange}
+                                           value={this.props.addresses[index].line_2}/>&lt;/Col>
+                    &lt;/Row>
+                    &lt;Row className="reg_row">
+                        &lt;Form.Label column sm={2} lg={2}>City:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|city"} placeholder="--City--"
+                                           readOnly
+                                           onChange={this.handleChange} value={this.props.addresses[index].city}/>&lt;/Col>
+                        &lt;Form.Label column sm={2} lg={2}>State:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|state"} placeholder="--State--"
+                                           readOnly
+                                           onChange={this.handleChange}
+                                           value={this.props.addresses[index].state}/>&lt;/Col>
+                        &lt;Form.Label column sm={2} lg={2}>Zip:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control id={"addr_" + index + "|zip"} placeholder="--ZIP--"
+                                           readOnly
+                                           onChange={this.handleChange} value={this.props.addresses[index].zip}/>&lt;/Col>
+                    &lt;/Row>
+                    &lt;Row className="reg_row">
+                        &lt;Form.Label column sm={2} lg={2}>Special Instructions:&lt;/Form.Label>
+                        &lt;Col>&lt;Form.Control as="textarea" rows={5} id={"addr_" + index + "|special_instructions"}
+                                           placeholder="Please include any additional information that a driver would need to know when picking up or dropping off from this location."
+                                           onChange={this.handleChange}
+                                           value={this.props.addresses[index].special_instructions}/>&lt;/Col>
+                    &lt;/Row>
+                &lt;/Card.Body>
+            );
+            //Divide all the addresses (do not place a break after the last value)
+            if (index !== this.props.addresses.length-1) body.push(&lt;hr key={index + "_break"}/>);
+
+            index++;
+        }
+        return(body);
+    }
+
+    /**
+     * Displays the common addresses and all its forms
+     *
+     * @returns {HTMLDocument}
+     */
+    render() {
+        return (
+            &lt;Card>
+                &lt;Card.Header>
+                    {this.props.mode === "rider" ?
+                        &lt;h5 style={{float: "left"}}>Common Addresses&lt;/h5>
+                    :
+                        &lt;h5 style={{float: "left"}}>Address&lt;/h5>
+                    }
+                    {this.props.mode === "rider" ?
+                    &lt;Button variant="dark" style={{float: "right"}} onClick={() => this.props.addAddress()}>
+                        Add Address
+                    &lt;/Button>
+                    : null}
+                &lt;/Card.Header>
+                {this.generateAddressForms()}
+                &lt;h6>{" "}&lt;/h6>
+            &lt;/Card>
+        );
+    }
+}
+
+/**
+ * Pulls addresses and user type from state's active ride
+ */
+const mapStateToProps = state => ({
+    addresses: state.active_profile.addresses,
+    user_type: state.active_profile.user_type
+});
+
+/**
+ * Sets up functions to send registration, address, and autocomplete information to reducer
+ */
+const mapDispatchToProps = dispatch => ({
+    updateRegistration: (type, id, value) => dispatch({
+        type: "registration",
+        payload: {
+            type: type,
+            id: id,
+            value: value
+        }
+    }),
+    addAddress: () => dispatch({
+        type: "registration",
+        payload: {
+            type: null,
+            id: "add_address",
+            value: null
+        }
+    }),
+    removeAddress: (id) => dispatch({
+        type: "registration",
+        payload: {
+            type: null,
+            id: "remove_address",
+            value: id
+        }
+    }),
+    triggerUpdate: () => dispatch({
+        type: "trigger_update",
+        payload: null
+    })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommonAddresses);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

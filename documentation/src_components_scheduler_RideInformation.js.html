@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/scheduler/RideInformation.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/scheduler/RideInformation.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from "react";
+import {connect} from "react-redux";
+
+import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table"
+import {Autocomplete} from "@react-google-maps/api";
+import MapContainer from "../google-maps/MapContainer";
+import moment from "moment";
+
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML
+
+/**
+ * @class RideInformation
+ * @typedef {Object} RideInformation
+ *
+ */
+class RideInformation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            addresses: {},
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleCommonAddress = this.handleCommonAddress.bind(this);
+
+        this.autocomplete = {};
+        this.count = 0;
+
+        this.onLoad = this.onLoad.bind(this);
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
+    }
+
+    /**
+     * Updates and saves selected date and time on the page
+     * in the form
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
+    componentDidMount() {
+        let today = moment()
+        //Set the default day to be one week in advance
+        if (!this.props.active_ride.ride_data.date) {
+            this.props.updateScheduler("date", null, today.add(8, 'days').format("YYYY-MM-DD"));
+        }
+    }
+
+    handleChange(event) {
+        let label_flag = event.target.id.split("_");
+        if (label_flag[1] === "date") {
+            //updating the date
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
+        } else if (label_flag[1] === "purpose") {
+            //updating the date
+            this.props.updateScheduler(label_flag[1], null, event.target.value);
+        } else if (label_flag[1] === "meta" &amp;&amp; label_flag[2] === "samereturn") {
+            //updating the date
+            this.props.updateScheduler(label_flag[2], null, event.target.checked)
+        } else {
+            //updating the location
+            this.props.updateScheduler(label_flag[1], label_flag[2], event.target.value)
+        }
+    };
+
+
+    /**
+     * When the operator selects "other" the autocomplete form will
+     * become editable
+     * If they do not select other then it will the form will filled and will not
+     * be able to be changed.
+     *
+     * @example
+     *     onChange={this.handleCommonAddress}
+     */
+    handleCommonAddress(event, type) {
+        if (event.target.value === "other") {
+            //Update store
+            this.props.updateScheduler("common_address", "set|"+type, event.target.value);
+        } else {
+            this.props.updateScheduler("common_address", type, this.props.active_ride.rider.id+"|"+event.target.value.replace("addr_", ""));
+        }
+    }
+
+    getSelectedItems() {
+        let items = [];
+        let addresses = [];
+        for (let i = 0; i &lt; this.props.users.length; i++) {
+            if (this.props.users[i].id === this.props.active_ride.rider.id) {
+                // this.setState({addresses: this.props.users[i].addresses});
+                let addresses = this.props.users[i].addresses
+            }
+        }
+        for (let i = 0; i &lt; addresses.length; i++) {
+            items.push(&lt;option key={i} value={i}>{i}&lt;/option>);
+        }
+        return items
+    }
+
+    onSelected(e) {
+        console.log("value", e.target.value);
+        //here you will see the current selected value of the select input
+    }
+
+    /**
+     * Creates more autocompletes and keeps track of them at different indices
+     *
+     * @example
+     *     onChange={this.handleChanget}
+     */
+    onLoad(autocomplete) {
+        this.autocomplete[this.count] = autocomplete;
+        this.count += 1
+    }
+
+    /**
+     * Uses autocomplete to list relevant addresses for pick up and drop off
+     * based on what is typed in.
+     *
+     * @example
+     *     onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+     */
+    onPlaceChanged(variable, number) {
+        if (this.autocomplete[number] != null) {
+            const place = this.autocomplete[number].getPlace();
+            this.props.updateScheduler(variable, "address", place.formatted_address);
+            this.props.updateScheduler(variable, "geolocation", {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            });
+            if (place.geometry !== null) {
+                this.props.updateScheduler(variable, "address", place.formatted_address);
+                this.props.updateScheduler(variable, "geolocation", {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                });
+            }
+        } else {
+            console.log('Autocomplete is not loaded yet!')
+        }
+    }
+
+    /**
+     * Grabs all common addresses for person of interest
+     * and loads them into the available options
+     *
+     * @example
+     *      {this.getCommonAddresses("pickup")}
+     *
+     */
+    getCommonAddresses(mode) {
+        let options = [];
+        if (!this.props.active_ride.locations[mode].address) options.push(&lt;option value={""} label={""} key="null"/>);
+        if (!this.props.active_ride.rider.id) return options;
+        options.push(...this.props.users[this.props.active_ride.rider.id].addresses.map((loc)=>{
+            return &lt;option value={"addr_"+loc.line_1} label={loc.name} key={loc.name}/>
+        }));
+        options.push(&lt;option value={"other"} label={"--Other--"} key="other"/>)
+        return options;
+    }
+
+    vehicleOptions() {
+        let options = [&lt;option value={""} label={""}/>];
+        if (!this.props.active_ride.driver.id) return options;
+        options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
+            return &lt;option value={car.lp} label={car.year + " " + car.make_model}/>
+        }));
+        return options;
+    };
+
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
+    render() {
+        return (
+            &lt;Container className="RideInformation" style={{minWidth: "100%"}}>
+                &lt;h1>Ride Information&lt;/h1>
+                &lt;Row>
+                    &lt;Col>
+                        &lt;Card>
+                            &lt;Card.Header>
+                                &lt;h5>Options&lt;/h5>
+                            &lt;/Card.Header>
+                            &lt;Card.Body>
+                                &lt;Table borderless>
+                                &lt;tbody>
+                                    &lt;tr>
+                                        &lt;td>Name:&lt;/td>
+                                        &lt;td>{`${this.props.active_ride.rider.first_name}`} {`${this.props.active_ride.rider.last_name}`}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Date:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control type="date" placeholder="" id='sched_date' onChange={this.handleChange}
+                                                          value={this.props.active_ride.ride_data.date}/>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Trip Purpose:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control as="select" placeholder="" id='sched_purpose' onChange={this.handleChange} value={this.props.active_ride.ride_data.purpose}>
+                                                {["", "Medical Appointments", "Pharmacy", "Grocery", "Congregate Meal", "Social Activity", "Religious", "Personal Care", "Errands", "Vet (Pet)", "Gym", "Restaurant"]
+                                                    .map((item) => {
+                                                        return &lt;option label={item} value={item} key={item}/>
+                                                    })}
+                                            &lt;/Form.Control>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            Mobility Aid:
+                                        &lt;/td>
+                                        &lt;td>
+                                            {this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid ? `${this.props.users[this.props.active_ride.rider.id].accommodations.mobility_aid}` : "N/A"}
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            Special Accommodations:
+                                        &lt;/td>
+                                        &lt;td>
+                                            {this.props.users[this.props.active_ride.rider.id].accommodations.special ? `${this.props.users[this.props.active_ride.rider.id].accommodations.special}` : "N/A"}
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;/tbody>
+                                &lt;/Table>
+                            &lt;/Card.Body>
+                        &lt;/Card>
+                    &lt;/Col>
+                    &lt;Col>
+                        &lt;Card>
+                            &lt;Card.Header>
+                                Pickup to Dropoff
+                            &lt;/Card.Header>
+                            &lt;Card.Body>
+                                &lt;Row style={{position: 'relative', width: '100%', height: '250px'}}>
+                                    &lt;MapContainer/>
+                                &lt;/Row>
+                                &lt;Row>
+                                    &lt;Col>Estimated Rider Trip Duration:&lt;/Col>
+                                    &lt;Col>
+                                        {this.props.active_ride.ride_data.time_total.rider ?
+                                            moment("2015-01-01").startOf('day')
+                                            .seconds(this.props.active_ride.ride_data.time_total.rider)
+                                            .format('H:mm:ss') : ""}
+                                    &lt;/Col>
+                                &lt;/Row>
+                                &lt;Row>
+                                    &lt;Col>Based on dropoff time, pickup time should be:&lt;/Col>
+                                    &lt;Col>
+                                        {(this.props.active_ride.locations.dropoff.time) ?
+                                            moment(this.props.active_ride.locations.dropoff.time, "HH:mm")
+                                                .subtract(this.props.active_ride.ride_data.time_total.rider, 'second')
+                                                .format('hh:mm:ss A') : ""}
+                                    &lt;/Col>
+                                &lt;/Row>
+                            &lt;/Card.Body>
+                        &lt;/Card>
+                    &lt;/Col>
+                &lt;/Row>
+                &lt;br/>
+                &lt;Row>
+                    &lt;Col>
+                        &lt;Card>
+                            &lt;Card.Header>
+                                &lt;h5>Pickup&lt;/h5>
+                            &lt;/Card.Header>
+                            &lt;Card.Body>
+                                &lt;Table borderless>
+                                    &lt;tbody>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Address:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control as="select"
+                                                          id='sched_pickup_address' onChange={(e) => this.handleCommonAddress(e, "pickup")}
+                                                          value={this.props.active_ride.ride_data.meta.pickup_CA}>
+                                                  {this.getCommonAddresses("pickup")}
+                                            &lt;/Form.Control>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>&lt;/td>
+                                        &lt;td>
+                                            &lt;Autocomplete
+                                                onLoad={this.onLoad}
+                                                onPlaceChanged  ={() => this.onPlaceChanged('pickup', 0)}
+                                            >
+                                                &lt;Form.Control type="text" placeholder="Pickup Location"
+                                                              disabled = {this.props.active_ride.ride_data.meta.pickup_CA !== "other"}
+                                                              id='sched_pickup_address' onChange={this.handleChange}
+                                                              value={this.props.active_ride.locations.pickup.address}/>
+                                            &lt;/Autocomplete>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Time:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control type="time" id='sched_pickup_time'
+                                                          onChange={(e) => this.handleChange(e)}
+                                                          value={this.props.active_ride.locations.pickup.time}/>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Special Instructions:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control type="text" placeholder="Pickup Instructions"
+                                                          id='sched_pickup_special' onChange={this.handleChange}
+                                                          value={this.props.active_ride.locations.pickup.special}/>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;/tbody>
+                                &lt;/Table>
+                            &lt;/Card.Body>
+                        &lt;/Card>
+                    &lt;/Col>
+                    &lt;Col>
+                        &lt;Card>
+                            &lt;Card.Header>
+                                &lt;h5>Dropoff&lt;/h5>
+                            &lt;/Card.Header>
+                            &lt;Card.Body>
+                                &lt;Table borderless>
+                                &lt;tbody>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Address:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control as="select"
+                                                          id='sched_dropoff_address'
+                                                          onChange={(e) => this.handleCommonAddress(e, "dropoff")}
+                                                          value={this.props.active_ride.ride_data.meta.dropbox_CA}>
+                                                {this.getCommonAddresses("dropoff")}
+                                            &lt;/Form.Control>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>&lt;/td>
+                                        &lt;td>
+                                            &lt;Autocomplete
+                                                onLoad={this.onLoad}
+                                                onPlaceChanged={() => this.onPlaceChanged('dropoff', 1)}
+                                            >
+                                                &lt;Form.Control type="text" placeholder="Dropoff Location"
+                                                              id='sched_dropoff_address' onChange={this.handleChange}
+                                                              disabled = {this.props.active_ride.ride_data.meta.dropoff_CA !== "other"}
+                                                              value={this.props.active_ride.locations.dropoff.address}/>
+                                            &lt;/Autocomplete>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Time:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control type="time" id='sched_dropoff_time'
+                                                          onChange={(e) => this.handleChange(e)}
+                                                          value={this.props.active_ride.locations.dropoff.time}/>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;td>
+                                            &lt;Form.Label>Special Instructions:&lt;/Form.Label>
+                                        &lt;/td>
+                                        &lt;td>
+                                            &lt;Form.Control type="text" placeholder="Dropoff Instructions"
+                                                          id='sched_dropoff_special' onChange={this.handleChange}
+                                                          value={this.props.active_ride.locations.dropoff.special}/>
+                                        &lt;/td>
+                                    &lt;/tr>
+                                &lt;/tbody>
+                                &lt;/Table>
+                            &lt;/Card.Body>
+                        &lt;/Card>
+                    &lt;/Col>
+                &lt;/Row>
+                &lt;br/>
+            &lt;/Container>
+        );
+    }
+}
+/**
+ * Pulls active_ride and users from state
+ *
+ */
+const mapStateToProps = state => ({
+    active_ride: state.active_ride,
+    users: state.users
+});
+/**
+ * Sets up functions to send scheduler information to the reducer
+ *
+ */
+const mapDispatchToProps = dispatch => ({
+    updateScheduler: (type, field, value) => dispatch({
+        type: "scheduler",
+        payload: {
+            type: type,
+            field: field,
+            value: value
+        }
+    }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RideInformation);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

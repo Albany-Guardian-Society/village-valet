@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/Login.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/Login.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom';
+import axios from "axios";
+
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+
+import Image from "react-bootstrap/Image";
+import logo from "../assets/VillageValetLogo.jpg"
+
+import "../App.css";
+import cookie from 'react-cookies'
+
+
+import {API_ROOT} from "../modules/api"
+
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+// withRouter, firestore, bcrypt relate to the specific function of this page
+
+// The seconf section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+// Finally, the last three imports are for the logo and custom css
+
+/** @class Login authenticates the login for the operator, without this the app cannot be used*/
+class Login extends Component {
+    // The construction will be pretty constant.  The "props" are variables passed down from
+    // the components parent (through an HTML attribute)
+    // The state is basically the member variables of a component.
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: "",
+            password: "",
+			showPassword: false,
+            errorMessage: ""
+        };
+        // You basically just need to do this if you want access to state in a functiton
+        // other than render
+		this.handleChange = this.handleChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentWillUnmount = this.componentWillUnmount.bind(this);
+    }
+
+    // This is a lifecycle state function of react.  It is called every time a component loads.
+    // There are a couple of these methods, but DidMount is the most useful imo.
+    componentDidMount() {
+        //When the enter key is pressed while on the login page, process the login
+        document.addEventListener('keyup', this.key_function);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.key_function);
+    }
+
+    //This was done to remove the bug that hitting enter caused the page to crash because "login_button" was not rendered
+    key_function = (k) => {
+        if (k.keyCode === 13) {
+            k.preventDefault();
+            document.getElementById("login_button").click();
+        }
+    }
+
+    // I like to use a single handler for each "thing" I want a component to do.
+    // This function handles when a user changes the text fields on the page.  It saves
+    // information to the state.  I usually use this function to save information to the
+    // store (reducer) but the login is a niche case.
+    handleChange(event) {
+		if (event.target.id === "username") {
+			this.setState({username: event.target.value})
+		} else if (event.target.id === "password") {
+			this.setState({password: event.target.value})
+		}
+	}
+
+    // This function handles the login and is called when the login button is pressed.
+    // It just does some firebase calls checking against the operators table.
+    // The two important React things are the "this.props.updateAuth" and "this.setState"
+    // The first as discussed above saves things only to this component. (Updating the state
+    // triggers a "re-render", so by changing the text of errorMessage I can make it appear
+    // on the page without any code besides assigning a variable.)
+    // The this.props.updateAuth is a dispatch function (defined at the bottom of the file)
+    // It passes a message to the reducer stack to be "reduced" into the store.
+    handleLogin() {
+        axios.post(API_ROOT + "/admin/login", {
+            username: this.state.username.toLowerCase(),
+            password: this.state.password
+        }).then((response) => {
+                cookie.save('token', response.headers.token, {path: '/', maxAge: 3600});
+                const user = {...response.data};
+                this.props.updateAuth(user);
+                this.props.history.push('/Dashboard');
+                window.location.reload();
+            }
+        ).catch(error => {
+            this.setState({errorMessage: "Login Failed: " + error.response.data.error})
+        })
+    }
+
+    // render() is the bread and butter of react.  JSX (a mix of JS and HTML) is used to
+    // create the actual layout of the page.  This can basically be thought of as writing
+    // HTML and then using { } whenever you want to include code.  One example is in the second
+    // &lt;Row> which includes a ternery that causes a conditional render of the &lt;Alert> which also
+    // uses {this.state.errorMessage} to display the errorMessage as the elemets innerHTML
+    // The second example is the some of the attributes like sm={2} or onClick={this.handleLogin}
+    // In these cases the value of the attribue is being supplied as "code" instead of text
+    render() {
+        return (
+            &lt;Container className="Login">
+            &lt;br/>
+            &lt;Row>
+                &lt;Col>
+                    &lt;Image src={logo} className="Login-Logo"/>
+                &lt;/Col>
+            &lt;/Row>
+            &lt;br/>
+            &lt;Row>
+                &lt;Col>
+                {this.state.errorMessage ?
+                    &lt;Alert variant="danger">
+                        {this.state.errorMessage}
+                    &lt;/Alert>
+                : null}
+                &lt;/Col>
+            &lt;/Row>
+            &lt;Row>
+                &lt;Col>
+                &lt;Card className="Login-Box">
+                    &lt;Form>
+                        &lt;Form.Group as={Row}>
+                            &lt;Form.Label column sm={2}>Username:&lt;/Form.Label>
+                            &lt;Col>
+                                &lt;Form.Control id="username" placeholder="Username" onChange={this.handleChange}/>
+                            &lt;/Col>
+                        &lt;/Form.Group>
+                        &lt;Form.Group as={Row}>
+                            &lt;Form.Label column sm={2}>Password:&lt;/Form.Label>
+                            &lt;Col>
+                                &lt;Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChange}/>
+                            &lt;/Col>
+                        &lt;/Form.Group>
+                        &lt;Button id="login_button" variant="primary" onClick={this.handleLogin}>
+                            Login
+                        &lt;/Button>
+                    &lt;/Form>
+                &lt;/Card>
+                &lt;/Col>
+            &lt;/Row>
+            &lt;/Container>
+        );
+    }
+}
+
+// mapStateToProps and mapDispatchToProps are part of the Redux implementation.
+// mapStateToProps allows you to read variables from the store
+const mapStateToProps = state => ({
+    authenticated: state.authenticated
+});
+
+//mapDispatchToProps allows you to define function that pass information to the reducer
+const mapDispatchToProps = dispatch => ({
+    updateAuth: (user) => dispatch({
+        type: "authenticate",
+        payload: user
+    }),
+});
+
+//This is the export it is REQUIRED unless a compenet will never have a parent or need to be imported
+// Most components will not need the withRouter(), it exists here because of the forced page routing
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

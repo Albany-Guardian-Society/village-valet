@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/profiles/registration/GeneralInformation.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/profiles/registration/GeneralInformation.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+
+import "./registration.css"
+
+/**
+ * General Information
+ * @class GeneralInformation
+ */
+class GeneralInformation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+		this.handleChange = this.handleChange.bind(this);
+    }
+
+    /**
+     * Makes user's village id the operator's village id by default
+     */
+    componentDidMount() {
+        if (!this.props.village_id) {
+            this.props.updateRegistration("personal_info", "primary_village_id", this.props.operator_village);
+        }
+    }
+
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
+	handleChange(event) {
+        switch (event.target.id) {
+            case "reg_language":
+                //Language is a multiselect and needs to be handled differently
+                this.props.updateRegistration("personal_info", event.target.id.replace('reg_', ''), Array.from(event.target.selectedOptions).map((o) => {
+                    return o.value
+                }));
+                break;
+            case "reg_primary_village_id":
+                this.props.updateRegistration("personal_info", event.target.id.replace('reg_', ''), event.target.value)
+                break;
+            default:
+                this.props.updateRegistration("personal_info", event.target.id.replace('reg_', ''), event.target.value);
+                break;
+        }
+	}
+
+	/**
+     * Generates list of villages
+     */
+    villageOptions() {
+        let options = [];
+        let villages = Object.keys(this.props.villages);
+        options = villages.map((v) => {
+            return(
+                &lt;option key={this.props.villages[v].id} value={this.props.villages[v].id} label={this.props.villages[v].village_name}/>
+            )
+        })
+        return options;
+    }
+
+    /**
+     * Displays the general information
+     *
+     * @returns {HTMLDocument}
+     */
+    render() {
+        return (
+            &lt;div>
+                {!this.props.partial ? &lt;React.Fragment>
+                    &lt;Card>
+                        &lt;Card.Body>
+                            &lt;Row className="reg_row">
+                                &lt;Form.Label column sm={4}  lg={2}>Account Type:&lt;/Form.Label>
+                                &lt;Col>&lt;Form.Control as="select" id="reg_user_type" onChange={this.handleChange} value={this.props.user_type}>
+                                    &lt;option value="" label=""/>
+                                    &lt;option value="rider" label="Rider"/>
+                                    &lt;option value="driver" label="Driver"/>
+                                &lt;/Form.Control>&lt;/Col>
+                            &lt;/Row>
+                            &lt;Row className="reg_row">
+                                &lt;Form.Label column sm={4} lg={2}>Village Membership:&lt;/Form.Label>
+                                &lt;Col>&lt;Form.Control as="select" id="reg_primary_village_id" onChange={this.handleChange}
+                                                   value={this.props.village_id}>
+                                    {this.villageOptions()}
+                                &lt;/Form.Control>&lt;/Col>
+                            &lt;/Row>
+                        &lt;/Card.Body>
+                    &lt;/Card>
+                    &lt;br/>
+                &lt;/React.Fragment>
+                :
+                null}
+                &lt;Card>
+                    &lt;Card.Header>
+                        &lt;h5 style={{float:"left"}}>General Information&lt;/h5>
+                    &lt;/Card.Header>
+                    &lt;Card.Body>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>First Name:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control id="reg_first_name" placeholder="--First Name--" onChange={this.handleChange} value={this.props.personal_info.first_name}/>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Last Name:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control id="reg_last_name" placeholder="--Last Name--" onChange={this.handleChange} value={this.props.personal_info.last_name}/>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Communication Preference:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control as="select" id="reg_preferred_communication" onChange={this.handleChange} value={this.props.personal_info.preferred_communication}>
+                                &lt;option value="" label=""/>
+                                &lt;option value="email" label="Email"/>
+                                &lt;option value="mobile" label="Mobile Phone"/>
+                                &lt;option value="home" label="Home Phone"/>
+                            &lt;/Form.Control>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Email:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control id="reg_email" placeholder="--Email Address--" onChange={this.handleChange} value={this.props.personal_info.email}/>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Mobile Phone:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control id="reg_phone_mobile" placeholder="--Mobile Phone--" onChange={this.handleChange} value={this.props.personal_info.phone_mobile}/>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Home Phone:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control id="reg_phone_home" placeholder="--Home Phone--" onChange={this.handleChange} value={this.props.personal_info.phone_home}/>&lt;/Col>
+                        &lt;/Row>
+                        &lt;Row className="reg_row">
+                            &lt;Form.Label column sm={4}  lg={2}>Preferred Language:&lt;/Form.Label>
+                            &lt;Col>&lt;Form.Control multiple={true} as="select" id="reg_language" onChange={this.handleChange} value={this.props.personal_info.language}>
+                                {/*https://names.mongabay.com/languages/counties/Albany_County_NY.html*/}
+                                &lt;option value="english" label="English"/>
+                                &lt;option value="spanish" label="Spanish"/>
+                                &lt;option value="french" label="French"/>
+                                &lt;option value="italian" label="Italian"/>
+                                &lt;option value="chinese" label="Chinese"/>
+                                &lt;option value="korean" label="Korean"/>
+                                &lt;option value="arabic" label="Arabic"/>
+                            &lt;/Form.Control>&lt;/Col>
+                        &lt;/Row>
+                    &lt;/Card.Body>
+                &lt;/Card>
+            &lt;/div>
+        );
+    }
+}
+
+/**
+ * Pulls information from state's active ride
+ */
+const mapStateToProps = state => ({
+    personal_info: state.active_profile.personal_info,
+    user_type: state.active_profile.user_type,
+    village_id: state.active_profile.primary_village_id,
+    user_villages: state.active_profile.villages,
+    villages: state.villages,
+    operator_village: state.operator.village_id
+});
+
+/**
+ * Sets up function to send general information to reducer
+ */
+const mapDispatchToProps = dispatch => ({
+    updateRegistration: (type, id, value) => dispatch({
+        type: "registration",
+        payload: {
+            type: type,
+            id: id,
+            value: value
+        }
+    }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralInformation);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

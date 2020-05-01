@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: ProfileTable</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: ProfileTable</h1>
+
+
+    <section>
+
+        <header>
+
+            <h2><span class="attribs"><span class="type-signature"></span></span>ProfileTable<span
+                    class="signature">()</span><span class="type-signature"></span></h2>
+
+
+        </header>
+
+        <article>
+            <div class="container-overview">
+
+
+                <h4 class="name" id="ProfileTable"><span class="type-signature"></span>new ProfileTable<span
+                        class="signature">()</span><span class="type-signature"></span></h4>
+
+
+                <div class="description">
+                    Profile Table
+                </div>
+
+
+                <h5 class="subsection-title">Properties:</h5>
+
+
+                <table class="props">
+                    <thead>
+                    <tr>
+
+                        <th>Name</th>
+
+
+                        <th>Type</th>
+
+
+                        <th class="last">Description</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                    <tr>
+
+                        <td class="name"><code>selcted_row</code></td>
+
+
+                        <td class="type">
+
+
+                            <span class="param-type">string</span>
+
+
+                        </td>
+
+
+                        <td class="description last">which row in the table has been selected (darkly highlighted on
+                            screen)
+                        </td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+
+
+                <dl class="details">
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                                <a href="src_components_profiles_ProfileTable.js.html#line9">line 9</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+                </dl>
+
+
+            </div>
+
+
+            <h3 class="subsection-title">Methods</h3>
+
+
+            <h4 class="name" id="generateTableData"><span class="type-signature"></span>generateTableData<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;Array.&lt;HTMLTableDataCellElement>>}</span>
+            </h4>
+
+
+            <div class="description">
+                Generates Profile Table Body
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line82">line 82</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                Array of rows, each row having array of user information
+            </div>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Array.&lt;Array.&lt;HTMLTableDataCellElement>></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id="generateTableHeaders"><span class="type-signature"></span>generateTableHeaders<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;HTMLTableHeaderCellElement>}</span>
+            </h4>
+
+
+            <div class="description">
+                Generates Profile Table Headers
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line56">line 56</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                Header names
+            </div>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Array.&lt;HTMLTableHeaderCellElement></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id="handleSelect"><span class="type-signature"></span>handleSelect<span class="signature">(event)</span><span
+                    class="type-signature"></span></h4>
+
+
+            <div class="description">
+                Handles when row is selected
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>event</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Object</span>
+
+
+                    </td>
+
+
+                    <td class="description last">profile of row selected</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line30">line 30</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h4 class="name" id="render"><span class="type-signature"></span>render<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {HTMLDocument}</span></h4>
+
+
+            <div class="description">
+                Displays the profile table
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line245">line 245</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">HTMLDocument</span>
+
+
+                </dd>
+            </dl>
+
+
+        </article>
+
+    </section>
+
+
+    <section>
+
+        <header>
+
+            <h2><span class="attribs"><span class="type-signature"></span></span>ProfileTable<span
+                    class="signature">()</span><span class="type-signature"></span></h2>
+
+
+        </header>
+
+        <article>
+            <div class="container-overview">
+
+
+                <h4 class="name" id="ProfileTable"><span class="type-signature"></span>new ProfileTable<span
+                        class="signature">()</span><span class="type-signature"></span></h4>
+
+
+                <div class="description">
+                    Profile Table
+                </div>
+
+
+                <h5 class="subsection-title">Properties:</h5>
+
+
+                <table class="props">
+                    <thead>
+                    <tr>
+
+                        <th>Name</th>
+
+
+                        <th>Type</th>
+
+
+                        <th class="last">Description</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                    <tr>
+
+                        <td class="name"><code>error_message</code></td>
+
+
+                        <td class="type">
+
+
+                            <span class="param-type">string</span>
+
+
+                        </td>
+
+
+                        <td class="description last">what displays in red box on top of screen if not validated
+                            correctly
+                        </td>
+                    </tr>
+
+
+                    <tr>
+
+                        <td class="name"><code>page</code></td>
+
+
+                        <td class="type">
+
+
+                            <span class="param-type">int</span>
+
+
+                        </td>
+
+
+                        <td class="description last">current page in registration process</td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+
+
+                <dl class="details">
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="src_components_profiles_Register.js.html">src/components/profiles/Register.js</a>,
+                                <a href="src_components_profiles_Register.js.html#line30">line 30</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+                </dl>
+
+
+            </div>
+
+
+            <h3 class="subsection-title">Methods</h3>
+
+
+            <h4 class="name" id="generateTableData"><span class="type-signature"></span>generateTableData<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;Array.&lt;HTMLTableDataCellElement>>}</span>
+            </h4>
+
+
+            <div class="description">
+                Generates Profile Table Body
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line82">line 82</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                Array of rows, each row having array of user information
+            </div>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Array.&lt;Array.&lt;HTMLTableDataCellElement>></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id="generateTableHeaders"><span class="type-signature"></span>generateTableHeaders<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;HTMLTableHeaderCellElement>}</span>
+            </h4>
+
+
+            <div class="description">
+                Generates Profile Table Headers
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line56">line 56</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                Header names
+            </div>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Array.&lt;HTMLTableHeaderCellElement></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id="handleSelect"><span class="type-signature"></span>handleSelect<span class="signature">(event)</span><span
+                    class="type-signature"></span></h4>
+
+
+            <div class="description">
+                Handles when row is selected
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>event</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Object</span>
+
+
+                    </td>
+
+
+                    <td class="description last">profile of row selected</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line30">line 30</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h4 class="name" id="render"><span class="type-signature"></span>render<span
+                    class="signature">()</span><span class="type-signature"> &rarr; {HTMLDocument}</span></h4>
+
+
+            <div class="description">
+                Displays the profile table
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="src_components_profiles_ProfileTable.js.html">src/components/profiles/ProfileTable.js</a>,
+                            <a href="src_components_profiles_ProfileTable.js.html#line245">line 245</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">HTMLDocument</span>
+
+
+                </dd>
+            </dl>
+
+
+        </article>
+
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

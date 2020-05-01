@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/firebase/operators.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/firebase/operators.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {firestore} = require("../../server");
+
+/**
+ * @module Operators
+ */
+
+/**
+ * Returns all operators in the database
+ * @returns {Promise&lt;Object[]>}
+ */
+exports.getOperators = async () => {
+    const querySnapshot = await firestore.collection('operators').get();
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        delete data['password'];
+        return {...data, id: doc.id}
+    });
+};
+
+/**
+ * Returns a specific operator by id in the database, without password
+ * @param {string} operator_id - Document id of the operator
+ * @returns {Promise&lt;{}>}
+ */
+exports.getOperatorById = async (operator_id) => {
+    const doc = await firestore.collection('operators').doc(operator_id).get();
+    if (!doc) {
+        return {}
+    }
+    const data = doc.data();
+    delete data['password'];
+    return {...data, id: doc.id}
+};
+
+/**
+ * Returns a specific operator by id in the database, with password
+ * @param {string} operator_id - Document id of the operator
+ * @returns {Promise&lt;{}>}
+ */
+exports.getOperatorByIdFull = async (operator_id) => {
+    const doc = await firestore.collection('operators').doc(operator_id).get();
+    if (!doc) {
+        return {}
+    }
+    const data = doc.data();
+    return {...data, id: doc.id}
+};
+
+/**
+ * Returns a specific operator by username in the database, with password
+ * @param operator_username - Username of the operator
+ * @returns {Promise&lt;Object[]>}
+ */
+exports.getOperatorByUsername = async (operator_username) => {
+    const querySnapshot = await firestore.collection('operators').where('username', '==', operator_username).get();
+    return querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    })
+};
+
+/**
+ * Returns all admins in the database. Currently not in use
+ * @returns {Promise&lt;Object[]>}
+ */
+exports.getAdmins = async () => {
+    const querySnapshot = await firestore.collection('operators')
+        .where('village_id', '==', 'admin').get();
+    return querySnapshot.docs.map(doc => {
+        return {...doc.data(), id: doc.id}
+    })
+};
+
+/**
+ * Adds user to the database. Returns the doc id if successful, returns false if not
+ * @param {Object} operator - Operator object
+ * @returns {Promise&lt;string | boolean>}
+ */
+exports.addOperator = async (operator) => {
+    return firestore.collection('operators').add(operator)
+        .then((doc) => {
+            return doc.id
+        })
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
+};
+
+/**
+ * Removes operator from database based on document id
+ * @param operator_id - Document Id of the operator
+ * @returns {Promise&lt;boolean>}
+ */
+exports.removeOperator = async (operator_id) => {
+    return firestore.collection('operators').doc(operator_id).delete()
+        .then(() => {
+            return true
+        })
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
+};
+
+/**
+ * Updates operator in the database
+ * @param {Object} operator - Operator Object
+ * @returns {Promise&lt;boolean>}
+ */
+exports.updateOperator = async (operator) => {
+    return firestore.collection('operators').doc(operator.id).update(operator)
+        .then(() => {
+            return true
+        })
+        .catch((e) => {
+            console.log(e);
+            return false
+        })
+};
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

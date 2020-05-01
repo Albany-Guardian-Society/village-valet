@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/google-maps/MapContainer.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/google-maps/MapContainer.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {DirectionsRenderer, DirectionsService, GoogleMap} from '@react-google-maps/api';
+import * as moment from 'moment';
+import {connect} from "react-redux";
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+
+
+/**
+ * @class MapContainer
+ *
+ */
+class MapContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            directions_cache: new Map()
+        };
+        this.locations = {};
+        this.timePast = false;
+        this.timeNow = null;
+        this.directionsCallback = this.directionsCallback.bind(this)
+
+    }
+
+    /**
+     * Checks to see if map should be updated
+     *@param {Object} nextProps
+     * @params {object} nextState
+     * @param {object} nextContext
+     *
+     */
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (((nextProps.ride.locations['pickup'].geolocation !== "" &amp;&amp; nextProps.ride.locations['dropoff'].geolocation !== "") &amp;&amp;
+            (this.props.ride.locations['pickup'].geolocation.lat !== nextProps.ride.locations['pickup'].geolocation.lat ||
+                this.props.ride.locations['dropoff'].geolocation.lat !== nextProps.ride.locations['dropoff'].geolocation.lat)) ||
+            (nextState.response != null &amp;&amp; this.state.response !== nextState.response)
+        ) {
+            return true
+        }
+        return this.props.ride.driver.id !== nextProps.ride.driver.id;
+
+    }
+    /**
+     * Converts meters to miles
+     *@param {number} meters
+     * @return {number} miles
+     * @example
+     *Used in another function
+     * this.convertMetersToMiles(response.routes[0].legs[0].distance.value)
+     */
+    convertMetersToMiles(meters) {
+        return Math.round((meters * 0.00062137 + Number.EPSILON) * 100) / 100
+    }
+    /**
+     * Stores information about the route into the store
+     *@param {object} response
+     * @example
+     *Used in render
+     * this.storeRouteInfo(response)
+     */
+    storeRouteInfo(response) {
+        if (this.props.ride.ride_data.associated_ride &amp;&amp; this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
+            this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[0].distance.value);
+            this.props.ride.ride_data.time_total.rider = response.routes[0].legs[0].duration.value
+        } else {
+            this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[1].distance.value);
+            this.props.ride.ride_data.time_total.rider = response.routes[0].legs[1].duration.value
+        }
+        if (this.props.ride.driver.id) {
+            this.props.ride.ride_data.mileage.driver = this.convertMetersToMiles(response.routes[0].legs[0].distance.value) + this.convertMetersToMiles(response.routes[0].legs[1].distance.value);
+            this.props.ride.ride_data.time_total.driver = response.routes[0].legs[0].duration.value + response.routes[0].legs[1].duration.value;
+        }
+        this.props.updateActiveRide(this.props.ride)
+    }
+    /**
+     * Used in the scheduler to format ride time and date
+     *
+     * @example
+     *  {this.checkTimeInPast()}
+     */
+    checkTimeInPast() {
+        this.timeNow = moment();
+        if (this.props.ride.ride_data.date === '' || this.props.ride.locations.pickup.time === '') {
+            this.timePast = true;
+            return
+        }
+        this.timePast = moment(this.props.ride.ride_data.date + ' ' + this.props.ride.locations.pickup.time, "YYYY-MM-DD HH:mm").isBefore(this.timeNow);
+    }
+    /**
+     * Stores entered directions and updates the state of the component
+     *@param {object} response
+     */
+    directionsCallback(response) {
+        if (response !== null) {
+            if (response.status === 'OK') {
+                let key;
+                if ('waypoint' in Object.keys(this.locations)) {
+                    key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
+                } else {
+                    key = this.locations['origin'].lat + this.locations['destination'].lat
+                }
+                this.storeRouteInfo(response)
+                this.state.directions_cache.set(key, response);
+                this.setState({directions_cache: this.state.directions_cache, response: response});
+            } else {
+                console.log('response: ', response)
+            }
+        }
+    }
+    /**
+     * Used for formatting the different locations the ride will have
+     *
+     */
+    locationOrder() {
+        if (!this.props.ride.locations.dropoff.geolocation || !this.props.ride.locations.pickup) return;
+        if (this.props.ride.driver.id) {
+            if (this.props.ride.ride_data.associated_ride &amp;&amp; this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
+                this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
+                this.locations['destination'] = this.props.ride.driver.geolocation;
+                this.locations['waypoint'] = [{
+                    location: this.props.ride.locations.dropoff.geolocation,
+                    stopover: true
+                }];
+            } else {
+                this.locations['origin'] = this.props.ride.driver.geolocation;
+                this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
+                this.locations['waypoint'] = [{
+                    location: this.props.ride.locations.pickup.geolocation,
+                    stopover: true
+                }];
+            }
+        } else {
+            this.locations['origin'] = this.props.ride.locations.pickup.geolocation;
+            this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
+        }
+    }
+    /**
+     * Creates directions in google maps using latitude and longitude
+     *@return {HTMLElement} DirectionsService
+     */
+    makeDirections() {
+        if (!this.locations['origin'] || !this.locations['destination']) {
+            return;
+        }
+        let key;
+        if ('waypoint' in Object.keys(this.locations)) {
+            key = this.locations['origin'].lat + this.locations['destination'].lat + this.locations['waypoint'].location.lat
+        } else {
+            key = this.locations['origin'].lat + this.locations['destination'].lat
+        }
+        if (this.state.directions_cache.has(key)) {
+            this.setState({
+                directions_cache: this.state.directions_cache,
+                response: this.state.directions_cache.get(key)
+            });
+            return;
+        }
+        return &lt;DirectionsService
+            options={{
+                origin: this.locations['origin'],
+                destination: this.locations['destination'],
+                travelMode: 'DRIVING',
+                waypoints: this.locations['waypoint'],
+                optimizeWaypoints: false,
+                drivingOptions: {
+                    departureTime: this.timePast ? this.timeNow.toDate() : moment(this.props.ride.ride_data.date + ' ' + this.props.ride.locations.pickup.time, "YYYY-MM-DD HH:mm").toDate(),
+                    trafficModel: 'pessimistic'
+                }
+            }}
+            callback={resp => {
+                this.directionsCallback(resp);
+            }}
+            onLoad={directionsService => {
+                console.log('DirectionsService onLoad directionsService: ', directionsService)
+            }}
+            onUnmount={directionsService => {
+                console.log('DirectionsService onUnmount directionsService: ', directionsService)
+            }}
+        />;
+    }
+    /**
+     * Displays directions
+     *@return {HTMLElement} DirectionsRenderer
+     */
+    renderDirections() {
+        if (!this.state.response) return;
+        return &lt;DirectionsRenderer
+            options={{
+                directions: this.state.response
+            }}
+            onLoad={directionsRenderer => {
+                console.log('DirectionsRenderer onLoad directionsRenderer: ', directionsRenderer)
+            }}
+            onUnmount={directionsRenderer => {
+                console.log('DirectionsRenderer onUnmount directionsRenderer: ', directionsRenderer)
+            }}
+        />
+    }
+    /**
+     * Displays the map container
+     *
+     * @returns {HTMLDocument}
+     *
+     */
+    render() {
+        return (
+            &lt;GoogleMap
+                id='map'
+                zoom={8}
+                mapContainerStyle={{width: "100%", height: "100%"}}
+                center={{lat: 42.6526, lng: -73.7562}}
+            >
+                {this.locationOrder()}
+                {this.checkTimeInPast()}
+                {this.locations &amp;&amp; this.makeDirections()}
+                {this.renderDirections()}
+            &lt;/GoogleMap>
+        )
+    }
+}
+
+/**
+ * Pulls rides from state
+ *
+ */
+const mapStateToProps = state => ({
+    ride: state.active_ride,
+});
+
+/**
+ * Updates active rides
+ *
+ */
+const mapDispatchToProps = dispatch => ({
+    updateActiveRide: (ride) => dispatch({
+        type: "update_active_ride",
+        payload: ride,
+    }),
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapContainer);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

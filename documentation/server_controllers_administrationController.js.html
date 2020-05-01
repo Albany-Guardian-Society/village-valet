@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/controllers/administrationController.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/controllers/administrationController.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {getRide, updateRide} = require("../firebase/rides");
+const {getOperatorById, updateOperator} = require("../firebase/operators")
+require("dotenv").config()
+
+const GoogleMapsToken = process.env.GOOGLE_MAPS_TOKEN
+
+/**
+ * @module AdministrationController
+ */
+/**
+ * A function which will confirm the driver will be picking up the rider. Sends a 200 if completed
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ */
+exports.confirmRide = async (req, res) => {
+    const {scope, id, ride_id, village_id} = res.locals.jwtPayload;
+    if (scope !== 'confirm_ride') {
+        res.status('401').send({error: 'Invalid Scope'});
+        return
+    }
+    if (!scope || !id || !ride_id || !village_id) {
+        res.status('400').send({error: 'Invalid Token Body'});
+        return
+    }
+    const oldRide = await getRide(village_id, ride_id);
+    if (!oldRide) {
+        res.status(404).send({error: 'Ride not found'});
+        return
+    }
+    if (oldRide.driver.id !== id) {
+        res.status(409).send({error: 'Driver is longer associated with this ride'});
+        return
+    }
+    oldRide.ride_data.driver_confirmed = true;
+    if (await updateRide(oldRide)) {
+        res.status(200).send({success: true});
+        return
+    }
+    res.status(500).send({error: 'Could not edit ride in database'})
+};
+
+/**
+ * A function which will confirm the admin on initial setup.  Redirects to login page if complete
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.confirmAdmin = async (req, res) => {
+    const {scope, id, village_id} = res.locals.jwtPayload;
+    if (scope !== 'confirm_admin') {
+        res.status('401').send({error: 'Invalid Scope'});
+        return
+    }
+    if (!scope || !id || !village_id) {
+        res.status('400').send({error: 'Invalid Token Body'});
+        return
+    }
+    if (village_id !== 'admin') {
+        res.status('400').send({error: 'Not an admin token'});
+        return
+    }
+    const admin = await getOperatorById(id);
+    if (!admin) {
+        res.status(404).send({error: 'Operator not found'});
+        return
+    }
+    admin.confirmed = true
+    if (await updateOperator(admin)) {
+        res.status(200).redirect(`https://${req.headers.host}/login`);
+        return
+    }
+    res.status(500).send({error: 'Could not edit operator in database'})
+};
+
+
+/**
+ * A function which sends the client a Google Maps API Token
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.googleMapsToken = async (req, res) => {
+    res.status(200).send({token: GoogleMapsToken})
+}
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

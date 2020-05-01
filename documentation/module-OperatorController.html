@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: OperatorController</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: OperatorController</h1>
+
+
+    <section>
+
+        <header>
+
+
+        </header>
+
+        <article>
+            <div class="container-overview">
+
+
+            </div>
+
+
+            <h3 class="subsection-title">Members</h3>
+
+
+            <h4 class="name" id="~JWT_SECRET"><span class="type-signature">(inner, constant) </span>JWT_SECRET<span
+                    class="type-signature"></span></h4>
+
+
+            <div class="description">
+                Secret Key to Sign Tokens
+            </div>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line22">line 22</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h3 class="subsection-title">Methods</h3>
+
+
+            <h4 class="name" id=".changePassword"><span class="type-signature">(static) </span>changePassword<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Receives a password change request, and if valid, changes the password of the operator. Currently not in
+                use
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line65">line 65</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".deleteOperator"><span class="type-signature">(static) </span>deleteOperator<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Takes request and removes operator frome the database
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line210">line 210</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".getAllOperators"><span class="type-signature">(static) </span>getAllOperators<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Return all operator information (except password) to admin
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line101">line 101</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".getOneOperator"><span class="type-signature">(static) </span>getOneOperator<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Returns a single operator to either to the admin or that specific operator
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line117">line 117</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".getSelfOperator"><span class="type-signature">(static) </span>getSelfOperator<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Return the requester's own information
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line134">line 134</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".login"><span class="type-signature">(static) </span>login<span class="signature">(req, res)</span><span
+                    class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+
+
+            <div class="description">
+                Receives a login request and if valid sends the client a valid token
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line32">line 32</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".postOperator"><span class="type-signature">(static) </span>postOperator<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Takes request and adds operator to the database
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line151">line 151</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id=".putOperator"><span class="type-signature">(static) </span>putOperator<span
+                    class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+            </h4>
+
+
+            <div class="description">
+                Takes request and edits operator in the database
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>req</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Request</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Request that was received from the client</td>
+                </tr>
+
+
+                <tr>
+
+                    <td class="name"><code>res</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">Response</span>
+
+
+                    </td>
+
+
+                    <td class="description last">Response that will be sent to the client</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="server_controllers_operatorController.js.html">server/controllers/operatorController.js</a>,
+                            <a href="server_controllers_operatorController.js.html#line177">line 177</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <h5>Returns:</h5>
+
+
+            <dl>
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;void></span>
+
+
+                </dd>
+            </dl>
+
+
+        </article>
+
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

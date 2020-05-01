@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/profiles/profile/Profile.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/profiles/profile/Profile.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
+
+import GI from "../registration/GeneralInformation.js";
+import EC from "../registration/EmergencyInformation.js";
+import CI from "../registration/CaregiveInformation.js"
+import CA from "../registration/CommonAddresses.js";
+import SA from "../registration/SpecialAccommodations.js";
+
+import VE from "../registration/VehicleInformation.js";
+import VS from "../registration/VolunteerSchedule.js";
+import VT from "../registration/DriverSpecific.js";
+
+const DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/**
+ * Profile
+ * @class Profile
+ * @property {string} sub_page - page to view within the profile
+ * @property {string} mode - read-only vs read/write (edit)
+ */
+class Profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            sub_page: "general_info",
+            mode: "view"
+        };
+        this.changePage = this.changePage.bind(this);
+        this.genSubPage = this.genSubPage.bind(this);
+    }
+
+    /**
+     * Sets the sub_page object variable
+     *
+     * @param {string} page - what search_term is set to
+     */
+    changePage(page) {
+        this.setState({sub_page: page});
+    }
+
+    /**
+     * Displays the sub_page depending on mode
+     *
+     * @returns {HTMLDocument}
+     */
+    genSubPage() {
+        switch (this.state.sub_page) {
+            case "general_info":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>&lt;tbody>
+                            &lt;tr>
+                                &lt;th>First Name&lt;/th>&lt;td>{this.props.user.personal_info.first_name}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Last Name&lt;/th>
+                                &lt;td>{this.props.user.personal_info.last_name}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Email&lt;/th>
+                                &lt;td>{this.props.user.personal_info.email}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Home Phone&lt;/th>
+                                &lt;td>{this.props.user.personal_info.phone_home}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Mobile Phone&lt;/th>
+                                &lt;td>{this.props.user.personal_info.phone_mobile}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Preferred Communication&lt;/th>
+                                &lt;td>{this.props.user.personal_info.preferred_communication.replace(/^\w/, c => c.toUpperCase())}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Language&lt;/th>
+                                &lt;td>{this.props.user.personal_info.language.map((l) => {
+                                    return l.replace(/^\w/, c => c.toUpperCase()) + ", "
+                                })}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Status&lt;/th>
+                                &lt;td>{this.props.user.status.replace(/^\w/, c => c.toUpperCase())}&lt;/td>
+                            &lt;/tr>
+                        &lt;/tbody>
+                        &lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                    return &lt;GI partial={true}/>;
+                }
+                break;
+            case "caregiver":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>
+                            {this.props.user.caregiver ?
+                                &lt;tbody>
+                                &lt;tr>
+                                    &lt;th>First Name&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.first_name}&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                    &lt;th>Last Name&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.last_name}&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                    &lt;th>Email&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.email}&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                    &lt;th>Home Phone&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.phone_home}&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                    &lt;th>Mobile Phone&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.phone_mobile}&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                    &lt;th>Preferred Communication&lt;/th>
+                                    &lt;td>{this.props.user.caregiver.preferred_communication.replace(/^\w/, c => c.toUpperCase())}&lt;/td>
+                                &lt;/tr>
+                                &lt;/tbody>
+                                : null}
+                        &lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                    return &lt;CI/>;
+                }
+                break;
+            case "emergency":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>
+                            &lt;tbody>
+                            &lt;tr>
+                                &lt;th>First Name&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.first_name}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Last Name&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.last_name}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Email&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.email}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Home Phone&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.phone_home}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Mobile Phone&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.phone_mobile}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Preferred Communcation&lt;/th>
+                                &lt;td>{this.props.user.emergency_contact.preferred_communication.replace(/^\w/, c => c.toUpperCase())}&lt;/td>
+                            &lt;/tr>
+                            &lt;/tbody>
+                        &lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                    return &lt;EC/>;
+                }
+                break;
+            case "vehicles":
+                if (this.state.mode === "view") {
+                    return (
+                        this.props.user.vehicles.map((car) => {
+                            return (
+                                &lt;React.Fragment key={car.lp+car.make_model}>&lt;Table striped bordered>&lt;tbody>
+                                    &lt;tr>
+                                        &lt;th colSpan="2">{car.year + " " + car.make_model}&lt;/th>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Make/Model&lt;/th>
+                                        &lt;td>{car.make_model}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Year&lt;/th>
+                                        &lt;td>{car.year}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Color&lt;/th>
+                                        &lt;td>{car.color}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>License Plate&lt;/th>
+                                        &lt;td>{car.lp}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Number of Seats&lt;/th>
+                                        &lt;td>{car.seats}&lt;/td>
+                                    &lt;/tr>
+
+                                    &lt;tr>
+                                        &lt;th colSpan="2">Insurance&lt;/th>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Provder&lt;/th>
+                                        &lt;td>{car.insur_provider}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Policy Number&lt;/th>
+                                        &lt;td>{car.insur_policy}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Coverage Amount&lt;/th>
+                                        &lt;td>{car.insur_coverage}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Insurance Expiration&lt;/th>
+                                        &lt;td>{car.insur_exp}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Last Inspection&lt;/th>
+                                        &lt;td>{car.insp_date}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Additional Notes&lt;/th>
+                                        &lt;td>{car.special}&lt;/td>
+                                    &lt;/tr>
+                                &lt;/tbody>&lt;/Table>
+                                &lt;hr/>&lt;/React.Fragment>
+                            );
+                        })
+                    );
+                } else if (this.state.mode === "edit") {
+                   return &lt;VE/>;
+                }
+                break;
+            case "schedule":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>
+                        &lt;thead>
+                            &lt;tr>
+                                &lt;th>Day&lt;/th>
+                                &lt;th>Start Time&lt;/th>
+                                &lt;th>End Time&lt;/th>
+                            &lt;/tr>
+                        &lt;/thead>
+                        &lt;tbody>
+                        {this.props.user.volunteer_hours.map((item) => {
+                            return (
+                                &lt;tr key={item.day+item.start+item.end}>
+                                    &lt;td>{DOW[item.day]}&lt;/td>
+                                    &lt;td>{item.start}&lt;/td>
+                                    &lt;td>{item.end}&lt;/td>
+                                &lt;/tr>
+                            );
+                        })}
+                        &lt;/tbody>&lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                   return &lt;VS/>;
+                }
+                break;
+            case "vetting":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>&lt;tbody>
+                            &lt;tr>
+                                &lt;th>Vetting Date&lt;/th>&lt;td>{this.props.user.driver_specific.vetting}&lt;/td>
+                            &lt;/tr>
+                        &lt;/tbody>&lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                   return &lt;VT/>;
+                }
+                break;
+            case "addresses":
+                if (this.state.mode === "view") {
+                    return (
+                        this.props.user.addresses.map((loc) => {
+                            return (
+                                &lt;React.Fragment key={loc.name+loc.line_1}>&lt;Table striped bordered>&lt;tbody>
+                                    &lt;tr>
+                                        &lt;th colSpan="2">{loc.name}&lt;/th>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Line 1&lt;/th>
+                                        &lt;td>{loc.line_1}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Line 2&lt;/th>
+                                        &lt;td>{loc.line_2}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>City&lt;/th>
+                                        &lt;td>{loc.city}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>State&lt;/th>
+                                        &lt;td>{loc.state}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Zip&lt;/th>
+                                        &lt;td>{loc.zip}&lt;/td>
+                                    &lt;/tr>
+                                    &lt;tr>
+                                        &lt;th>Special Instructions&lt;/th>
+                                        &lt;td>{loc.special_instructions}&lt;/td>
+                                    &lt;/tr>
+                                &lt;/tbody>&lt;/Table>
+                                &lt;hr/>&lt;/React.Fragment>
+                            );
+                        })
+                    );
+                } else if (this.state.mode === "edit") {
+                    return (&lt;CA/>);
+                }
+                break;
+            case "special":
+                if (this.state.mode === "view") {
+                    return (
+                        &lt;Table striped bordered>&lt;tbody>
+                            &lt;tr>
+                                &lt;th>Allergies&lt;/th>&lt;td>{this.props.user.accommodations.allergies}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Mobility Aid&lt;/th>&lt;td>{this.props.user.accommodations.mobility_aid}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Smoke Free&lt;/th>&lt;td>{this.props.user.accommodations.smoke_preference.replace(/^\w/, c => c.toUpperCase())}&lt;/td>
+                            &lt;/tr>
+                            &lt;tr>
+                                &lt;th>Additional Accommodations&lt;/th>&lt;td>{this.props.user.accommodations.special}&lt;/td>
+                            &lt;/tr>
+                        &lt;/tbody>&lt;/Table>
+                    );
+                } else if (this.state.mode === "edit") {
+                   return &lt;SA/>;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Saves profile information when save is clicked in edit mode
+     */
+    handleSave() {
+        this.setState({mode: "view"});
+        //Moving firestore call to VillageReducer
+        this.props.updateUser(this.props.user.id);
+    }
+
+    /**
+     * Deactivates user when deactivate is clicked in edit mode
+     */
+    handleDeactivate() {
+        if (window.confirm("Are you sure you want to DEACTIVATE this user?")) {
+            this.props.deactivateUser();
+            let name = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            window.alert("DEACTIVATED: " + name);
+        }
+    }
+
+    /**
+     * Reactivates user when reactivate is clicked in edit mode
+     */
+    handleReactivate() {
+        if (window.confirm("Are you sure you want to ACTIVATE this user?")) {
+            this.props.activateUser();
+            let name = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            window.alert("ACTIVATED: " + name);
+        }
+    }
+
+    /**
+     * Permanently deletes user when delete is clicked in edit mode
+     */
+    handlePermaDelete() {
+        if (window.confirm("Are you sure you want to DELETE this user?")) {
+            let check_value = this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name;
+            if (window.prompt("To delete this user please enter check value: " + check_value + "\n THIS OPERATION CANNOT BE UNDONE!") === check_value) {
+                this.props.deleteUser();
+                this.props.history.push("/Profiles/");
+                window.alert("DELETED: " + check_value);
+            } else {
+                window.alert("Check value did not match, operation canceled.")
+            }
+        }
+    }
+
+    /**
+     * Displays the profile selected based on mode
+     *
+     * @returns {HTMLDocument}
+     */
+    render() {
+        return (
+            &lt;div style={{paddingLeft: "3%", paddingRight: "3%"}}>
+            &lt;Card>
+                &lt;Card.Header>
+                    &lt;h5 style={{float:"left"}}>{this.props.user.personal_info.first_name + " " + this.props.user.personal_info.last_name}&lt;/h5>
+                    &lt;div style={{float:"right"}}>
+                        {this.props.user.status === "active" ?
+                        &lt;React.Fragment>
+                            {this.state.mode === "view" ?
+                                &lt;Button variant="warning" style={{marginRight: "10px"}} onClick={() => this.setState({mode: "edit"})}>
+                                    Edit
+                                &lt;/Button>
+                            :
+                                &lt;Button variant="success" style={{marginRight: "10px"}} onClick={() => this.handleSave()}>
+                                    Save
+                                &lt;/Button>
+                            }
+                            &lt;Button variant="danger" onClick={() => this.handleDeactivate()}>
+                                Deactivate
+                            &lt;/Button>
+                        &lt;/React.Fragment>
+                        :
+                        &lt;React.Fragment>
+                            &lt;Button variant="warning" style={{marginRight: "10px"}} onClick={() => this.handleReactivate()}>
+                                Reactivate
+                            &lt;/Button>
+                            &lt;Button variant="danger" onClick={() => this.handlePermaDelete()}>
+                                Permanently Delete
+                            &lt;/Button>
+                        &lt;/React.Fragment>
+                        }
+                    &lt;/div>
+                &lt;/Card.Header>
+                &lt;Card.Body>
+                    &lt;Row>
+                    &lt;Col sm={3}>
+                        &lt;ListGroup>
+                            &lt;ListGroup.Item active={this.state.sub_page === "general_info"} onClick={() => this.changePage("general_info")}>General Information&lt;/ListGroup.Item>
+                            &lt;ListGroup.Item active={this.state.sub_page === "emergency"} onClick={() => this.changePage("emergency")}>Emergency Contact&lt;/ListGroup.Item>
+                            {this.props.user.user_type === "driver" ?
+                                &lt;>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "addresses"} onClick={() => this.changePage("addresses")}>Address&lt;/ListGroup.Item>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "vehicles"} onClick={() => this.changePage("vehicles")}>Vehicles&lt;/ListGroup.Item>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "schedule"} onClick={() => this.changePage("schedule")}>Volunteer Schedule&lt;/ListGroup.Item>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "vetting"} onClick={() => this.changePage("vetting")}>Vetting&lt;/ListGroup.Item>
+                                &lt;/>
+                            :
+                                &lt;>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "caregiver"}
+                                                    onClick={() => this.changePage("caregiver")}>Caregiver Information&lt;/ListGroup.Item>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "addresses"}
+                                                    onClick={() => this.changePage("addresses")}>Addresses&lt;/ListGroup.Item>
+                                    &lt;ListGroup.Item active={this.state.sub_page === "special"}
+                                                    onClick={() => this.changePage("special")}>Special Accommodations&lt;/ListGroup.Item>
+                                &lt;/>
+                            }
+                        &lt;/ListGroup>
+                    &lt;/Col>
+                    &lt;Col>
+                        {this.genSubPage()}
+                    &lt;/Col>
+                    &lt;/Row>
+                &lt;/Card.Body>
+            &lt;/Card>
+            &lt;/div>
+        );
+    }
+}
+
+/**
+ * Pulls user from state
+ */
+const mapStateToProps = state => ({
+    user: state.active_profile,
+});
+
+/**
+ * Sets up functions to change users in reducer
+ */
+const mapDispatchToProps = dispatch => ({
+    deactivateUser: () => dispatch({
+        type: "user_deactivate",
+        payload: null
+    }),
+    activateUser: () => dispatch({
+        type: "user_activate",
+        payload: null
+    }),
+    deleteUser: () => dispatch({
+        type: "user_perma_delete",
+        payload: null
+    }),
+    updateUser: (id) => dispatch({
+        type: "user_update",
+        payload: id
+    })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
