@@ -143,10 +143,10 @@ exports.sendConfirmationEmail = async (ride) => {
                 `<p><strong>Pickup Time:</strong> ${ride.locations.pickup.time}</p>\n` +
                 `<p><strong>Pickup Special:</strong> ${ride.locations.pickup.special}</p>\n` +
                 `<p><strong>Drop off Address:</strong> ${ride.locations.dropoff.address}</p>\n` +
-                `<p><strong>Drop off Time: ${ride.locations.dropoff.time}</strong></p>\n` +
+                `<p><strong>Drop off Time:</strong> ${ride.locations.dropoff.time}</p>\n` +
                 `<p><strong>Dropoff Special:</strong> ${ride.locations.dropoff.special}</p>\n` +
-                `<p><strong>Total Trip Duration: ${moment("2015-01-01").startOf('day')
-                    .seconds(ride.ride_data.time_total.rider).format('H:mm:ss')}}</strong></p>\n` +
+                `<p><strong>Total Trip Duration:</strong> ${moment("2015-01-01").startOf('day')
+                    .seconds(ride.ride_data.time_total.rider).format('H:mm')}</p>\n` +
                 `<p><br></p>\n` +
                 `<p>Your rider, ${rider.personal_info.first_name} ${rider.personal_info.last_name},
              may have special accommodations which can be seen here: ${rider.accommodations.special}. </p>\n`
@@ -181,10 +181,10 @@ exports.sendConfirmationEmail = async (ride) => {
                 `<p><strong>Pickup Time:</strong> ${ride.locations.pickup.time}</p>\n` +
                 `<p><strong>Pickup Special:</strong> ${ride.locations.pickup.special}</p>\n` +
                 `<p><strong>Drop off Address:</strong> ${ride.locations.dropoff.address}</p>\n` +
-                `<p><strong>Drop off Time: ${ride.locations.dropoff.time}</strong></p>\n` +
+                `<p><strong>Drop off Time:</strong> ${ride.locations.dropoff.time}</p>\n` +
                 `<p><strong>Dropoff Special:</strong> ${ride.locations.dropoff.special}</p>\n` +
-                `<p><strong>Total Trip Duration: ${moment("2015-01-01").startOf('day')
-                    .seconds(ride.ride_data.time_total.rider).format('H:mm:ss')}}</strong></p>\n` +
+                `<p><strong>Total Trip Duration:</strong> ${moment("2015-01-01").startOf('day')
+                    .seconds(ride.ride_data.time_total.rider).format('H:mm')}</p>\n` +
                 `<p><br></p>\n` +
                 `<p>Your driver, ${driver.personal_info.first_name} ${driver.personal_info.last_name}, will be driving a 
             ${ride.driver.vehicle.color} ${ride.driver.vehicle.make_model} with the license plate ${ride.driver.vehicle.lp}.
