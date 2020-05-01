@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 ENV GENERATE_SOURCEMAP false
 COPY . /usr/src/app/
 RUN npm ci
-EXPOSE 4200
+EXPOSE 3000
 RUN npm run build
 CMD npm start
