@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 
 /**
  * @class MapContainer
- * @typedef {Object} MapContainer
  *
  */
 class MapContainer extends Component {

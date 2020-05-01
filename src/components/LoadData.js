@@ -17,7 +17,6 @@ import * as jwt from "jsonwebtoken"
 
 /**
  * @class LoadData
- * @typedef {Object} LoadData
  *
  */
 class LoadData extends Component {
