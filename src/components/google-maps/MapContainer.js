@@ -27,7 +27,9 @@ class MapContainer extends Component {
     /**
      * Final step of scheduler.
      * Allows operator to look over information before submitting rider
-     *
+     *@param {Object} nextProps
+     * @params {object} nextState
+     * @param {object} nextContext
      * @example
      *
      */
@@ -45,7 +47,8 @@ class MapContainer extends Component {
     }
     /**
      * Converts meters to miles
-     *
+     *@param {number} meters
+     * @return {number} miles
      * @example
      *Used in another function
      * this.convertMetersToMiles(response.routes[0].legs[0].distance.value)
@@ -55,7 +58,7 @@ class MapContainer extends Component {
     }
     /**
      * Stores information about the route into the store
-     *
+     *@param {object} response
      * @example
      *Used in render
      * this.storeRouteInfo(response)
@@ -90,7 +93,7 @@ class MapContainer extends Component {
     }
     /**
      * Stores entered directions and updates the state of the component
-     *
+     *@param {object} response
      */
     directionsCallback(response) {
         if (response !== null) {
@@ -138,7 +141,7 @@ class MapContainer extends Component {
     }
     /**
      * Creates directions in google maps using latitude and longitude
-     *
+     *@return {HTMLElement} DirectionsService
      */
     makeDirections() {
         if (!this.locations['origin'].lat || !this.locations['destination'].lat) {
@@ -182,7 +185,7 @@ class MapContainer extends Component {
     }
     /**
      * Displays directions
-     *
+     *@return {HTMLElement} DirectionsRenderer
      */
     renderDirections() {
         if (!this.state.response) return;
