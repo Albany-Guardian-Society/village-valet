@@ -8,8 +8,18 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import {API_ROOT} from "../modules/api";
 import cookie from 'react-cookies'
 import * as jwt from "jsonwebtoken"
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
 
 
+/**
+ * @class LoadData
+ * @typedef {Object} LoadData
+ *
+ */
 class LoadData extends Component {
     constructor(props) {
         super(props);
@@ -18,6 +28,12 @@ class LoadData extends Component {
             message: "",
         };
     }
+    /**
+     * Loads all information into to the site on login
+     *
+     * @example
+     *
+     */
 
 	componentDidMount() {
         //Load the villages
@@ -102,7 +118,12 @@ class LoadData extends Component {
             })
         })
     }
-
+    /**
+     * Displays loading bar on page
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <div style={{padding: 100}}>
@@ -118,11 +139,17 @@ class LoadData extends Component {
         );
     }
 }
-
+/**
+ * Pulls village id from state
+ *
+ */
 const mapStateToProps = state => ({
     village_id: state.operator.village_id
 });
-
+/**
+ * sends login information to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     updateAuth: (user) => dispatch({
         type: "authenticate",
