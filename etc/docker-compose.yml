@@ -20,13 +20,13 @@ services:
       - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
 
   village-valet:
-    build: https://github.com/ItsAMeNick/village-valet.git
+    build: https://github.com/Albany-Guardian-Society/village-valet.git
     container_name: village-valet
     restart: always
     labels:
-      - traefik.http.routers.village-valet_dev.rule=Host(`example.com`,`www.example.com`)
-      - traefik.http.routers.village-valet_dev.tls=true
-      - traefik.http.routers.village-valet_dev.tls.certresolver=tls
+      - traefik.http.routers.village-valet.rule=Host(`example.com`,`www.example.com`)
+      - traefik.http.routers.village-valet.tls=true
+      - traefik.http.routers.village-valet.tls.certresolver=tls
     volumes:
       - /drone/village-valet/serviceAccountKey.json:/usr/src/app/keys/serviceAccountKey.json
     env_file: village-valet/.env
