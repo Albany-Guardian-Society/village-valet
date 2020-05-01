@@ -2,8 +2,15 @@ import React, {Component} from 'react';
 import {DirectionsRenderer, DirectionsService, GoogleMap} from '@react-google-maps/api';
 import * as moment from 'moment';
 import {connect} from "react-redux";
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
 
 
+
+/**
+ * @class MapContainer
+ *
+ */
 class MapContainer extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +24,15 @@ class MapContainer extends Component {
 
     }
 
+    /**
+     * Checks to see if map should be updated
+     *@param {Object} nextProps
+     * @params {object} nextState
+     * @param {object} nextContext
+     * @example
+     *
+     */
+
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (((nextProps.ride.locations['pickup'].geolocation !== "" && nextProps.ride.locations['dropoff'].geolocation !== "") &&
             (this.props.ride.locations['pickup'].geolocation.lat !== nextProps.ride.locations['pickup'].geolocation.lat ||
@@ -28,11 +44,24 @@ class MapContainer extends Component {
         return this.props.ride.driver.id !== nextProps.ride.driver.id;
 
     }
-
+    /**
+     * Converts meters to miles
+     *@param {number} meters
+     * @return {number} miles
+     * @example
+     *Used in another function
+     * this.convertMetersToMiles(response.routes[0].legs[0].distance.value)
+     */
     convertMetersToMiles(meters) {
         return Math.round((meters * 0.00062137 + Number.EPSILON) * 100) / 100
     }
-
+    /**
+     * Stores information about the route into the store
+     *@param {object} response
+     * @example
+     *Used in render
+     * this.storeRouteInfo(response)
+     */
     storeRouteInfo(response) {
         if (this.props.ride.ride_data.associated_ride && this.props.ride.ride_data.associated_ride.driver_id === this.props.ride.driver.id) {
             this.props.ride.ride_data.mileage.rider = this.convertMetersToMiles(response.routes[0].legs[0].distance.value);
@@ -47,7 +76,12 @@ class MapContainer extends Component {
         }
         this.props.updateActiveRide(this.props.ride)
     }
-
+    /**
+     * Used in the scheduler to format ride time and date
+     *
+     * @example
+     *  {this.checkTimeInPast()}
+     */
     checkTimeInPast() {
         this.timeNow = moment();
         if (this.props.ride.ride_data.date === '' || this.props.ride.locations.pickup.time === '') {
@@ -56,7 +90,10 @@ class MapContainer extends Component {
         }
         this.timePast = moment(this.props.ride.ride_data.date + ' ' + this.props.ride.locations.pickup.time, "YYYY-MM-DD HH:mm").isBefore(this.timeNow);
     }
-
+    /**
+     * Stores entered directions and updates the state of the component
+     *@param {object} response
+     */
     directionsCallback(response) {
         if (response !== null) {
             if (response.status === 'OK') {
@@ -74,7 +111,10 @@ class MapContainer extends Component {
             }
         }
     }
-
+    /**
+     * Used for formatting the different locations the ride will have
+     *
+     */
     locationOrder() {
         if (!this.props.ride.locations.dropoff.geolocation || !this.props.ride.locations.pickup) return;
         if (this.props.ride.driver.id) {
@@ -98,6 +138,10 @@ class MapContainer extends Component {
             this.locations['destination'] = this.props.ride.locations.dropoff.geolocation;
         }
     }
+    /**
+     * Creates directions in google maps using latitude and longitude
+     *@return {HTMLElement} DirectionsService
+     */
     makeDirections() {
         if (!this.locations['origin'] || !this.locations['destination']) {
             return;
@@ -138,7 +182,10 @@ class MapContainer extends Component {
             }}
         />;
     }
-
+    /**
+     * Displays directions
+     *@return {HTMLElement} DirectionsRenderer
+     */
     renderDirections() {
         if (!this.state.response) return;
         return <DirectionsRenderer
@@ -153,7 +200,12 @@ class MapContainer extends Component {
             }}
         />
     }
-
+    /**
+     * Displays the map container
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <GoogleMap
@@ -171,11 +223,18 @@ class MapContainer extends Component {
     }
 }
 
-
+/**
+ * Pulls rides from state
+ *
+ */
 const mapStateToProps = state => ({
     ride: state.active_ride,
 });
 
+/**
+ * Updates active rides
+ *
+ */
 const mapDispatchToProps = dispatch => ({
     updateActiveRide: (ride) => dispatch({
         type: "update_active_ride",
