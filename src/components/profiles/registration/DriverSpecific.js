@@ -6,6 +6,10 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+/**
+ * Driver Specific Registration Information
+ * @class DriverSpecific
+ */
 class DriverSpecific extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +18,11 @@ class DriverSpecific extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when form is filled
+     *
+     * @param {Object} event - form that was filled in
+     */
     handleChange(event) {
         switch (event.target.id) {
             default:
@@ -22,6 +31,11 @@ class DriverSpecific extends Component {
         }
 	}
 
+    /**
+     * Displays the driver specific page
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -36,10 +50,16 @@ class DriverSpecific extends Component {
     }
 }
 
+/**
+ * Pulls driver specific information from state's active ride
+ */
 const mapStateToProps = state => ({
     driver_specific: state.active_profile.driver_specific
 });
 
+/**
+ * Sets up functions to send driver information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

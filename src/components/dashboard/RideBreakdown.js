@@ -5,6 +5,8 @@ import Card from "react-bootstrap/Card"
 import MapContainer from "../google-maps/MapContainer";
 import RideDetails from "./RideDetails";
 
+/** @class RideBreakdown is a container holding ride details*/
+
 class RideBreakdown extends Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,7 @@ class RideBreakdown extends Component {
                 <Card.Body>
                     <RideDetails/>
                     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                        <MapContainer ride={this.props.ride}/>
+                        <MapContainer/>
                     </div>
                 </Card.Body>
             </Card>
@@ -33,8 +35,6 @@ class RideBreakdown extends Component {
 }
 
 const mapStateToProps = state => ({
-    ride: state.ridebreakdown
-
 });
 
 const mapDispatchToProps = dispatch => ({

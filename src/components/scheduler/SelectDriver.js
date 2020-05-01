@@ -5,11 +5,22 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+
 import MapContainer from "../google-maps/MapContainer";
-
 import ProfileTable from "../profiles/ProfileTable";
+import moment from "moment";
 
+// Above are all the imports for this file.
+// Every file will need React, Component, connect
+
+// The second section of imports are React Bootstrap components.  These allow for easy styling
+// and layout without much need for custom CSS or HTML.
+
+/**
+ * @class SelectDriver
+ * @typedef {Object} SelectDriver
+ *
+ */
 class SelectDriver extends Component {
     constructor(props) {
         super(props);
@@ -19,45 +30,80 @@ class SelectDriver extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Fills field for vehicle selection
+     *
+     * @example
+     *     onChange={this.handleChange}
+     */
     handleChange(event){
-        this.setState({search_term: event.target.value})
+        if (event.target.id === "search") this.setState({search_term: event.target.value});
+        else if (event.target.id === "sched_vehicle") this.props.updateScheduler("vehicle", this.props.active_ride.driver.id, event.target.value);
     };
 
+    /**
+     * Loads vehicle options for driver
+     *
+     * @example
+     *     {this.vehicleOptions()}
+     */
+    vehicleOptions() {
+        let options = [<option value={""} label={""} key={"null"}/>];
+        if (!this.props.active_ride.driver.id) return options;
+        if (this.props.active_ride.driver.vehicle.lp) options = [];
+        options.push(...this.props.users[this.props.active_ride.driver.id].vehicles.map((car)=>{
+            return <option key={car.lp} value={car.lp} label={car.year + " " + car.make_model}/>
+        }));
+        return options;
+    };
+
+    /**
+     * Displays the confirmation page.
+     *
+     * @returns {HTMLDocument}
+     *
+     */
     render() {
         return (
             <Container className="SelectDriver" style={{minWidth: "100%"}}>
                 <h1>Select Driver</h1>
                 <Form>
                     <Form.Group as={Row}>
-                        <Form.Label>Driver</Form.Label>
-                        <Form.Check></Form.Check>
                         <Col>
-                            <Form.Control type="search" id="search" placeholder="Search" onChange={this.handleChange}/>
+                            <Form.Control type="search" id="search" placeholder="Search Drivers" onChange={this.handleChange}/>
                         </Col>
-                        <Button id="search_button" onClick={this.handleSearch}>
-                            Search
-                        </Button>
                     </Form.Group>
                 </Form>
-                <ProfileTable search_term={this.state.search_term} mode={ "driver"}/>
+                <hr/>
+                <Row style={{height: "30%"}}>
+                    <ProfileTable search_term={this.state.search_term} mode={"driver"}/>
+                </Row>
+                <hr/>
                 <Row>
                     <Col>
-                        <Row>
-                            Driver
-                        </Row>
-                        <Row>
-                            Return Driver
-                        </Row>
-                    </Col>
-                    <Col>
-                        <MapContainer>Trip Summary</MapContainer>
+                        <div style={{position: 'relative', width: '100%', height: '250px'}}>
+                            <MapContainer/>
+                        </div>
                     </Col>
                     <Col>
                         <Row>
-                            Trip Duration
+                            <Col>Driver:</Col>
+                            <Col>{`${this.props.active_ride.driver.first_name}`} {`${this.props.active_ride.driver.last_name}`}</Col>
                         </Row>
                         <Row>
-                            Expected Traffic
+                            <Col>Select Vehicle:</Col>
+                            <Col>
+                                <Form.Control as="select" id="sched_vehicle" onChange={this.handleChange}
+                                              value={this.props.active_ride.driver.vehicle.lp ? this.props.active_ride.driver.vehicle.lp : ""}>
+                                    {this.vehicleOptions()}
+                                </Form.Control>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>Trip Duration:</Col>
+                            <Col>{this.props.active_ride.ride_data.time_total.driver ? moment("2015-01-01").startOf('day')
+                                .seconds(this.props.active_ride.ride_data.time_total.driver)
+                                .format('H [hours] mm [minutes]') : ""}</Col>
                         </Row>
                     </Col>
                 </Row>
@@ -66,10 +112,28 @@ class SelectDriver extends Component {
     }
 }
 
+/**
+ * Pulls active_ride and users from state
+ *
+ */
 const mapStateToProps = state => ({
+    active_ride: state.active_ride,
+    users: state.users
 });
 
+/**
+ * Sets up functions to send scheduler information to the reducer
+ *
+ */
 const mapDispatchToProps = dispatch => ({
+    updateScheduler: (type, field, value) => dispatch({
+        type: "scheduler",
+        payload: {
+            type: type,
+            field: field,
+            value: value
+        }
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectDriver);

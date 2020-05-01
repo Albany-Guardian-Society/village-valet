@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/metrics/reports/MileageReport.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/metrics/reports/MileageReport.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import { connect } from "react-redux";
+
+import ReactPDF from '@react-pdf/renderer';
+import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
+import { Text, View, StyleSheet } from '@react-pdf/renderer';
+
+const TODAY = new Date();
+
+// Create styles
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'col',
+    backgroundColor: '#E4E4E4',
+    width: 3600,
+    margin: '20px',
+    '@media orientation: landscape': {
+      width: 3600,
+    },
+  },
+  table: { display: "table", width: "90%", borderStyle: "solid", borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
+  tableRow: { margin: "auto", flexDirection: "row" },
+  tableCol: { width: "20%", borderStyle: "solid", borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableCell: { margin: "auto", marginTop: 5, fontSize: 10 },
+});
+
+/** @class MileageReportPDF produces a PDF report of millage statistics for rides - may need some development*/
+
+//PDF
+class MileageReportPDF extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          total_miles: 0,
+          total_time: 0
+        };
+        this.generateRows = this.generateRows.bind(this);
+    }
+
+    generateRows() {
+      let ride_ids = Object.keys(this.props.rides);
+      let counter = 0;
+      let time = 0;
+      let miles = 0;
+      let rows = ride_ids.filter((ride) => {
+          return this.props.rides[ride].driver.id === this.props.driver.id;
+      }).map((item) => {
+          counter += 1;
+          time += this.props.rides[item].ride_data.time_total.driver;
+          miles += this.props.rides[item].ride_data.mileage.driver;
+          return (
+            &lt;View style={styles.tableRow}>
+              &lt;View style={styles.tableCol}>
+                  &lt;Text style={styles.tableCell}>{counter}&lt;/Text>
+              &lt;/View>
+              &lt;View style={styles.tableCol}>
+                  &lt;Text style={styles.tableCell}>{this.props.rides[item].id}&lt;/Text>
+              &lt;/View>
+              &lt;View style={styles.tableCol}>
+                  &lt;Text style={styles.tableCell}>{this.props.rides[item].ride_data.date}&lt;/Text>
+              &lt;/View>
+              &lt;View style={styles.tableCol}>
+                  &lt;Text style={styles.tableCell}>{(this.props.rides[item].ride_data.time_total.driver/60).toFixed(2)}&lt;/Text>
+              &lt;/View>
+              &lt;View style={styles.tableCol}>
+                  &lt;Text style={styles.tableCell}>{(this.props.rides[item].ride_data.mileage.driver).toFixed(2)}&lt;/Text>
+              &lt;/View>
+          &lt;/View>
+        )});
+        if (this.state.total_time !== time || this.state.total_miles !== miles) {
+          this.setState({total_time: time, total_miles: miles});
+        }
+        return rows;
+    }
+
+    generateRideTable() {
+        return (
+          &lt;>
+          &lt;View style={styles.table}>
+            &lt;View style={styles.tableRow}>
+                &lt;View style={styles.tableCol}>
+                    &lt;Text style={styles.tableCell}>Item Number&lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.tableCol}>
+                    &lt;Text style={styles.tableCell}>Ride ID&lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.tableCol}>
+                    &lt;Text style={styles.tableCell}>Trip Date&lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.tableCol}>
+                    &lt;Text style={styles.tableCell}>Trip Time&lt;/Text>
+                &lt;/View>
+                &lt;View style={styles.tableCol}>
+                    &lt;Text style={styles.tableCell}>Trip Mileage&lt;/Text>
+                &lt;/View>
+            &lt;/View>
+            &lt;View>
+              {this.generateRows()}
+            &lt;/View>
+            &lt;/View>
+            &lt;View>&lt;Text>{" "}&lt;/Text>&lt;/View>
+            &lt;View>
+                &lt;Text>{"Totals:"}&lt;/Text>
+            &lt;/View>
+            &lt;View style={styles.table}>
+              &lt;View style={styles.tableRow}>
+                  &lt;View style={styles.tableCol}>
+                      &lt;Text style={styles.tableCell}>&lt;/Text>
+                  &lt;/View>
+                  &lt;View style={styles.tableCol}>
+                      &lt;Text style={styles.tableCell}>&lt;/Text>
+                  &lt;/View>
+                  &lt;View style={styles.tableCol}>
+                      &lt;Text style={styles.tableCell}>&lt;/Text>
+                  &lt;/View>
+                  &lt;View style={styles.tableCol}>
+                      &lt;Text style={styles.tableCell}>{(this.state.total_time/60).toFixed(2)}&lt;/Text>
+                  &lt;/View>
+                  &lt;View style={styles.tableCol}>
+                      &lt;Text style={styles.tableCell}>{(this.state.total_miles).toFixed(2)}&lt;/Text>
+                  &lt;/View>
+              &lt;/View>
+          &lt;/View>
+        &lt;/>);
+    }
+
+    render() {
+        return (
+            &lt;Document
+                title={this.props.driver.personal_info.last_name + " Mileage Report: "+TODAY.getDate()+(TODAY.getMonth()+1)+TODAY.getFullYear()}
+                author="AGS Village Valet"
+                creator="AGS Village Valet"
+            >
+                &lt;Page size="A4" style={styles.page}>
+                    &lt;View>
+                        &lt;Text>AGS Village Valet - Mileage Report&lt;/Text>
+                    &lt;/View>
+                    &lt;View>&lt;Text>{" "}&lt;/Text>&lt;/View>
+                    &lt;View>
+                        &lt;Text>{this.props.driver.personal_info.last_name + ", " + this.props.driver.personal_info.first_name}&lt;/Text>
+                        &lt;Text>{this.props.driver.addresses[0].line_1}&lt;/Text>
+                        &lt;Text>{this.props.driver.addresses[0].city + ", " + this.props.driver.addresses[0].state + " " + this.props.driver.addresses[0].zip}&lt;/Text>
+                        &lt;Text>{(this.props.driver.personal_info.email ? this.props.driver.personal_info.email + " " : "") + (this.props.driver.personal_info.phone_home ? this.props.driver.personal_info.phone_home + " " : "") + (this.props.driver.personal_info.phone_mobile ? this.props.driver.personal_info.phone_mobile + " " : "")}&lt;/Text>
+                    &lt;/View>
+                    &lt;View>&lt;Text>{" "}&lt;/Text>&lt;/View>
+                    &lt;View>
+                        &lt;Text>{"From: [DATE]"}&lt;/Text>
+                        &lt;Text>{"To: [DATE]"}&lt;/Text>
+                    &lt;/View>
+                    &lt;View>&lt;Text>{" "}&lt;/Text>&lt;/View>
+                    {this.generateRideTable()}
+                &lt;/Page>
+            &lt;/Document>
+        )
+    }
+}
+
+//This is the "rendered component"
+class MileageReportButton extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event){
+    };
+
+    render() {
+        return (
+          &lt;div>
+            &lt;PDFDownloadLink document={&lt;MileageReportPDF driver={this.props.driver} rides={this.props.rides}/>} fileName={this.props.driver.personal_info.last_name + "-M"+TODAY.getDate()+(TODAY.getMonth()+1)+TODAY.getFullYear()}>
+              {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+            &lt;/PDFDownloadLink>
+          &lt;/div>
+        )
+    }
+}
+
+const mapStateToProps = state => ({
+    driver: state.active_profile,
+    rides: state.rides
+});
+
+const mapDispatchToProps = dispatch => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MileageReportButton);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

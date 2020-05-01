@@ -1,47 +1,49 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import * as moment from 'moment';
 
 import Card from "react-bootstrap/Card";
 
 import RidesTable from "./RidesTable";
 
-const TEST = [
-    {
-        id:1234,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        locations: {
-            origin: {lat: 42.6526, lng: -73.7562},
-            pickup: {lat: 42.7301, lng: -73.7012},
-            destination: {lat: 42.7284, lng: -73.6918}
-        }
-    },
-    {
-        id:5555,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        locations: {origin: {lat: 41.6526, lng: -73.7562}, destination: {lat: 41.7284, lng: -73.6918}}
-    }
-];
+/** @class ActiveRides produces current rides */
 
 class ActiveRides extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
-		this.handleChange = this.handleChange.bind(this);
+        this.state = {};
+        this.handleChange = this.handleChange.bind(this);
     }
 
+    handleChange(event) {
+    }
 
-	handleChange(event) {
-	}
+    /**
+     * Filters for active rides pick up date and time drop of date and time
+     * @returns ride object
+     */
+
+    filterRides() {
+        if (this.props.rides) {
+            return Object.values(this.props.rides).filter(ride => ride.ride_data.date ===
+                moment().format('YYYY-MM-DD')
+                && moment(ride.locations.pickup.time, 'HH:mm').isSameOrBefore({
+                    h: moment().hours(),
+                    m: moment().minutes()
+                }) &&
+                moment(ride.locations.dropoff.time, "HH:mm").isSameOrAfter({
+                    h: moment().hours(),
+                    m: moment().minutes()
+                }))
+        }
+    }
 
     render() {
         return (
             <Card>
                 <Card.Header>Active Rides</Card.Header>
-                <Card.Body style={{alignItems:'center'}}>
-                    <RidesTable rides = {TEST}/>
+                <Card.Body style={{alignItems: 'center'}}>
+                    <RidesTable rides={this.filterRides()}/>
                 </Card.Body>
             </Card>
         );
@@ -49,13 +51,10 @@ class ActiveRides extends Component {
 }
 
 const mapStateToProps = state => ({
+    rides: state.rides
 });
 
 const mapDispatchToProps = dispatch => ({
-    changeRideBreakdown: (ride) => dispatch({
-        type: "ridebreakdown",
-        payload: ride,
-    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActiveRides);

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/admin/Operator.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/admin/Operator.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import Card from "react-bootstrap/Card";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+
+/** @class Operator The operator component. */
+class Operator extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            edit: false,
+            mode: "",
+            password: "",
+        };
+		this.handleChange = this.handleChange.bind(this);
+    }
+
+    /**
+    * componentDidUpdate fires when the component updates
+    *
+    * @param {props} prevProps the props of the state before it updated
+    */
+    componentDidUpdate(prevProps) {
+        //Make sure that if they change the selected the mode is changed
+        if (this.props.show_operator !== prevProps.show_operator) {
+            this.setState({edit: false});
+        }
+    }
+
+    /**
+    * handleChange handles any changes being made by this component
+    *
+    * @param {Event} event contains the information about what fired the function
+    */
+	handleChange(event) {
+        let field = event.target.id.split("|")[1];
+        if (field === "password") {
+            //This should probably be validated!
+            this.setState({password: event.target.value});
+            //Encrypt and pass the password
+            this.props.changeOperator("edit", "password", event.target.value);
+        } else {
+            this.props.changeOperator("edit", field, event.target.value);
+        }
+	}
+
+    /**
+    * villageOptions created the dropdown lists for village options
+    *
+    * @return {HTML} List of valid village options
+    */
+    villageOptions() {
+        let options = [];
+        let villages = Object.values(this.props.villages);
+        options = villages.map((v) => {
+            return(
+                &lt;option key={v.id} value={v.id} label={v.village_name}/>
+            )
+        })
+        return [&lt;option key={""} value={""} label={""}/>, ...options];
+    }
+
+    /** saveOperator sends operator information to the reducer to be saved*/
+    saveOperator() {
+        if (this.validate()) {
+            if (this.state.mode === "new") {
+                this.props.changeOperator("add")
+            } else {
+                this.props.changeOperator("save")
+            }
+            this.setState({edit: false, password: "", mode: ""});
+        }
+    }
+
+    /** deleteOperator sends operator information to the reducer to be deleted*/
+    deleteOperator() {
+        if (window.confirm("Are you sure you want to delete this operator?\nTHIS CANNOT BE UNDONE!")) {
+            this.props.changeOperator("delete");
+            this.setState({edit: false, password: "", mode: ""});
+        }
+    }
+
+    /** validate validated the infomration in the operator*/
+    validate() {
+        if (this.props.active_operator.first_name === "") {
+            window.alert("INVALID NAME: Please provide a first name.");
+            return false;
+        } else if (this.props.active_operator.last_name === "") {
+            window.alert("INVALID NAME: Please provide a last name.");
+            return false;
+        } else if (this.props.active_operator.email === "") {
+            window.alert("INVALID EMAIL: Please provide an email.");
+            return false;
+        } else if (this.props.active_operator.phone === "") {
+            window.alert("INVALID PHONE NUMBER: Please provide a phone number.");
+            return false;
+        } else if (this.props.active_operator.username === "") {
+            window.alert("INVALID USERNAME: Please provide a username.");
+            return false;
+        } else if (this.state.mode === "new" &amp;&amp; this.props.active_operator.password === "") {
+            window.alert("INVALID PASSWORD: Please provide a password.");
+            return false;
+        } else if (this.props.active_operator.village_id === "") {
+            window.alert("INVALID VILLAGE: Please select a Village for the Operator.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    * render renders the HTML
+    *
+    * @return {HTML} The HTML visable element
+    */
+    render() {
+        return (
+        &lt;>
+            &lt;Card.Header>
+                &lt;h5 style={{float:"left"}}>{this.props.active_operator.first_name ? this.props.active_operator.first_name +" "+ this.props.active_operator.last_name : "Select an Operator"}&lt;/h5>
+                {!this.state.edit ?
+                    &lt;>{this.props.show_village &amp;&amp; this.props.show_operator ?
+                        &lt;Button variant="dark" style={{float: "right"}} onClick={() => this.setState({edit: true, mode: "edit"})}>
+                            Edit Operator
+                        &lt;/Button>
+                    :
+                        &lt;Button variant="dark" style={{float: "right"}} onClick={() => this.setState({edit: true, mode: "new"})}>
+                            Add Operator
+                        &lt;/Button>
+                    }&lt;/>
+                :
+                    &lt;>
+                        &lt;Button variant="success" style={{float: "right", marginLeft: "10px"}} onClick={() => this.saveOperator()}>
+                            Save
+                        &lt;/Button>
+                        {this.state.mode !== "new" ?
+                        &lt;Button variant="danger" style={{float: "right"}} onClick={() => this.deleteOperator()}>
+                            Delete
+                        &lt;/Button>
+                        : null }
+                    &lt;/>
+                }
+            &lt;/Card.Header>
+            &lt;Card.Body>
+                {!this.state.edit ?
+                    &lt;Table>&lt;tbody>
+                        &lt;tr>
+                            &lt;td>Username: &lt;/td>
+                            &lt;td>{this.props.active_operator.username}&lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Email: &lt;/td>
+                            &lt;td>{this.props.active_operator.email}&lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Phone Number: &lt;/td>
+                            &lt;td>{this.props.active_operator.phone}&lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Village: &lt;/td>
+                            &lt;td>{this.props.active_village ? this.props.active_village.village_name : ""}&lt;/td>
+                        &lt;/tr>
+                    &lt;/tbody>&lt;/Table>
+                :
+                    &lt;Table>&lt;tbody>
+                        &lt;tr>
+                            &lt;td>First Name: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control id="admin|first_name" onChange={this.handleChange} value={this.props.active_operator.first_name}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Last Name: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control id="admin|last_name" onChange={this.handleChange} value={this.props.active_operator.last_name}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Email: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control id="admin|email" onChange={this.handleChange} value={this.props.active_operator.email}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Phone Number: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control id="admin|phone" onChange={this.handleChange} value={this.props.active_operator.phone}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Username: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control id="admin|username" onChange={this.handleChange} value={this.props.active_operator.username}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Password: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control placeholder={this.state.mode === "new" ? "" : "Leave blank to keep existing password."} id="admin|password" onChange={this.handleChange} value={this.state.password}/>
+                            &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                            &lt;td>Village: &lt;/td>
+                            &lt;td>
+                                &lt;Form.Control as="select" id="admin|village_id" onChange={this.handleChange} value={this.props.active_operator.village_id}>
+                                    {this.villageOptions()}
+                                &lt;/Form.Control>
+                            &lt;/td>
+                        &lt;/tr>
+                    &lt;/tbody>&lt;/Table>
+                }
+            &lt;/Card.Body>
+        &lt;/>
+        );
+    }
+}
+
+const mapStateToProps = state => ({
+    active_operator: state.active_operator,
+    active_village: state.active_village,
+    villages: state.villages
+});
+
+const mapDispatchToProps = dispatch => ({
+    changeOperator: (mode, field=null, value=null) => dispatch({
+        type: "change_admin",
+        payload: {
+            type: "operator",
+            mode: mode,
+            field: field,
+            value: value
+        }
+    }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Operator);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

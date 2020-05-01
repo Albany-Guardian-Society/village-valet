@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/controllers/usersController.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: server/controllers/usersController.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {addUser, getUser, getUsers, removeUser, updateUser} = require("../firebase/users");
+
+/**
+ * @module UsersController
+ */
+
+/**
+ * Returns to requester all users they have access to.
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.getAllUsers = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    res.status(200).send(await getUsers(village_id));
+
+};
+
+/**
+ * Returns to requester the specific user, if they have access to it.
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.getOneUser = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const id = req.query.id;
+    if (id == null) {
+        res.status(400).send({error: 'Missing query parameter: id'});
+        return
+    }
+    res.status(200).send(await getUser(village_id, id))
+};
+
+/**
+ * Takes the request and adds the user to the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.postUser = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const user = req.body.user;
+    if (user == null) {
+        res.status(400).send({error: 'Missing from body: user'});
+        return
+    }
+    if (village_id !== user.primary_village_id &amp;&amp; village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    const id = await addUser(user);
+    if (id) {
+        res.status(201).send({success: true, id: id});
+        return
+    }
+    res.status(500).send({error: "Could not add user to database"})
+};
+
+/**
+ * Takes the request and edits the entire user in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.putUser = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const user = req.body.user;
+    if (user == null) {
+        res.status(400).send({error: 'Missing from body: user'});
+        return
+    }
+    const oldUser = await getUser(village_id, user.id);
+    if (!oldUser) {
+        res.status(404).send({error: 'User not found'});
+        return
+    }
+    if (oldUser.user_type !== user.user_type) {
+        res.status(400).send({error: 'Can not change user type of a user'});
+        return
+    }
+    if (oldUser.user_type === 'rider' &amp;&amp; user.villages.length > 1) {
+        res.status(400).send({error: 'User cannot have multiple villages if they are a rider'});
+        return
+    }
+    if (user.user_type === 'driver') {
+        if (village_id !== 'admin' &amp;&amp; village_id !== user.primary_village_id) {
+            res.status(401).send({error: 'Access forbidden'});
+            return
+        }
+    }
+    if (await updateUser(user)) {
+        res.status(200).send({success:true});
+        return
+    }
+    res.status(500).send({error:"Could not update user in database"})
+};
+
+/**
+ * Takes the request and removes the user from the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.deleteUser = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const user_id = req.body.user_id;
+    if (user_id == null) {
+        res.status(400).send({error: 'Missing from body: user_id'});
+        return
+    }
+    const oldUser = await getUser(village_id, user_id);
+    if (!oldUser) {
+        res.status(404).send({error: 'User not found'});
+        return
+    }
+    if (oldUser.villages.indexOf(village_id) === -1 &amp;&amp; village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    if (oldUser.primary_village_id === village_id || village_id === 'admin') {
+        if (await removeUser(user_id)) {
+            res.status(200).send({success: true});
+            return
+        }
+    } else if (oldUser.villages.indexOf(village_id) !== -1) {
+        oldUser.villages = oldUser.villages.filter(vId => vId !== village_id);
+        oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
+        if (await updateUser(oldUser)) {
+            res.status(200).send({success: true});
+            return
+        }
+    }
+    res.status(500).send({error: "Could not delete user from database"})
+};
+
+/**
+ * Takes the request and edits the user's status in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.patchUser_active = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const {user_id, status} = req.body;
+    if (!user_id || !status) {
+        res.status(400).send({error: 'Missing either user_id or status'});
+        return
+    }
+    const oldUser = await getUser(village_id, user_id);
+    if (!oldUser) {
+        res.status(404).send({error: 'User not found'});
+        return
+    }
+    if (oldUser.villages.indexOf(village_id) === -1 &amp;&amp; village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    oldUser.status = status
+    if (await updateUser(oldUser)) {
+        res.status(200).send({success: true});
+        return
+    }
+    res.status(500).send({error: "Could not update user in database"})
+}
+
+/**
+ * Takes the request and edits the user's vetting information in the database
+ *
+ * @param {Request} req - Request that was received from the client
+ * @param {Response} res - Response that will be sent to the client
+ * @returns {Promise&lt;void>}
+ */
+exports.patchUser_vetting = async (req, res) => {
+    const {village_id} = res.locals.jwtPayload;
+    const {user_id, vetting_info} = req.body;
+    if (user_id === null) {
+        res.status(400).send({error: 'Missing from body: user'});
+        return
+    }
+    const oldUser = await getUser(village_id, user_id);
+    if (!oldUser) {
+        res.status(404).send({error: 'User not found'});
+        return
+    }
+    if (oldUser.user_type !== 'driver') {
+        res.status(400).send({error: 'Can not change vetting info for non driver'});
+        return
+    }
+    if ((oldUser.villages.indexOf(village_id) === -1 || vetting_info.village_id !== village_id) &amp;&amp; village_id !== 'admin') {
+        res.status(401).send({error: 'Access forbidden'});
+        return
+    }
+    oldUser.vetting = oldUser.vetting.filter(v => v.village_id !== village_id);
+    oldUser.vetting.push(vetting_info);
+    if (await updateUser(oldUser)) {
+        res.status(200).send({success:true});
+        return
+    }
+    res.status(500).send({error:"Could not update user in database"})
+};
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

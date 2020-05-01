@@ -3,47 +3,39 @@ import {connect} from "react-redux";
 
 import Card from "react-bootstrap/Card"
 import RidesTable from "./RidesTable";
+import * as moment from "moment";
 
-const TEST = [
-    {
-        id:53423,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        locations: {
-            origin: {lat: 42.6526, lng: -73.7562},
-            pickup: {lat: 42.7301, lng: -73.7012},
-            destination: {lat: 42.7284, lng: -73.6918}
-        }
-    },
-    {
-        id:5523455,
-        rider:'Rider Name',
-        driver:'Driver Name',
-        locations: {
-            origin: {lat: 42.6526, lng: -73.7562},
-            pickup: {lat: 42.7301, lng: -73.7012},
-            destination: {lat: 42.7284, lng: -73.6918}
-        }
-    }
-];
+/** @class UpcomingRides shows upcoming rides*/
 
 class UpcomingRides extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
-		this.handleChange = this.handleChange.bind(this);
+        this.state = {};
+        this.handleChange = this.handleChange.bind(this);
     }
 
-	handleChange(event) {
-	}
+    handleChange(event) {
+    }
+
+    /**
+     * Filters for future rides by date
+     * @returns ride object
+     */
+
+    filterRides() {
+        if (this.props.rides) {
+            return Object.values(this.props.rides).filter(ride => ride.ride_data.date ===
+                moment().format('YYYY-MM-DD') &&
+                moment(ride.locations.pickup.time, "HH:mm").isAfter({h: moment().hours(), m: moment().minutes()}))
+        }
+    }
 
     render() {
         return (
             <Card>
                 <Card.Header>Upcoming Rides</Card.Header>
                 <Card.Body>
-                    <RidesTable rides = {TEST}/>
+                    <RidesTable rides={this.filterRides()}/>
                 </Card.Body>
             </Card>
         );
@@ -51,14 +43,10 @@ class UpcomingRides extends Component {
 }
 
 const mapStateToProps = state => ({
-    ride: state.ridebreakdown
+    rides: state.rides
 });
 
 const mapDispatchToProps = dispatch => ({
-    changeRideBreakdown: (ride) => dispatch({
-        type: "ridebreakdown",
-        payload: ride,
-    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpcomingRides);

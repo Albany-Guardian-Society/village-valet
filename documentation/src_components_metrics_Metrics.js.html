@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/metrics/Metrics.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
+    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/metrics/Metrics.js</h1>
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import { connect } from "react-redux";
+
+import Container from "react-bootstrap/Container";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
+
+import Riders from "./Riders.js";
+import Drivers from "./Drivers.js";
+import Reports from "./Reports";
+import Col from "react-bootstrap/Col";
+
+//Reports
+import MileageReport from "./reports/MileageReport.js";
+
+/** @class Metrics holds the metrics components */
+
+class Metrics extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          metric_options: "drivers",
+        };
+		this.handleChange = this.handleChange.bind(this);
+    }
+
+    /**
+     * handles the metrics tab button presses
+     * @param value: the metric/report selected
+     */
+	   handleChange(value) {
+        this.setState({metric_options:value})
+
+    }
+
+    /**
+     * changes the report to be downloaded
+     * @returns {*}: Components to the corresponding metric/report
+     */
+    pickReport() {
+      if (this.state.metric_options === "reports") {
+        if (this.props.active_profile.id) {
+          return &lt;MileageReport/>
+        } else {
+          return &lt;p>Select a Person&lt;/p>
+        }
+      }
+    }
+
+    /**
+     * changes the displayed table
+     * @returns {*}: Components to the corresponding metric/report
+     */
+	   changeTable() {
+        switch (this.state.metric_options) {
+            case "riders":
+                return (&lt;Riders/>);
+            case "drivers":
+                return (&lt;Drivers/>);
+            case "reports":
+                return (&lt;Reports/>);
+            default:
+                return(&lt;Riders/>);
+        }
+    }
+
+    /**
+     * Displays the metrics toolbar, download button, and selected metric/report
+     * @returns {*}
+     */
+    render() {
+        return (
+            &lt;Container style={{minWidth: "100%"}}>
+                &lt;ButtonToolbar
+                    className="justify-content-between"
+                    aria-label="Toolbar with Button groups">
+
+                    &lt;ToggleButtonGroup type="radio" name="options" defaultValue={1} onChange={this.handleChange} >
+                        &lt;ToggleButton id='riders' value={'riders'}>Riders&lt;/ToggleButton>
+                        &lt;ToggleButton id='drivers' value={'drivers'}>Drivers&lt;/ToggleButton>
+                        &lt;ToggleButton id='reports'  value={'reports'}>Reports&lt;/ToggleButton>
+                    &lt;/ToggleButtonGroup>
+
+                    &lt;Col sm={2}>
+                        {this.pickReport()}
+                    &lt;/Col>
+                &lt;/ButtonToolbar>
+                &lt;hr/>
+                {this.changeTable()}
+            &lt;/Container>
+        );
+    }
+}
+
+const mapStateToProps = state => ({
+  active_profile: state.active_profile
+});
+
+const mapDispatchToProps = dispatch => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Metrics);
+</code></pre>
+        </article>
+    </section>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Modules</h3>
+    <ul>
+        <li><a href="module-Administration.html">Administration</a></li>
+        <li><a href="module-AdministrationController.html">AdministrationController</a></li>
+        <li><a href="module-JWTCheckerMiddleware.html">JWTCheckerMiddleware</a></li>
+        <li><a href="module-OperatorController.html">OperatorController</a></li>
+        <li><a href="module-Operators.html">Operators</a></li>
+        <li><a href="module-Reducer.html">Reducer</a></li>
+        <li><a href="module-Rides.html">Rides</a></li>
+        <li><a href="module-RidesController.html">RidesController</a></li>
+        <li><a href="module-SendEmail.html">SendEmail</a></li>
+        <li><a href="module-Users.html">Users</a></li>
+        <li><a href="module-UsersController.html">UsersController</a></li>
+        <li><a href="module-UserTokenGenerator.html">UserTokenGenerator</a></li>
+        <li><a href="module-Villages.html">Villages</a></li>
+        <li><a href="module-VillagesController.html">VillagesController</a></li>
+    </ul>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="ActiveRides.html">ActiveRides</a></li>
+        <li><a href="Admin.html">Admin</a></li>
+        <li><a href="CaregiverInformation.html">CaregiverInformation</a></li>
+        <li><a href="CommonAddresses.html">CommonAddresses</a></li>
+        <li><a href="Drivers.html">Drivers</a></li>
+        <li><a href="DriverSpecific.html">DriverSpecific</a></li>
+        <li><a href="EditRide.html">EditRide</a></li>
+        <li><a href="EmergencyInformation.html">EmergencyInformation</a></li>
+        <li><a href="GeneralInformation.html">GeneralInformation</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Ledger.html">Ledger</a></li>
+        <li><a href="LedgerTable.html">LedgerTable</a></li>
+        <li><a href="LoadData.html">LoadData</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="MapContainer.html">MapContainer</a></li>
+        <li><a href="Metrics.html">Metrics</a></li>
+        <li><a href="MileageReportPDF.html">MileageReportPDF</a></li>
+        <li><a href="module-Reducer-VillageReducer.html">VillageReducer</a></li>
+        <li><a href="Navigation.html">Navigation</a></li>
+        <li><a href="Operator.html">Operator</a></li>
+        <li><a href="Profile.html">Profile</a></li>
+        <li><a href="Profiles.html">Profiles</a></li>
+        <li><a href="ProfileTable.html">ProfileTable</a></li>
+        <li><a href="Reports.html">Reports</a></li>
+        <li><a href="RideBreakdown.html">RideBreakdown</a></li>
+        <li><a href="RideDetails.html">RideDetails</a></li>
+        <li><a href="Riders.html">Riders</a></li>
+        <li><a href="RidesTable.html">RidesTable</a></li>
+        <li><a href="SpecialAccommodations.html">SpecialAccommodations</a></li>
+        <li><a href="UpcomingRides.html">UpcomingRides</a></li>
+        <li><a href="VehicleInformation.html">VehicleInformation</a></li>
+        <li><a href="Village.html">Village</a></li>
+        <li><a href="Villages.html">Villages</a></li>
+        <li><a href="VolunteerSchedule.html">VolunteerSchedule</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li>
+        <li><a href="global.html#mapStateToProps">mapStateToProps</a></li>
+    </ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri May 01 2020 13:51:26
+    GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

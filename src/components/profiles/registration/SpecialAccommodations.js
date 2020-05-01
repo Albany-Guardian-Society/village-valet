@@ -6,7 +6,11 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 
-class Error extends Component {
+/**
+ * Special Accommodations
+ * @class SpecialAccommodations
+ */
+class SpecialAccommodations extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,6 +18,11 @@ class Error extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
     handleChange(event) {
         switch (event.target.id) {
             default:
@@ -22,6 +31,11 @@ class Error extends Component {
         }
 	}
 
+    /**
+     * Displays the special accommodation information
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -58,10 +72,16 @@ class Error extends Component {
     }
 }
 
+/**
+ * Pulls accommodation information from state's active ride
+ */
 const mapStateToProps = state => ({
     accommodations: state.active_profile.accommodations,
 });
 
+/**
+ * Sets up function to send special accommodation information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",
@@ -73,4 +93,4 @@ const mapDispatchToProps = dispatch => ({
     }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Error);
+export default connect(mapStateToProps, mapDispatchToProps)(SpecialAccommodations);

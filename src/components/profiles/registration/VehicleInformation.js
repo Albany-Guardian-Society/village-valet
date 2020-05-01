@@ -9,6 +9,10 @@ import Button from "react-bootstrap/Button";
 
 import "./registration.css"
 
+/**
+ * Vehicle Information
+ * @class VehicleInformation
+ */
 class VehicleInformation extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +21,11 @@ class VehicleInformation extends Component {
 		this.handleChange = this.handleChange.bind(this);
     }
 
+    /**
+     * Handles when fields are changed
+     *
+     * @param {Object} event - what is typed into fields
+     */
     handleChange(event) {
         let id = event.target.id.split("|")[0].replace("car_", "");
         let field = event.target.id.split("|")[1];
@@ -27,6 +36,11 @@ class VehicleInformation extends Component {
         }
 	}
 
+    /**
+     * Creates the forms on the page
+     *
+     * @returns {HTMLFormElement[]} - HTML forms to be displayed
+     */
     generateVehicleForms() {
         let body = [];
         let index = 0;
@@ -64,15 +78,23 @@ class VehicleInformation extends Component {
                     </div>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Provider:</Form.Label>
-                        <Col><Form.Control id={"car_"+index+"|insur_provider"} placeholder="--Insurance Provider--" onChange={this.handleChange} value={this.props.vehicles[index].insur_provider}/></Col>
+                        <Col><Form.Control id={"car_" + index + "|insur_provider"} placeholder="--Insurance Provider--"
+                                           onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_provider}/></Col>
                         <Form.Label column sm={3} lg={2}>Policy Number:</Form.Label>
-                        <Col><Form.Control id={"car_"+index+"|insur_policy"} placeholder="--Policy Number--" onChange={this.handleChange} value={this.props.vehicles[index].insur_policy}/></Col>
+                        <Col><Form.Control id={"car_" + index + "|insur_policy"} placeholder="--Policy Number--"
+                                           onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_policy}/></Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Insurance Expiration:</Form.Label>
-                        <Col><Form.Control type="date" id={"car_"+index+"|insur_exp"} placeholder="--Expiration Date--" onChange={this.handleChange} value={this.props.vehicles[index].insur_exp}/></Col>
+                        <Col><Form.Control type="date" id={"car_" + index + "|insur_exp"}
+                                           placeholder="--Expiration Date--" onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_exp}/></Col>
                         <Form.Label column sm={3} lg={2}>Coverage Amount:</Form.Label>
-                        <Col><Form.Control type="number" id={"car_"+index+"|insur_coverage"} placeholder="--Coverage Amount--" onChange={this.handleChange} value={this.props.vehicles[index].insur_coverage}/></Col>
+                        <Col><Form.Control type="number" id={"car_" + index + "|insur_coverage"}
+                                           placeholder="--Coverage Amount--" onChange={this.handleChange}
+                                           value={this.props.vehicles[index].insur_coverage}/></Col>
                     </Row>
                     <Row className="reg_row">
                         <Form.Label column sm={3} lg={2}>Date of Last Inspection:</Form.Label>
@@ -97,6 +119,11 @@ class VehicleInformation extends Component {
         return(body);
     }
 
+    /**
+     * Displays the vehicle information and all its forms
+     *
+     * @returns {HTMLDocument}
+     */
     render() {
         return (
             <Card>
@@ -113,11 +140,17 @@ class VehicleInformation extends Component {
     }
 }
 
+/**
+ * Pulls vehicles and user type from state's active ride
+ */
 const mapStateToProps = state => ({
     vehicles: state.active_profile.vehicles,
     user_type: state.active_profile.user_type
 });
 
+/**
+ * Sets up functions to send registration and vehicle information to reducer
+ */
 const mapDispatchToProps = dispatch => ({
     updateRegistration: (type, id, value) => dispatch({
         type: "registration",

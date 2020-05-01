@@ -9,6 +9,8 @@ import ActiveRides from "./ActiveRides.js";
 import UpcomingRides from "./UpcomingRides.js";
 import RideBreakdown from "./RideBreakdown.js";
 
+/** @class Home is the dashboard page for the operator*/
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -21,21 +23,21 @@ class Home extends Component {
 	}
 
     render() {
+        // Three columns: upcoming rides, active rides, ride summary
         return (
-            <Container style={{minWidth: "100%"}}> <Row>
-                <Col>
-                    <UpcomingRides/>
-                </Col>
-                <Col>
-                    <ActiveRides/>
-                </Col>
-                <Col>
-                <Row> <Col>
-                    <RideBreakdown/>
-                </Col> </Row> <br/> <Row> <Col>
-
-                </Col> </Row> </Col>
-            </Row> </Container>
+            <Container style={{minWidth: "100%"}}>
+                <Row>
+                    <Col>
+                        <UpcomingRides/>
+                    </Col>
+                    <Col>
+                        <ActiveRides/>
+                    </Col>
+                    <Col>
+                        <RideBreakdown/>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
